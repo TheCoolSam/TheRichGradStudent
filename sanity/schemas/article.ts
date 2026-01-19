@@ -42,11 +42,28 @@ export default defineType({
       of: [{type: 'string'}],
       options: {
         list: [
-          {title: 'Blog Post', value: 'blog-post'},
-          {title: 'Credit Card Review', value: 'credit-card-review'},
-          {title: 'Article', value: 'article'},
+          {title: 'New Here', value: 'new'},
+          {title: 'Every Day Earning', value: 'everyday'},
+          {title: 'Travel Cards', value: 'travel'},
+          {title: 'Credit Card Pro', value: 'pro'},
         ],
       },
+      validation: (Rule) => Rule.required().min(1),
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured Article',
+      type: 'boolean',
+      description: 'Mark as featured to show prominently on articles page',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'metaDescription',
+      title: 'SEO Description',
+      type: 'text',
+      rows: 3,
+      description: 'Brief description for search engines (150-160 characters)',
+      validation: (Rule) => Rule.max(160),
     }),
     defineField({
       name: 'tags',

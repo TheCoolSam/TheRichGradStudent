@@ -4,6 +4,7 @@ export interface Author {
   _id: string
   name: string
   role: string
+  school?: string
   image?: {
     asset: {
       _ref: string
@@ -11,6 +12,13 @@ export interface Author {
     }
   }
   bio?: string
+  email?: string
+  socialLinks?: {
+    twitter?: string
+    linkedin?: string
+    instagram?: string
+    website?: string
+  }
 }
 
 export interface Post {
@@ -30,6 +38,9 @@ export interface Post {
   publishedAt: string
   body: any[]
   category?: 'new' | 'everyday' | 'travel' | 'pro'
+  featured?: boolean
+  metaDescription?: string
+  excerpt?: string
 }
 
 export type Rating = 'great' | 'good' | 'poor' | 'rgs-wallet'
@@ -89,4 +100,6 @@ export interface CreditCard {
   
   author?: Author
   publishedAt: string
+  featured?: boolean
+  metaDescription?: string
 }

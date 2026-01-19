@@ -7,21 +7,27 @@ export default {
       name: 'title',
       title: 'Section Title',
       type: 'string',
-      description: 'e.g., "Maximize Your Points Value"'
+      description: 'Heading for the points value carousel',
+      validation: (Rule: any) => Rule.required()
     },
     {
       name: 'cards',
       title: 'Point Value Cards',
       type: 'array',
+      description: 'Add all points programs to display in the carousel',
+      validation: (Rule: any) => Rule.required().min(1),
       of: [
         {
           type: 'object',
+          name: 'pointCard',
+          title: 'Points Program',
           fields: [
             {
               name: 'name',
-              title: 'Card/Program Name',
+              title: 'Program Name',
               type: 'string',
-              description: 'e.g., "Chase", "Bilt", "Capital One"'
+              description: 'Name of points program (e.g., "Chase Ultimate Rewards")',
+              validation: (Rule: any) => Rule.required()
             },
             {
               name: 'logo',
@@ -29,27 +35,45 @@ export default {
               type: 'image',
               options: {
                 hotspot: true
-              }
+              },
+              description: 'Program logo (recommend square format, 200x200px)',
+              validation: (Rule: any) => Rule.required()
             },
             {
               name: 'baseValue',
-              title: 'Base Value (cents)',
+              title: 'Base Value (cents per point)',
               type: 'number',
-              description: 'Base value in cents per point, e.g., 2 for 2¢'
+              description: 'Typical redemption value (e.g., 1.25 for 1.25¢)',
+              validation: (Rule: any) => Rule.required().min(0).max(100)
             },
             {
               name: 'bestRedemption',
-              title: 'Best Redemption Value (cents)',
+              title: 'Best Redemption (cents per point)',
               type: 'number',
-              description: 'Best redemption value in cents, e.g., 7 for 7¢'
+              description: 'Maximum value with optimal redemption (e.g., 2.5 for 2.5¢)',
+              validation: (Rule: any) => Rule.required().min(0).max(100)
             },
             {
               name: 'order',
               title: 'Display Order',
               type: 'number',
-              description: 'Order in which cards appear (1, 2, 3, etc.)'
+              description: 'Position in carousel (lower numbers appear first)',
+              validation: (Rule: any) => Rule.required().min(1)
             }
-          ]
+          ],
+          preview: {
+            select: {
+              title: 'name',
+              subtitle: 'baseValue',
+              media: 'logo'
+            },
+            prepare({ title, subtitle }: any) {
+              return {
+                title: title,
+                subtitle: `Base: ${subtitle}¢ per point`
+              }
+            }
+          }
         }
       ]
     }
