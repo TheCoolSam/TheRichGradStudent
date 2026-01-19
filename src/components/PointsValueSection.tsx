@@ -7,12 +7,19 @@ import { urlFor } from '@/lib/image'
 import Image from 'next/image'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
+interface CreditCardImage {
+  image: any
+  name: string
+}
+
 interface PointValueCard {
+  _id: string
   name: string
   logo?: any
   baseValue: number
   bestRedemption: number
   order: number
+  topCards?: CreditCardImage[]
 }
 
 interface PointValueData {
@@ -50,22 +57,52 @@ export default function PointsValueSection() {
   useEffect(() => {
     async function fetchPointValues() {
       try {
-        const result = await client.fetch<PointValueData>(
-          `*[_type == "pointValue"][0]{
-            title,
-            cards[]{
-              name,
-              logo,
-              baseValue,
-              bestRedemption,
-              order
-            }
-          }`
+        // First get the pointValue document
+        const pointValueDoc = await client.fetch<any>(
+          `*[_type == "pointValue"][0]`
         )
-        if (result && result.cards) {
-          setData(result)
+        
+        if (!pointValueDoc) {
+          console.log('No pointValue document found')
+          return
         }
+        
+        // For each card in the pointValue, fetch related credit cards
+        const cardsWithTopRated = await Promise.all(
+          (pointValueDoc.cards || []).map(async (card: any) => {
+            // Find credit cards that reference this specific point program
+            // We need to match by name since we don't have the nested document ID
+            const topCards = await client.fetch<CreditCardImage[]>(
+              `*[_type == "creditCard" && pointsProgram->name == $programName] | order(
+                select(
+                  signupBonusRating == "great" => 4,
+                  signupBonusRating == "rgs-wallet" => 4,
+                  signupBonusRating == "good" => 3,
+                  signupBonusRating == "poor" => 2,
+                  true => 1
+                ) desc,
+                publishedAt desc
+              )[0..2]{
+                name,
+                image
+              }`,
+              { programName: card.name }
+            )
+            
+            return {
+              ...card,
+              _id: card.name, // Use name as ID for carousel key
+              topCards
+            }
+          })
+        )
+        
+        setData({
+          title: pointValueDoc.title || 'Maximize Your Points Value',
+          cards: cardsWithTopRated
+        })
       } catch (error) {
+        console.log('Error fetching point values:', error)
         console.log('Using mock data for points values')
       }
     }
@@ -152,16 +189,16 @@ export default function PointsValueSection() {
             id="points-carousel"
             role="region"
             aria-label="Points value comparison carousel"
-            className="relative h-[400px] w-full overflow-hidden"
+            className="relative h-[440px] w-full overflow-hidden"
           >
             {sortedCards.map((card, i) => (
               <Card
-                key={card.name}
+                key={card._id || card.name}
                 card={card}
                 index={i}
                 activeIndex={activeIndex}
-                prefersReducedMotion={prefersReducedMotion}
                 totalCards={sortedCards.length}
+                prefersReducedMotion={prefersReducedMotion}
               />
             ))}
           </div>
@@ -176,6 +213,7 @@ interface CardProps {
   card: PointValueCard
   index: number
   activeIndex: number
+  totalCards: number
   prefersReducedMotion: boolean
 }
 
@@ -234,7 +272,7 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
         damping: 20,
       }}
     >
-      <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-100 w-64 h-[320px] flex flex-col">
+      <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-100 w-64 min-h-[360px] flex flex-col">
         {card.logo && (
           <div className="relative h-12 mb-4">
             <Image
@@ -248,7 +286,7 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
           </div>
         )}
         <h3 className="font-bold text-lg mb-2 text-rgs-black">{card.name}</h3>
-        <div className="space-y-1 text-sm flex-grow">
+        <div className="space-y-1 text-sm mb-4">
           <p className="text-gray-600">
             Value: <span className="font-bold text-rgs-green">{card.baseValue}¢</span>
           </p>
@@ -257,6 +295,53 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
             <span className="font-bold text-rgs-green">{card.bestRedemption}¢</span>
           </p>
         </div>
+        
+        {/* Pyramid of Top 3 Credit Cards */}
+        {card.topCards && card.topCards.length > 0 && (
+          <div className="mt-auto">
+            <p className="text-xs text-gray-500 mb-2 font-semibold">Top Rated Cards:</p>
+            <div className="flex flex-col items-center gap-1">
+              {/* Top card (centered) */}
+              {card.topCards[0] && (
+                <div className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
+                  <Image
+                    src={urlFor(card.topCards[0].image).width(64).height(40).url()}
+                    alt={card.topCards[0].name}
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              
+              {/* Bottom two cards (side by side) */}
+              <div className="flex gap-1 justify-center">
+                {card.topCards[1] && (
+                  <div className="relative w-14 h-9 rounded shadow-sm overflow-hidden">
+                    <Image
+                      src={urlFor(card.topCards[1].image).width(56).height(36).url()}
+                      alt={card.topCards[1].name}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                {card.topCards[2] && (
+                  <div className="relative w-14 h-9 rounded shadow-sm overflow-hidden">
+                    <Image
+                      src={urlFor(card.topCards[2].image).width(56).height(36).url()}
+                      alt={card.topCards[2].name}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </motion.div>
   )
