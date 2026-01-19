@@ -205,11 +205,11 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
         <h3 className="font-bold text-lg mb-2 text-rgs-black">{card.name}</h3>
         <div className="space-y-1 text-sm flex-grow">
           <p className="text-gray-600">
-            Value: <span className="font-bold text-rgs-green">{card.baseValue}┬ó</span>
+            Value: <span className="font-bold text-rgs-green">{card.baseValue}¢</span>
           </p>
           <p className="text-gray-600">
             Our Best Redemption:{' '}
-            <span className="font-bold text-rgs-green">{card.bestRedemption}┬ó</span>
+            <span className="font-bold text-rgs-green">{card.bestRedemption}¢</span>
           </p>
         </div>
       </div>
