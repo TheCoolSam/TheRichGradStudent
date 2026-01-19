@@ -3,7 +3,11 @@ import { CreditCard } from '@/types/sanity'
 import { calculateAt2cpp, calculateAt7cpp, formatAsPercentage, getRatingColor } from '@/utils/cardMath'
 
 interface CardValueTableProps {
-  card: CreditCard
+  card: CreditCard | null | undefined
+  isLoading?: boolean
+  error?: Error | string | null
+  spendingCapAmount?: number
+  spendingCapPeriod?: 'annually' | 'quarterly' | 'monthly' | 'per year' | 'total'
 }
 
 interface TableRow {
@@ -15,7 +19,68 @@ interface TableRow {
   hasAsterisk?: boolean
 }
 
-export default function CardValueTable({ card }: CardValueTableProps) {
+export default function CardValueTable({ 
+  card, 
+  isLoading = false, 
+  error = null,
+  spendingCapAmount = 25000,
+  spendingCapPeriod = 'annually'
+}: CardValueTableProps) {
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="my-8">
+        <h2 className="text-2xl font-bold mb-4">RGS Value Table</h2>
+        <div className="bg-gray-50 rounded-lg p-12 text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-rgs-green border-r-transparent" role="status" aria-label="Loading">
+            <span className="sr-only">Loading...</span>
+          </div>
+          <p className="mt-4 text-gray-600">Loading card details...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    const errorMessage = typeof error === 'string' ? error : error.message
+    return (
+      <div className="my-8">
+        <h2 className="text-2xl font-bold mb-4">RGS Value Table</h2>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6" role="alert">
+          <div className="flex items-start">
+            <svg className="w-6 h-6 text-red-600 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <h3 className="text-red-800 font-semibold mb-1">Unable to load card data</h3>
+              <p className="text-red-700 text-sm">{errorMessage}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Missing card state
+  if (!card) {
+    return (
+      <div className="my-8">
+        <h2 className="text-2xl font-bold mb-4">RGS Value Table</h2>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6" role="alert">
+          <div className="flex items-start">
+            <svg className="w-6 h-6 text-yellow-600 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <h3 className="text-yellow-800 font-semibold mb-1">No card data available</h3>
+              <p className="text-yellow-700 text-sm">Card information is currently unavailable.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
   const rows: TableRow[] = [
     {
       category: 'Signup Bonus',
@@ -143,7 +208,7 @@ export default function CardValueTable({ card }: CardValueTableProps) {
                 </td>
               </tr>
             ))}
-          </tbody>
+          </tbody>{spendingCapAmount.toLocaleString()} {spendingCapPeriod}
         </table>
       </div>
       

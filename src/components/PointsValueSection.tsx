@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { client } from '@/lib/sanity'
 import { urlFor } from '@/lib/image'
 import Image from 'next/image'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 interface PointValueCard {
   name: string
@@ -44,6 +45,7 @@ export default function PointsValueSection() {
     cards: mockPointValues
   })
   const [activeIndex, setActiveIndex] = useState(0)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     async function fetchPointValues() {
@@ -74,12 +76,28 @@ export default function PointsValueSection() {
   const sortedCards = [...data.cards].sort((a, b) => (a.order || 0) - (b.order || 0))
 
   const handleNext = () => {
-    setActiveIndex((prev) => prev + 1)
+    setActiveIndex((prev) => (prev + 1) % sortedCards.length)
   }
 
   const handlePrevious = () => {
-    setActiveIndex((prev) => prev - 1)
+    setActiveIndex((prev) => (prev - 1 + sortedCards.length) % sortedCards.length)
   }
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        handlePrevious()
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        handleNext()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeIndex])
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-rgs-green to-rgs-dark-green">
@@ -107,7 +125,9 @@ export default function PointsValueSection() {
           <button
             onClick={handlePrevious}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-3 rounded-full shadow-lg transition-all hover:scale-110"
-            aria-label="Previous cards"
+            aria-label={`Previous cards, currently showing ${sortedCards[activeIndex]?.name}`}
+            aria-controls="points-carousel"
+            type="button"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -118,7 +138,9 @@ export default function PointsValueSection() {
           <button
             onClick={handleNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-3 rounded-full shadow-lg transition-all hover:scale-110"
-            aria-label="Next cards"
+            aria-label={`Next cards, currently showing ${sortedCards[activeIndex]?.name}`}
+            aria-controls="points-carousel"
+            type="button"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -126,13 +148,19 @@ export default function PointsValueSection() {
           </button>
 
           {/* Cards Container */}
-          <div className="relative h-[400px] w-full overflow-hidden">
+          <div 
+            id="points-carousel"
+            role="region"
+            aria-label="Points value comparison carousel"
+            className="relative h-[400px] w-full overflow-hidden"
+          >
             {sortedCards.map((card, i) => (
               <Card
                 key={card.name}
                 card={card}
                 index={i}
                 activeIndex={activeIndex}
+                prefersReducedMotion={prefersReducedMotion}
                 totalCards={sortedCards.length}
               />
             ))}
@@ -148,9 +176,10 @@ interface CardProps {
   card: PointValueCard
   index: number
   activeIndex: number
-  totalCards: number
+  prefersReducedMotion: boolean
 }
 
+const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, prefersReducedMotion
 const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => {
   // Calculate effective index with proper modulo for negative numbers
   const effectiveIndex = ((activeIndex % totalCards) + totalCards) % totalCards
@@ -176,17 +205,31 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
 
   return (
     <motion.div
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      layout
+      layoutId={`card-${card.name}`}
+      className="absolute"
+      style={{
+        left: '50%',
+        top: '50%',
+      }}
       initial={false}
       animate={{
-        x: `calc(-50% + ${x}px)`,
-        y: '-50%',
+        translateX: x,
+        translateY: '-50%',
         scale,
         opacity,
         zIndex,
       }}
-      transition={{
-        type: 'spring',
+          type: prefersReducedMotion ? 'tween' : 'spring', 
+          stiffness: prefersReducedMotion ? undefined : 260, 
+          damping: prefersReducedMotion ? undefined : 20,
+          duration: prefersReducedMotion ? 0.01 : undefined
+        },
+        opacity: { duration: prefersReducedMotion ? 0.01 : 0.2 },
+        type: prefersReducedMotion ? 'tween' : 'spring',
+        stiffness: prefersReducedMotion ? undefined : 260,
+        damping: prefersReducedMotion ? undefined : 20,
+        duration: prefersReducedMotion ? 0.01 : undefinedg',
         stiffness: 260,
         damping: 20,
       }}
@@ -198,6 +241,8 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
               src={urlFor(card.logo).width(100).height(50).url()}
               alt={card.name}
               fill
+              sizes="100px"
+              quality={90}
               className="object-contain"
             />
           </div>

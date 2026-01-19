@@ -40,7 +40,7 @@ export default function RootLayout({
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-6 md:mb-0">
                 <h3 className="text-xl font-bold mb-2">The Rich Grad Student</h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-white/80 text-sm">
                   Millionaire Style Travel, GRAD STUDENT BUDGET
                 </p>
               </div>
@@ -48,20 +48,20 @@ export default function RootLayout({
               <div className="flex gap-8">
                 <Link 
                   href="/" 
-                  className="text-gray-300 hover:text-white transition-colors"
+                  className="text-white/80 hover:text-white transition-colors"
                 >
                   Home
                 </Link>
                 <Link 
                   href="/blog" 
-                  className="text-gray-300 hover:text-white transition-colors"
+                  className="text-white/80 hover:text-white transition-colors"
                 >
                   Blog
                 </Link>
               </div>
             </div>
             
-            <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
+            <div className="mt-8 pt-8 border-t border-gray-800 text-center text-white/70 text-sm">
               <p>© 2026 The Rich Grad Student. All rights reserved.</p>
             </div>
           </div>

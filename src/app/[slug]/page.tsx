@@ -220,9 +220,14 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
             </div>
 
             {/* Quick Info */}
-            {((content as CreditCard).spendRequirement || (content as CreditCard).aprOffer) && (
+            {((content as CreditCard).spendRequirement || (content as CreditCard).aprOffer || (content as CreditCard).pointsProgram) && (
               <div className="mb-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
                 <h3 className="font-bold text-lg mb-3">Quick Info</h3>
+                {(content as CreditCard).pointsProgram && (
+                  <p className="mb-2">
+                    <strong>Points Program:</strong> {(content as CreditCard).pointsProgram === 'Cash Back' ? 'Cash Back Card (No Points)' : (content as CreditCard).pointsProgram}
+                  </p>
+                )}
                 {(content as CreditCard).spendRequirement && (
                   <p className="mb-2">
                     <strong>Spend Requirement:</strong> {(content as CreditCard).spendRequirement}

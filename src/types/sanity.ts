@@ -52,6 +52,7 @@ export interface CreditCard {
   spendRequirement?: string
   aprOffer?: string
   hasSpendingCap: boolean
+  pointsProgram?: string
   
   // Value table data
   signupBonusValue?: string

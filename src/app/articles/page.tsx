@@ -41,7 +41,7 @@ export default async function ArticlesPage() {
         {posts.length > 0 ? (
           <section>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {posts.map((post) => (
+              {posts.map((post, index) => (
                 <div key={post._id}>
                   <Link href={`/${post.slug.current}`}>
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full hover:shadow-2xl transition-all duration-300">
@@ -51,6 +51,9 @@ export default async function ArticlesPage() {
                             src={urlFor(post.mainImage).width(400).height(250).url()}
                             alt={post.title}
                             fill
+                            priority={index < 3}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            quality={85}
                             className="object-cover"
                           />
                         </div>

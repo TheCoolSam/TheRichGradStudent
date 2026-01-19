@@ -39,7 +39,7 @@ export default function AboutPage() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               About Us
             </h1>
-            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
+            <p className="text-xl md:text-2xl text-white/90 drop-shadow-lg leading-relaxed">
               Two grad students on a mission to help fellow students travel the world in style
             </p>
           </motion.div>

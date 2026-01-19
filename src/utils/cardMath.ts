@@ -4,30 +4,41 @@
  */
 
 /**
- * Calculate points value at 2 cents per point
+ * Calculate points value at 2 cents per point with proper error handling
  * @param multiplier - The cash back multiplier (e.g., 3 for 3%)
- * @returns The value at 2cpp as a percentage
+ * @returns The value at 2cpp as a percentage, or 0 if invalid
  */
-export function calculateAt2cpp(multiplier: number): number {
-  return multiplier * 2
+export function calculateAt2cpp(multiplier: number | null | undefined): number {
+  if (typeof multiplier !== 'number' || isNaN(multiplier) || multiplier < 0) {
+    return 0
+  }
+  // Use toFixed to avoid floating point precision errors
+  return Number((multiplier * 2).toFixed(2))
 }
 
 /**
- * Calculate points value at 7 cents per point
+ * Calculate points value at 7 cents per point with proper error handling
  * @param multiplier - The cash back multiplier (e.g., 3 for 3%)
- * @returns The value at 7cpp as a percentage
+ * @returns The value at 7cpp as a percentage, or 0 if invalid
  */
-export function calculateAt7cpp(multiplier: number): number {
-  return multiplier * 7
+export function calculateAt7cpp(multiplier: number | null | undefined): number {
+  if (typeof multiplier !== 'number' || isNaN(multiplier) || multiplier < 0) {
+    return 0
+  }
+  return Number((multiplier * 7).toFixed(2))
 }
 
 /**
- * Format a number as a percentage string
+ * Format a number as a percentage string with proper handling
  * @param value - The numeric value
- * @returns Formatted percentage string (e.g., "6%")
+ * @returns Formatted percentage string (e.g., "6%") or 'N/A' if invalid
  */
-export function formatAsPercentage(value: number): string {
-  return `${value}%`
+export function formatAsPercentage(value: number | null | undefined): string {
+  if (typeof value !== 'number' || isNaN(value)) {
+    return 'N/A'
+  }
+  // Remove unnecessary decimal places (6.00% -> 6%)
+  return value % 1 === 0 ? `${value}%` : `${value.toFixed(2)}%`
 }
 
 /**

@@ -91,6 +91,28 @@ export default defineType({
       type: 'array',
       of: [{type: 'reference', to: {type: 'tag'}}],
     }),
+    defineField({
+      name: 'pointsProgram',
+      title: 'Points Program',
+      type: 'string',
+      description: 'Select which points program this card uses (must match a card name in Point Values)',
+      options: {
+        list: [
+          { title: 'Chase Ultimate Rewards', value: 'Chase' },
+          { title: 'Bilt Rewards', value: 'Bilt' },
+          { title: 'Capital One Miles', value: 'Capital One' },
+          { title: 'American Express Membership Rewards', value: 'Amex' },
+          { title: 'American Airlines AAdvantage', value: 'American Airlines' },
+          { title: 'United MileagePlus', value: 'United' },
+          { title: 'Southwest Rapid Rewards', value: 'Southwest' },
+          { title: 'Hilton Honors', value: 'Hilton' },
+          { title: 'Marriott Bonvoy', value: 'Marriott' },
+          { title: 'World of Hyatt', value: 'Hyatt' },
+          { title: 'Cash Back (No Points)', value: 'Cash Back' },
+          { title: 'Other', value: 'Other' },
+        ],
+      },
+    }),
     
     // VALUE TABLE DATA FIELDS
     defineField({

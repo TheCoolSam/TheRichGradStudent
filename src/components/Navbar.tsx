@@ -41,6 +41,10 @@ export default function Navbar() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden text-white hover:text-rgs-light-green transition-colors"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
+            type="button"
           >
             <svg
               className="h-6 w-6"
@@ -66,23 +70,58 @@ export default function Navbar() {
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
+            id="mobile-menu"
+            role="navigation"
+            aria-label="Mobile navigation"
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden bg-rgs-black border-t border-rgs-green"
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="md:hidden bg-rgs-black border-t border-rgs-green overflow-hidden"
           >
-            <div className="px-4 py-4 space-y-4">
+            <motion.div
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={{
+                open: {
+                  transition: { staggerChildren: 0.07, delayChildren: 0.1 }
+                },
+                closed: {
+                  transition: { staggerChildren: 0.05, staggerDirection: -1 }
+                }
+              }}
+              className="px-4 py-4 space-y-2"
+            >
               {navLinks.map((link) => (
-                <Link
+                <motion.div
                   key={link.href}
-                  href={link.href}
-                  className="block text-white hover:text-rgs-light-green transition-colors duration-200 py-2"
-                  onClick={() => setMobileMenuOpen(false)}
+                  variants={{
+                    open: {
+                      y: 0,
+                      opacity: 1,
+                      transition: {
+                        y: { stiffness: 1000, velocity: -100 }
+                      }
+                    },
+                    closed: {
+                      y: 20,
+                      opacity: 0,
+                      transition: {
+                        y: { stiffness: 1000 }
+                      }
+                    }
+                  }}
                 >
-                  {link.label}
-                </Link>
+                  <Link
+                    href={link.href}
+                    className="block text-white hover:text-rgs-light-green transition-colors duration-200 py-3 px-4 rounded-lg hover:bg-rgs-dark-green/30"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

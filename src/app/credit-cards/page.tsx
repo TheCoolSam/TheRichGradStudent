@@ -40,7 +40,7 @@ export default async function CreditCardsPage() {
         {cards.length > 0 ? (
           <section>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {cards.map((card) => (
+              {cards.map((card, index) => (
                 <div key={card._id}>
                   <Link href={`/${card.slug.current}`}>
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full hover:shadow-2xl transition-all duration-300">
@@ -50,6 +50,9 @@ export default async function CreditCardsPage() {
                             src={urlFor(card.image).width(400).height(250).url()}
                             alt={card.name}
                             fill
+                            priority={index < 3}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            quality={85}
                             className="object-contain p-4"
                           />
                         </div>
