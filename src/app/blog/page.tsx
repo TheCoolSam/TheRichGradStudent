@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { urlFor } from '@/lib/image'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 async function getBlogContent() {
   try {

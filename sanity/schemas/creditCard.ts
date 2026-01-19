@@ -38,6 +38,11 @@ export default defineType({
       options: { collapsible: true, collapsed: false }
     },
     {
+      name: 'additional',
+      title: 'Additional Information',
+      options: { collapsible: true, collapsed: true }
+    },
+    {
       name: 'metadata',
       title: 'Metadata & SEO',
       options: { collapsible: true, collapsed: true }
@@ -307,6 +312,16 @@ export default defineType({
       type: 'string',
       options: { list: ratingOptions },
       fieldset: 'benefits',
+    }),
+    
+    // ADDITIONAL INFORMATION
+    defineField({
+      name: 'additionalInfo',
+      title: 'Additional Information',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'Extra details, tips, or important notes about this card',
+      fieldset: 'additional',
     }),
     
     defineField({

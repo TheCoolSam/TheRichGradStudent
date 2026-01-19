@@ -81,6 +81,9 @@ export default function CardValueTable({
       </div>
     )
   }
+  // Calculate net annual fee
+  const netAnnualFee = card.annualFee - card.annualCredits
+  
   const rows: TableRow[] = [
     {
       category: 'Signup Bonus',
@@ -100,6 +103,13 @@ export default function CardValueTable({
       cashBack: `$${card.annualCredits}`,
       points2cpp: 'N/A',
       points7cpp: 'N/A',
+    },
+    {
+      category: 'Net Annual Fee',
+      cashBack: `$${netAnnualFee}`,
+      points2cpp: 'N/A',
+      points7cpp: 'N/A',
+      rating: netAnnualFee <= 0 ? 'great' : netAnnualFee < 100 ? 'good' : undefined,
     },
     {
       category: 'Travel',
@@ -208,13 +218,13 @@ export default function CardValueTable({
                 </td>
               </tr>
             ))}
-          </tbody>{spendingCapAmount.toLocaleString()} {spendingCapPeriod}
+          </tbody>
         </table>
       </div>
       
       {card.hasSpendingCap && (
         <p className="mt-4 text-sm text-gray-600 italic">
-          **On the first $25,000 annually
+          ** Spending cap applies on these categories
         </p>
       )}
     </div>

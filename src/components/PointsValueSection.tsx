@@ -1,25 +1,17 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { client } from '@/lib/sanity'
 import { urlFor } from '@/lib/image'
 import Image from 'next/image'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
-
-interface CreditCardImage {
-  image: any
-  name: string
-}
 
 interface PointValueCard {
-  _id: string
   name: string
   logo?: any
   baseValue: number
   bestRedemption: number
   order: number
-  topCards?: CreditCardImage[]
 }
 
 interface PointValueData {
@@ -34,16 +26,16 @@ const SPACING = CARD_WIDTH + CARD_GAP // 288px
 
 // Mock data fallback
 const mockPointValues: PointValueCard[] = [
-  { _id: 'mock-1', name: 'Chase', baseValue: 2, bestRedemption: 7, order: 1 },
-  { _id: 'mock-2', name: 'Bilt', baseValue: 2, bestRedemption: 4, order: 2 },
-  { _id: 'mock-3', name: 'Capital One', baseValue: 1.5, bestRedemption: 6, order: 3 },
-  { _id: 'mock-4', name: 'Amex', baseValue: 1.5, bestRedemption: 5, order: 4 },
-  { _id: 'mock-5', name: 'American Airlines', baseValue: 1.5, bestRedemption: 4.5, order: 5 },
-  { _id: 'mock-6', name: 'United', baseValue: 1.3, bestRedemption: 4, order: 6 },
-  { _id: 'mock-7', name: 'Southwest', baseValue: 1.4, bestRedemption: 1.5, order: 7 },
-  { _id: 'mock-8', name: 'Hilton', baseValue: 0.5, bestRedemption: 0.8, order: 8 },
-  { _id: 'mock-9', name: 'Marriott', baseValue: 0.8, bestRedemption: 1.2, order: 9 },
-  { _id: 'mock-10', name: 'Hyatt', baseValue: 1.5, bestRedemption: 2.5, order: 10 },
+  { name: 'Chase', baseValue: 2, bestRedemption: 7, order: 1 },
+  { name: 'Bilt', baseValue: 2, bestRedemption: 4, order: 2 },
+  { name: 'Capital One', baseValue: 1.5, bestRedemption: 6, order: 3 },
+  { name: 'Amex', baseValue: 1.5, bestRedemption: 5, order: 4 },
+  { name: 'American Airlines', baseValue: 1.5, bestRedemption: 4.5, order: 5 },
+  { name: 'United', baseValue: 1.3, bestRedemption: 4, order: 6 },
+  { name: 'Southwest', baseValue: 1.4, bestRedemption: 1.5, order: 7 },
+  { name: 'Hilton', baseValue: 0.5, bestRedemption: 0.8, order: 8 },
+  { name: 'Marriott', baseValue: 0.8, bestRedemption: 1.2, order: 9 },
+  { name: 'Hyatt', baseValue: 1.5, bestRedemption: 2.5, order: 10 },
 ]
 
 export default function PointsValueSection() {
@@ -52,57 +44,26 @@ export default function PointsValueSection() {
     cards: mockPointValues
   })
   const [activeIndex, setActiveIndex] = useState(0)
-  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     async function fetchPointValues() {
       try {
-        // First get the pointValue document
-        const pointValueDoc = await client.fetch<any>(
-          `*[_type == "pointValue"][0]`
-        )
-        
-        if (!pointValueDoc) {
-          console.log('No pointValue document found')
-          return
-        }
-        
-        // For each card in the pointValue, fetch related credit cards
-        const cardsWithTopRated = await Promise.all(
-          (pointValueDoc.cards || []).map(async (card: any) => {
-            // Find credit cards that reference this specific point program
-            // We need to match by name since we don't have the nested document ID
-            const topCards = await client.fetch<CreditCardImage[]>(
-              `*[_type == "creditCard" && pointsProgram->name == $programName] | order(
-                select(
-                  signupBonusRating == "great" => 4,
-                  signupBonusRating == "rgs-wallet" => 4,
-                  signupBonusRating == "good" => 3,
-                  signupBonusRating == "poor" => 2,
-                  true => 1
-                ) desc,
-                publishedAt desc
-              )[0..2]{
-                name,
-                image
-              }`,
-              { programName: card.name }
-            )
-            
-            return {
-              ...card,
-              _id: card.name, // Use name as ID for carousel key
-              topCards
+        const result = await client.fetch<PointValueData>(
+          `*[_type == "pointValue"][0]{
+            title,
+            cards[]{
+              name,
+              logo,
+              baseValue,
+              bestRedemption,
+              order
             }
-          })
+          }`
         )
-        
-        setData({
-          title: pointValueDoc.title || 'Maximize Your Points Value',
-          cards: cardsWithTopRated
-        })
+        if (result && result.cards) {
+          setData(result)
+        }
       } catch (error) {
-        console.log('Error fetching point values:', error)
         console.log('Using mock data for points values')
       }
     }
@@ -113,28 +74,12 @@ export default function PointsValueSection() {
   const sortedCards = [...data.cards].sort((a, b) => (a.order || 0) - (b.order || 0))
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % sortedCards.length)
+    setActiveIndex((prev) => prev + 1)
   }
 
   const handlePrevious = () => {
-    setActiveIndex((prev) => (prev - 1 + sortedCards.length) % sortedCards.length)
+    setActiveIndex((prev) => prev - 1)
   }
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault()
-        handlePrevious()
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault()
-        handleNext()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [activeIndex])
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-rgs-green to-rgs-dark-green">
@@ -162,9 +107,7 @@ export default function PointsValueSection() {
           <button
             onClick={handlePrevious}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-3 rounded-full shadow-lg transition-all hover:scale-110"
-            aria-label={`Previous cards, currently showing ${sortedCards[activeIndex]?.name}`}
-            aria-controls="points-carousel"
-            type="button"
+            aria-label="Previous cards"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -175,9 +118,7 @@ export default function PointsValueSection() {
           <button
             onClick={handleNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-3 rounded-full shadow-lg transition-all hover:scale-110"
-            aria-label={`Next cards, currently showing ${sortedCards[activeIndex]?.name}`}
-            aria-controls="points-carousel"
-            type="button"
+            aria-label="Next cards"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -185,20 +126,14 @@ export default function PointsValueSection() {
           </button>
 
           {/* Cards Container */}
-          <div 
-            id="points-carousel"
-            role="region"
-            aria-label="Points value comparison carousel"
-            className="relative h-[440px] w-full overflow-hidden"
-          >
+          <div className="relative h-[400px] w-full overflow-hidden">
             {sortedCards.map((card, i) => (
               <Card
-                key={card._id || card.name}
+                key={card.name}
                 card={card}
                 index={i}
                 activeIndex={activeIndex}
                 totalCards={sortedCards.length}
-                prefersReducedMotion={prefersReducedMotion}
               />
             ))}
           </div>
@@ -214,10 +149,9 @@ interface CardProps {
   index: number
   activeIndex: number
   totalCards: number
-  prefersReducedMotion: boolean
 }
 
-const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, prefersReducedMotion }) => {
+const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => {
   // Calculate effective index with proper modulo for negative numbers
   const effectiveIndex = ((activeIndex % totalCards) + totalCards) % totalCards
   
@@ -242,105 +176,42 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, prefe
 
   return (
     <motion.div
-      layout
-      layoutId={`card-${card.name}`}
-      className="absolute"
-      style={{
-        left: '50%',
-        top: '50%',
-      }}
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       initial={false}
       animate={{
-        translateX: x,
-        translateY: '-50%',
+        x: `calc(-50% + ${x}px)`,
+        y: '-50%',
         scale,
         opacity,
         zIndex,
       }}
       transition={{
-        layout: { 
-          type: prefersReducedMotion ? 'tween' : 'spring', 
-          stiffness: prefersReducedMotion ? undefined : 260, 
-          damping: prefersReducedMotion ? undefined : 20,
-          duration: prefersReducedMotion ? 0.01 : undefined
-        },
-        opacity: { duration: prefersReducedMotion ? 0.01 : 0.2 },
-        type: prefersReducedMotion ? 'tween' : 'spring',
-        stiffness: prefersReducedMotion ? undefined : 260,
-        damping: prefersReducedMotion ? undefined : 20,
-        duration: prefersReducedMotion ? 0.01 : undefined
+        type: 'spring',
+        stiffness: 260,
+        damping: 20,
       }}
     >
-      <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-100 w-64 min-h-[360px] flex flex-col">
+      <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-100 w-64 h-[320px] flex flex-col">
         {card.logo && (
           <div className="relative h-12 mb-4">
             <Image
               src={urlFor(card.logo).width(100).height(50).url()}
               alt={card.name}
               fill
-              sizes="100px"
-              quality={90}
               className="object-contain"
             />
           </div>
         )}
         <h3 className="font-bold text-lg mb-2 text-rgs-black">{card.name}</h3>
-        <div className="space-y-1 text-sm mb-4">
+        <div className="space-y-1 text-sm flex-grow">
           <p className="text-gray-600">
-            Value: <span className="font-bold text-rgs-green">{card.baseValue}¢</span>
+            Value: <span className="font-bold text-rgs-green">{card.baseValue}┬ó</span>
           </p>
           <p className="text-gray-600">
             Our Best Redemption:{' '}
-            <span className="font-bold text-rgs-green">{card.bestRedemption}¢</span>
+            <span className="font-bold text-rgs-green">{card.bestRedemption}┬ó</span>
           </p>
         </div>
-        
-        {/* Pyramid of Top 3 Credit Cards */}
-        {card.topCards && card.topCards.length > 0 && (
-          <div className="mt-auto">
-            <p className="text-xs text-gray-500 mb-2 font-semibold">Top Rated Cards:</p>
-            <div className="flex flex-col items-center gap-1">
-              {/* Top card (centered) */}
-              {card.topCards[0] && (
-                <div className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
-                  <Image
-                    src={urlFor(card.topCards[0].image).width(64).height(40).url()}
-                    alt={card.topCards[0].name}
-                    fill
-                    sizes="64px"
-                    className="object-cover"
-                  />
-                </div>
-              )}
-              
-              {/* Bottom two cards (side by side) */}
-              <div className="flex gap-1 justify-center">
-                {card.topCards[1] && (
-                  <div className="relative w-14 h-9 rounded shadow-sm overflow-hidden">
-                    <Image
-                      src={urlFor(card.topCards[1].image).width(56).height(36).url()}
-                      alt={card.topCards[1].name}
-                      fill
-                      sizes="56px"
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                {card.topCards[2] && (
-                  <div className="relative w-14 h-9 rounded shadow-sm overflow-hidden">
-                    <Image
-                      src={urlFor(card.topCards[2].image).width(56).height(36).url()}
-                      alt={card.topCards[2].name}
-                      fill
-                      sizes="56px"
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </motion.div>
   )

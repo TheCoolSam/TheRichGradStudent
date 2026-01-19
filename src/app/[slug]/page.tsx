@@ -8,9 +8,8 @@ import Disclaimer from '@/components/Disclaimer'
 import CardValueTable from '@/components/CardValueTable'
 import DonationButton from '@/components/DonationButton'
 
-// Force dynamic rendering to avoid caching
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// Revalidate every 60 seconds
+export const revalidate = 60
 
 // Custom components for rendering Portable Text content
 const portableTextComponents: PortableTextComponents = {
@@ -101,7 +100,8 @@ async function getContent(slug: string): Promise<Post | CreditCard | null> {
           name,
           role,
           image
-        }
+        },
+        "pointsProgram": pointsProgram->name
       }`,
       { slug }
     )
@@ -196,12 +196,12 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
           <>
             {/* Card Image */}
             {(content as CreditCard).image && (
-              <div className="mb-8 rounded-xl overflow-hidden shadow-2xl">
+              <div className="mb-8 max-w-md mx-auto rounded-xl overflow-hidden shadow-lg">
                 <Image
-                  src={urlFor((content as CreditCard).image).width(800).height(500).url()}
+                  src={urlFor((content as CreditCard).image).width(400).height(250).url()}
                   alt={(content as CreditCard).name}
-                  width={800}
-                  height={500}
+                  width={400}
+                  height={250}
                   className="w-full"
                 />
               </div>
@@ -256,6 +256,19 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
 
             {/* Value Table */}
             <CardValueTable card={content as CreditCard} />
+
+            {/* Additional Information */}
+            {(content as CreditCard).additionalInfo && (
+              <div className="my-8 p-6 bg-gray-50 border border-gray-200 rounded-lg">
+                <h2 className="text-2xl font-bold mb-4">Additional Information</h2>
+                <div className="prose prose-lg max-w-none">
+                  <PortableText 
+                    value={(content as CreditCard).additionalInfo}
+                    components={portableTextComponents}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Donation Button */}
             <div className="my-12 text-center">

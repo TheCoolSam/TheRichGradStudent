@@ -98,6 +98,8 @@ export interface CreditCard {
   miscBenefits?: string
   miscRating?: Rating
   
+  additionalInfo?: any[]
+  
   author?: Author
   publishedAt: string
   featured?: boolean
