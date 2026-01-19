@@ -10,6 +10,8 @@ export default function Navbar() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/blog', label: 'Blog' },
+    { href: '/articles', label: 'Articles' },
+    { href: '/credit-cards', label: 'Credit Cards' },
     { href: '/about', label: 'About Us' },
   ]
 

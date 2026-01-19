@@ -1,73 +1,71 @@
 import { client } from '@/lib/sanity'
-import { Post } from '@/types/sanity'
+import { CreditCard } from '@/types/sanity'
 import Link from 'next/link'
 import Image from 'next/image'
 import { urlFor } from '@/lib/image'
 
 export const dynamic = 'force-dynamic'
 
-async function getBlogContent() {
+async function getCreditCards() {
   try {
-    // Fetch blog posts with category "blog-post"
-    const posts = await client.fetch<Post[]>(`
-      *[_type == "post" && "blog-post" in categories] | order(publishedAt desc){
+    // Fetch credit card reviews
+    const cards = await client.fetch<CreditCard[]>(`
+      *[_type == "creditCard"] | order(name asc){
         _id,
-        title,
+        name,
         slug,
-        mainImage,
+        image,
         publishedAt,
-        excerpt,
         "author": author->{name, role}
       }
     `)
     
-    return { posts: posts || [] }
+    return { cards: cards || [] }
   } catch (error) {
     console.error('Error fetching from Sanity:', error)
-    return { posts: [] }
+    return { cards: [] }
   }
 }
 
-export default async function BlogPage() {
-  const { posts } = await getBlogContent()
+export default async function CreditCardsPage() {
+  const { cards } = await getCreditCards()
 
   return (
     <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog Posts</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Credit Card Reviews</h1>
         </div>
 
-        {/* Blog Posts Section */}
-        {posts.length > 0 ? (
+        {cards.length > 0 ? (
           <section>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {posts.map((post) => (
-                <div key={post._id}>
-                  <Link href={`/${post.slug.current}`}>
+              {cards.map((card) => (
+                <div key={card._id}>
+                  <Link href={`/${card.slug.current}`}>
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full hover:shadow-2xl transition-all duration-300">
-                      {post.mainImage && (
-                        <div className="relative h-48 bg-gray-100">
+                      {card.image && (
+                        <div className="relative h-48 bg-gradient-to-br from-amber-100 to-orange-100">
                           <Image
-                            src={urlFor(post.mainImage).width(400).height(250).url()}
-                            alt={post.title}
+                            src={urlFor(card.image).width(400).height(250).url()}
+                            alt={card.name}
                             fill
-                            className="object-cover"
+                            className="object-contain p-4"
                           />
                         </div>
                       )}
                       <div className="p-6">
-                        <h3 className="text-xl font-bold mb-2">{post.title}</h3>
+                        <h3 className="text-xl font-bold mb-2">{card.name}</h3>
                         <p className="text-sm text-gray-600 mb-4">
-                          {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                          {new Date(card.publishedAt).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
                           })}
                         </p>
-                        {post.author && (
+                        {card.author && (
                           <p className="text-sm text-gray-500">
-                            by {post.author.name}
+                            by {card.author.name}
                           </p>
                         )}
                       </div>
@@ -80,9 +78,9 @@ export default async function BlogPage() {
         ) : (
           <div className="text-center py-20">
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold mb-4">No Blog Posts Yet!</h2>
+              <h2 className="text-3xl font-bold mb-4">No Credit Card Reviews Yet!</h2>
               <p className="text-xl text-gray-600 mb-6">
-                Check back soon for new blog posts.
+                Check back soon for new credit card reviews.
               </p>
             </div>
           </div>
@@ -91,4 +89,3 @@ export default async function BlogPage() {
     </main>
   )
 }
-
