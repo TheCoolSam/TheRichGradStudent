@@ -24,26 +24,10 @@ const CARD_WIDTH = 256
 const CARD_GAP = 32
 const SPACING = CARD_WIDTH + CARD_GAP // 288px
 
-// Mock data fallback
-const mockPointValues: PointValueCard[] = [
-  { name: 'Chase', baseValue: 2, bestRedemption: 7, order: 1 },
-  { name: 'Bilt', baseValue: 2, bestRedemption: 4, order: 2 },
-  { name: 'Capital One', baseValue: 1.5, bestRedemption: 6, order: 3 },
-  { name: 'Amex', baseValue: 1.5, bestRedemption: 5, order: 4 },
-  { name: 'American Airlines', baseValue: 1.5, bestRedemption: 4.5, order: 5 },
-  { name: 'United', baseValue: 1.3, bestRedemption: 4, order: 6 },
-  { name: 'Southwest', baseValue: 1.4, bestRedemption: 1.5, order: 7 },
-  { name: 'Hilton', baseValue: 0.5, bestRedemption: 0.8, order: 8 },
-  { name: 'Marriott', baseValue: 0.8, bestRedemption: 1.2, order: 9 },
-  { name: 'Hyatt', baseValue: 1.5, bestRedemption: 2.5, order: 10 },
-]
-
 export default function PointsValueSection() {
-  const [data, setData] = useState<PointValueData>({
-    title: 'Maximize Your Points Value',
-    cards: mockPointValues
-  })
+  const [data, setData] = useState<PointValueData | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     async function fetchPointValues() {
@@ -60,16 +44,27 @@ export default function PointsValueSection() {
             }
           }`
         )
-        if (result && result.cards) {
+        if (result && result.cards && result.cards.length > 0) {
           setData(result)
         }
       } catch (error) {
-        console.log('Using mock data for points values')
+        console.error('Error fetching point values:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchPointValues()
   }, [])
+
+  // Don't render if no data or still loading
+  if (isLoading) {
+    return null
+  }
+
+  if (!data || !data.cards || data.cards.length === 0) {
+    return null
+  }
 
   const sortedCards = [...data.cards].sort((a, b) => (a.order || 0) - (b.order || 0))
 
