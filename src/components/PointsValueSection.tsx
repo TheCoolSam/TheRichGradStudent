@@ -32,6 +32,7 @@ export default function PointsValueSection() {
   useEffect(() => {
     async function fetchPointValues() {
       try {
+        console.log('Fetching point values...')
         const result = await client.fetch<PointValueData>(
           `*[_type == "pointValue"][0]{
             title,
@@ -44,8 +45,12 @@ export default function PointsValueSection() {
             }
           }`
         )
+        console.log('Fetched result:', result)
         if (result && result.cards && result.cards.length > 0) {
+          console.log('Setting data with', result.cards.length, 'cards')
           setData(result)
+        } else {
+          console.log('No valid data found')
         }
       } catch (error) {
         console.error('Error fetching point values:', error)
@@ -57,13 +62,26 @@ export default function PointsValueSection() {
     fetchPointValues()
   }, [])
 
-  // Don't render if no data or still loading
+  // Show loading state for debugging
   if (isLoading) {
-    return null
+    return (
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-rgs-green to-rgs-dark-green">
+        <div className="max-w-7xl mx-auto text-center text-white">
+          <p>Loading points values...</p>
+        </div>
+      </section>
+    )
   }
 
+  // Show message if no data
   if (!data || !data.cards || data.cards.length === 0) {
-    return null
+    return (
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-rgs-green to-rgs-dark-green">
+        <div className="max-w-7xl mx-auto text-center text-white">
+          <p>No points programs configured yet. Add them in Sanity!</p>
+        </div>
+      </section>
+    )
   }
 
   const sortedCards = [...data.cards].sort((a, b) => (a.order || 0) - (b.order || 0))
