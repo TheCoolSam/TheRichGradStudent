@@ -1,0 +1,91 @@
+// TypeScript interfaces for Sanity data
+
+export interface Author {
+  _id: string
+  name: string
+  role: string
+  image?: {
+    asset: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+  bio?: string
+}
+
+export interface Post {
+  _id: string
+  _type: 'post'
+  title: string
+  slug: {
+    current: string
+  }
+  mainImage?: {
+    asset: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+  author: Author
+  publishedAt: string
+  body: any[]
+  category?: 'new' | 'everyday' | 'travel' | 'pro'
+}
+
+export type Rating = 'great' | 'good' | 'poor' | 'rgs-wallet'
+
+export interface CreditCard {
+  _id: string
+  _type: 'creditCard'
+  name: string
+  slug: {
+    current: string
+  }
+  image: {
+    asset: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+  affiliateLink: string
+  introContent?: any[]
+  spendRequirement?: string
+  aprOffer?: string
+  hasSpendingCap: boolean
+  
+  // Value table data
+  signupBonusValue?: string
+  signupBonusRating?: Rating
+  annualFee: number
+  annualCredits: number
+  
+  travelMultiplier: number
+  travelRating?: Rating
+  
+  groceryMultiplier: number
+  groceryRating?: Rating
+  
+  gasMultiplier: number
+  gasRating?: Rating
+  
+  diningMultiplier: number
+  diningRating?: Rating
+  
+  pharmacyMultiplier: number
+  pharmacyRating?: Rating
+  
+  otherMultiplier: number
+  otherRating?: Rating
+  
+  loungeBenefits?: string
+  loungeRating?: Rating
+  
+  partnerBenefits?: string
+  partnerRating?: Rating
+  
+  miscBenefits?: string
+  miscRating?: Rating
+  
+  author?: Author
+  publishedAt: string
+}

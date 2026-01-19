@@ -1,0 +1,299 @@
+'use client'
+
+import React from 'react'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import PointsValueSection from '@/components/PointsValueSection'
+
+const levelCards = [
+  {
+    title: "I'm new here",
+    bullets: [
+      'Build your credit score',
+      'Learn to responsibly use credit cards',
+      'Get student credit cards'
+    ],
+    gradient: 'from-emerald-600 to-green-700',
+    category: 'new'
+  },
+  {
+    title: 'EveryDay Earning',
+    bullets: [
+      'Maximise points and cashback on no-fee cards',
+      'The Chase ecosystem',
+      '5% cashback'
+    ],
+    gradient: 'from-green-600 to-emerald-700',
+    category: 'everyday'
+  },
+  {
+    title: 'Travel Cards',
+    bullets: [
+      "Don't fear the annual fee",
+      'Maximize benefits',
+      'Travel in style'
+    ],
+    gradient: 'from-teal-600 to-cyan-700',
+    category: 'travel'
+  },
+  {
+    title: 'Credit Card Pro',
+    bullets: [
+      'Business and luxury credit cards',
+      'Add luxury to everyday life',
+      'Earn large bonuses'
+    ],
+    gradient: 'from-cyan-600 to-blue-700',
+    category: 'pro'
+  }
+]
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5
+    }
+  }
+}
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-white">
+      {/* Hero Section with elegant dark design */}
+      <section className="relative bg-gradient-to-br from-rgs-black via-rgs-off-black to-rgs-dark-green min-h-[600px] flex items-center">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              <span className="text-white">Millionaire Style Travel,</span>
+              <br />
+              <span className="text-rgs-light-green">GRAD STUDENT BUDGET</span>
+            </h1>
+
+            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed mb-8 max-w-4xl mx-auto">
+              We believe graduate students have the most to gain from mastering the points 
+              travel game. As a community, we often operate on limited budgets, making every 
+              point and discount incredibly valuable.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                href="/blog"
+                className="px-8 py-4 bg-rgs-green hover:bg-rgs-dark-green text-white font-bold rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+              >
+                Explore Content
+              </Link>
+              <Link
+                href="/blog?category=new"
+                className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-lg border-2 border-rgs-light-green transition-all duration-300 backdrop-blur-sm"
+              >
+                Getting Started
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Decorative elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent"></div>
+      </section>
+
+      {/* Points Value Section */}
+      <PointsValueSection />
+
+          <motion.p
+            className="text-lg md:text-xl text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto"
+            variants={itemVariants}
+          >
+            We believe graduate students have the most to gain from mastering the points 
+            travel game. As a community, we often operate on limited budgets, making every 
+            point and discount incredibly valuable. Our frequent participation in 
+            university-related events provides opportunities to earn points quickly. Many of 
+            us live far from home, requiring regular travel to stay connected with family.
+          </motion.p>
+
+          <motion.div
+            className="text-3xl md:text-4xl font-bold text-gray-900 mb-12"
+            variants={itemVariants}
+          >
+
+      {/* Mission Statement */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+          className="max-w-4xl mx-auto text-center"
+        >
+          <motion.h2
+            variants={itemVariants}
+            className="text-3xl md:text-4xl font-bold mb-6 text-rgs-black"
+          >
+            YOU'RE ALREADY IN THE CREDIT CARD GAME
+          </motion.h2>
+          <motion.p
+            variants={itemVariants}
+            className="text-xl text-gray-700 mb-4"
+          >
+            Don't let it play you.
+          </motion.p>
+          <motion.p
+            variants={itemVariants}
+            className="text-2xl md:text-3xl font-bold text-rgs-green"
+          >
+            ULTIMATE MILLIONAIRE GUIDE
+          </motion.p>
+        </motion.div>
+      </section>
+
+      {/* Level Selector Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <motion.div
+          className="max-w-7xl mx-auto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+        >
+          <motion.h2
+            variants={itemVariants}
+            className="text-4xl md:text-5xl font-bold text-center mb-4 text-rgs-black"
+          >
+            Choose Your Level
+          </motion.h2>
+          <motion.p
+            variants={itemVariants}
+            className="text-center text-gray-600 mb-12 text-lg"
+          >
+            Start where you are, grow to where you want to be
+          </motion.p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {levelCards.map((card, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                whileHover={{
+                  y: -10,
+                  boxShadow: '0 20px 40px rgba(6, 95, 70, 0.2)',
+                }}
+                className="cursor-pointer"
+              >
+                <Link href={`/blog?category=${card.category}`}>
+                  <div className={`h-full p-8 rounded-2xl bg-gradient-to-br ${card.gradient} text-white shadow-xl relative overflow-hidden group`}>
+                    {/* Shine effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    
+                    <h3 className="text-2xl font-bold mb-6 relative z-10">
+                      {card.title}
+                    </h3>
+                    <ul className="space-y-3 relative z-10">
+                      {card.bullets.map((bullet, bulletIndex) => (
+                        <li key={bulletIndex} className="flex items-start">
+                          <span className="mr-2 text-white/80">•</span>
+                          <span className="text-sm">{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-rgs-off-black text-white">
+        <motion.div
+          className="max-w-5xl mx-auto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+        >
+          <motion.h2
+            variants={itemVariants}
+            className="text-4xl md:text-5xl font-bold text-center mb-16"
+          >
+            Meet The Experts
+          </motion.h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {[
+              {
+                name: 'Karan',
+                role: 'Business and Personal Credit Card Expert',
+                initial: 'K'
+              },
+              {
+                name: 'Giorgio',
+                role: 'Personal Credit Card Expert, Hotel/Airfare Redemption Expert',
+                initial: 'G'
+              }
+            ].map((member, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                className="text-center group"
+              >
+                <motion.div
+                  className="w-40 h-40 mx-auto mb-6 rounded-full bg-gradient-to-br from-rgs-green to-rgs-light-green flex items-center justify-center shadow-2xl relative overflow-hidden"
+                  whileHover={{
+                    scale: 1.1,
+                    boxShadow: '0 30px 60px rgba(16, 185, 129, 0.4)'
+                  }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
+                  <span className="text-6xl text-white font-bold">
+                    {member.initial}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                </motion.div>
+                <h3 className="text-2xl font-bold mb-2 text-white">{member.name}</h3>
+                <p className="text-gray-400">{member.role}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-rgs-green to-rgs-dark-green text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Start Your Journey?
+          </h2>
+          <p className="text-xl mb-8 text-white/90">
+            Join thousands of grad students traveling the world on points
+          </p>
+          <Link
+            href="/blog"
+            className="inline-block px-10 py-4 bg-white text-rgs-green font-bold rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+          >
+            Start Learning Now
+          </Link>
+        </div>
+      </section>
+    </main>
+  )
+}
