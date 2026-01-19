@@ -34,16 +34,16 @@ const SPACING = CARD_WIDTH + CARD_GAP // 288px
 
 // Mock data fallback
 const mockPointValues: PointValueCard[] = [
-  { name: 'Chase', baseValue: 2, bestRedemption: 7, order: 1 },
-  { name: 'Bilt', baseValue: 2, bestRedemption: 4, order: 2 },
-  { name: 'Capital One', baseValue: 1.5, bestRedemption: 6, order: 3 },
-  { name: 'Amex', baseValue: 1.5, bestRedemption: 5, order: 4 },
-  { name: 'American Airlines', baseValue: 1.5, bestRedemption: 4.5, order: 5 },
-  { name: 'United', baseValue: 1.3, bestRedemption: 4, order: 6 },
-  { name: 'Southwest', baseValue: 1.4, bestRedemption: 1.5, order: 7 },
-  { name: 'Hilton', baseValue: 0.5, bestRedemption: 0.8, order: 8 },
-  { name: 'Marriott', baseValue: 0.8, bestRedemption: 1.2, order: 9 },
-  { name: 'Hyatt', baseValue: 1.5, bestRedemption: 2.5, order: 10 },
+  { _id: 'mock-1', name: 'Chase', baseValue: 2, bestRedemption: 7, order: 1 },
+  { _id: 'mock-2', name: 'Bilt', baseValue: 2, bestRedemption: 4, order: 2 },
+  { _id: 'mock-3', name: 'Capital One', baseValue: 1.5, bestRedemption: 6, order: 3 },
+  { _id: 'mock-4', name: 'Amex', baseValue: 1.5, bestRedemption: 5, order: 4 },
+  { _id: 'mock-5', name: 'American Airlines', baseValue: 1.5, bestRedemption: 4.5, order: 5 },
+  { _id: 'mock-6', name: 'United', baseValue: 1.3, bestRedemption: 4, order: 6 },
+  { _id: 'mock-7', name: 'Southwest', baseValue: 1.4, bestRedemption: 1.5, order: 7 },
+  { _id: 'mock-8', name: 'Hilton', baseValue: 0.5, bestRedemption: 0.8, order: 8 },
+  { _id: 'mock-9', name: 'Marriott', baseValue: 0.8, bestRedemption: 1.2, order: 9 },
+  { _id: 'mock-10', name: 'Hyatt', baseValue: 1.5, bestRedemption: 2.5, order: 10 },
 ]
 
 export default function PointsValueSection() {
@@ -217,8 +217,7 @@ interface CardProps {
   prefersReducedMotion: boolean
 }
 
-const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, prefersReducedMotion
-const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => {
+const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, prefersReducedMotion }) => {
   // Calculate effective index with proper modulo for negative numbers
   const effectiveIndex = ((activeIndex % totalCards) + totalCards) % totalCards
   
@@ -258,6 +257,8 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
         opacity,
         zIndex,
       }}
+      transition={{
+        layout: { 
           type: prefersReducedMotion ? 'tween' : 'spring', 
           stiffness: prefersReducedMotion ? undefined : 260, 
           damping: prefersReducedMotion ? undefined : 20,
@@ -267,9 +268,7 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
         type: prefersReducedMotion ? 'tween' : 'spring',
         stiffness: prefersReducedMotion ? undefined : 260,
         damping: prefersReducedMotion ? undefined : 20,
-        duration: prefersReducedMotion ? 0.01 : undefinedg',
-        stiffness: 260,
-        damping: 20,
+        duration: prefersReducedMotion ? 0.01 : undefined
       }}
     >
       <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-100 w-64 min-h-[360px] flex flex-col">
