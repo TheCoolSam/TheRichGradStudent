@@ -122,25 +122,6 @@ export default defineType({
       initialValue: false,
       fieldset: 'intro',
     }),
-    defineField({
-      name: 'categories',
-      title: 'Categories',
-      type: 'array',
-      of: [{type: 'string'}],
-      options: {
-        list: [
-          {title: 'Blog Post', value: 'blog-post'},
-          {title: 'Credit Card Review', value: 'credit-card-review'},
-          {title: 'Article', value: 'article'},
-        ],
-      },
-    }),
-    defineField({
-      name: 'tags',
-      title: 'Tags',
-      type: 'array',
-      of: [{type: 'reference', to: {type: 'tag'}}],
-    }),
     
     // VALUE TABLE DATA FIELDS
     defineField({
