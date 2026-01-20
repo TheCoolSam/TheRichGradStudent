@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export default function HeroSectionClient() {
   return (
@@ -37,14 +38,18 @@ export default function HeroSectionClient() {
               <span className="text-white font-bold text-sm sm:text-base md:text-lg sm:ml-2 block sm:inline">DON'T LET IT PLAY YOU.</span>
             </motion.div>
             
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-rgs-green to-rgs-light-green rounded-full shadow-xl border-2 border-white/30 w-full sm:w-auto text-center"
-            >
-              <span className="text-white font-bold text-base sm:text-lg md:text-xl">ULTIMATE MILLIONAIRE GUIDE</span>
-            </motion.div>
+            <Link href="/millionaire-guide">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-rgs-green to-rgs-light-green rounded-full shadow-xl border-2 border-white/30 w-full sm:w-auto text-center cursor-pointer"
+              >
+                <span className="text-white font-bold text-base sm:text-lg md:text-xl">ULTIMATE MILLIONAIRE GUIDE</span>
+              </motion.div>
+            </Link>
           </div>
         </motion.div>
       </div>

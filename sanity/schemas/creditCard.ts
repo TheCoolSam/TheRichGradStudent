@@ -90,6 +90,27 @@ export default defineType({
       fieldset: 'basic',
     }),
     defineField({
+      name: 'issuer',
+      title: 'Card Issuer/Bank',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Chase', value: 'Chase' },
+          { title: 'American Express', value: 'American Express' },
+          { title: 'Citi', value: 'Citi' },
+          { title: 'Capital One', value: 'Capital One' },
+          { title: 'Discover', value: 'Discover' },
+          { title: 'Barclays', value: 'Barclays' },
+          { title: 'Wells Fargo', value: 'Wells Fargo' },
+          { title: 'US Bank', value: 'US Bank' },
+          { title: 'Bank of America', value: 'Bank of America' },
+        ],
+      },
+      description: 'Which bank or issuer provides this card?',
+      validation: (Rule) => Rule.required(),
+      fieldset: 'basic',
+    }),
+    defineField({
       name: 'affiliateLink',
       title: 'Affiliate Link',
       type: 'url',
@@ -362,6 +383,28 @@ export default defineType({
       },
       description: 'Which level does this card best fit?',
       validation: (Rule) => Rule.required(),
+      fieldset: 'metadata',
+    }),
+    defineField({
+      name: 'subCategory',
+      title: 'Pro Sub-Category (Optional)',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Business', value: 'business' },
+          { title: 'Luxury', value: 'luxury' }
+        ]
+      },
+      description: 'For Pro-level cards only: Is this a business or luxury card?',
+      hidden: ({ document }) => document?.category !== 'pro',
+      fieldset: 'metadata',
+    }),
+    defineField({
+      name: 'relatedCards',
+      title: 'Related Cards (Progression Path)',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'creditCard' }] }],
+      description: 'Cards that come before or after this one in a recommended path (same issuer/program)',
       fieldset: 'metadata',
     }),
     defineField({
