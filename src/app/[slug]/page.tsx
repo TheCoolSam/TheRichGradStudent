@@ -76,6 +76,37 @@ interface PageProps {
   }
 }
 
+async function getTopCardsByCategory(categories: string[]) {
+  if (!categories || categories.length === 0) return []
+  
+  try {
+    const topCards = await client.fetch<CreditCard[]>(
+      `*[_type == "creditCard" && category in $categories] | order(
+        select(
+          signupBonusRating == "great" => 4,
+          signupBonusRating == "rgs-wallet" => 4,
+          signupBonusRating == "good" => 3,
+          signupBonusRating == "poor" => 2,
+          true => 1
+        ) desc,
+        publishedAt desc
+      )[0..2]{
+        _id,
+        name,
+        slug,
+        image,
+        signupBonusValue,
+        signupBonusRating
+      }`,
+      { categories }
+    )
+    return topCards
+  } catch (error) {
+    console.error('Error fetching top cards:', error)
+    return []
+  }
+}
+
 async function getContent(slug: string): Promise<Post | CreditCard | Article | null> {
   try {
     // First, try to fetch as a blog post
@@ -306,7 +337,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
             {(content as Article).mainImage && (
               <div className="mb-8 rounded-xl overflow-hidden shadow-lg">
                 <Image
-                  src={urlFor((content as Article).mainImage).width(1200).height(675).url()}
+                  src={urlFor((content as Article).mainImage!).width(1200).height(675).url()}
                   alt={(content as Article).title}
                   width={1200}
                   height={675}
@@ -330,7 +361,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
               <div className="my-12 p-8 bg-gradient-to-br from-rgs-green to-emerald-700 rounded-xl">
                 <h2 className="text-3xl font-bold mb-6 text-white text-center">Top Rated Cards</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {topCards.map((card) => (
+                  {topCards.map((card: CreditCard) => (
                     <Link key={card._id} href={`/${card.slug.current}`}>
                       <div className="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105">
                         {card.image && (
