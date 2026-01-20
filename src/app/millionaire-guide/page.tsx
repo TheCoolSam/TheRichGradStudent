@@ -17,7 +17,15 @@ async function getCreditCards() {
   }`
 
   const cards = await client.fetch(query)
-  return cards
+  // Filter out cards without required fields
+  return cards.filter((card: any) => 
+    card._id && 
+    card.name && 
+    card.slug && 
+    card.category && 
+    card.issuer && 
+    card.image
+  )
 }
 
 export default async function MillionaireGuidePage() {

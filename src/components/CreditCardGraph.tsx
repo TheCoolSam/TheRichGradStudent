@@ -18,13 +18,13 @@ import Link from 'next/link'
 interface CreditCardNode {
   _id: string
   name: string
-  slug: { current: string }
+  slug: { current: string } | string
   category: 'new' | 'everyday' | 'travel' | 'pro'
   subCategory?: 'business' | 'luxury'
   issuer: string
   image: any
-  pointsProgramName: string
-  relatedCardsSlugs: string[]
+  pointsProgramName?: string
+  relatedCardsSlugs?: string[] | null
   rating: number
 }
 
@@ -69,6 +69,11 @@ function CardNode({ data }: any) {
 
 const nodeTypes = {
   cardNode: CardNode,
+}
+
+// Helper function to safely get slug string
+function getSlugString(slug: { current: string } | string): string {
+  return typeof slug === 'string' ? slug : slug.current
 }
 
 export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
@@ -132,7 +137,7 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
           },
           data: {
             name: card.name,
-            slug: card.slug.current,
+            slug: getSlugString(card.slug),
             image: card.image,
             issuer: card.issuer,
             pointsProgram: card.pointsProgramName,
@@ -148,9 +153,11 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
     const generatedEdges: Edge[] = []
     
     cards.forEach(card => {
-      if (card.relatedCardsSlugs && card.relatedCardsSlugs.length > 0) {
+      if (card.relatedCardsSlugs && Array.isArray(card.relatedCardsSlugs) && card.relatedCardsSlugs.length > 0) {
         card.relatedCardsSlugs.forEach(relatedSlug => {
-          const relatedCard = cards.find(c => c.slug.current === relatedSlug)
+          if (!relatedSlug) return // Skip if slug is null/undefined
+          
+          const relatedCard = cards.find(c => getSlugString(c.slug) === relatedSlug)
           if (relatedCard) {
             // Only create edge if cards are in adjacent levels
             const sourceLevel = card.category === 'pro' && card.subCategory 
@@ -196,8 +203,8 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
         levelCards.forEach(sourceCard => {
           cardsByLevel[nextLevel].forEach(targetCard => {
             // Connect if same issuer or same points program
-            if (sourceCard.issuer === targetCard.issuer || 
-                sourceCard.pointsProgramName === targetCard.pointsProgramName) {
+            if ((sourceCard.issuer && targetCard.issuer && sourceCard.issuer === targetCard.issuer) || 
+                (sourceCard.pointsProgramName && targetCard.pointsProgramName && sourceCard.pointsProgramName === targetCard.pointsProgramName)) {
               
               // Check if edge doesn't already exist
               const edgeExists = generatedEdges.some(
