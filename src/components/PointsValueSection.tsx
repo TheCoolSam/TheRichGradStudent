@@ -42,6 +42,7 @@ const getCardGap = () => {
 export default function PointsValueSection({ data }: PointsValueSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [dimensions, setDimensions] = useState({ width: 256, gap: 32 })
+  const [isDragging, setIsDragging] = useState(false)
 
   // Update dimensions on mount and resize
   React.useEffect(() => {
@@ -69,6 +70,19 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
 
   const handlePrevious = () => {
     setActiveIndex((prev) => prev - 1)
+  }
+
+  const handleDragEnd = (event: any, info: any) => {
+    setIsDragging(false)
+    const swipeThreshold = 50
+    
+    if (info.offset.x < -swipeThreshold) {
+      // Swiped left, go to next
+      handleNext()
+    } else if (info.offset.x > swipeThreshold) {
+      // Swiped right, go to previous
+      handlePrevious()
+    }
   }
 
   return (
@@ -116,7 +130,14 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
           </button>
 
           {/* Cards Container */}
-          <div className="relative h-[360px] sm:h-[400px] w-full overflow-hidden px-2 sm:px-0">
+          <motion.div 
+            className="relative h-[360px] sm:h-[400px] w-full overflow-hidden px-2 sm:px-0 cursor-grab active:cursor-grabbing"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={handleDragEnd}
+          >
             {sortedCards.map((card, i) => (
               <Card
                 key={card.name}
@@ -125,17 +146,19 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
                 activeIndex={activeIndex}
                 totalCards={sortedCards.length}
                 spacing={dimensions.width + dimensions.gap}
+                isDragging={isDragging}
               />
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
   )
 }
+  isDragging: boolean
+}
 
-// Individual Card Component
-interface CardProps {
+const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spacing, isDragg
   card: PointValueCard
   index: number
   activeIndex: number
