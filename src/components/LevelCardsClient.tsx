@@ -9,6 +9,7 @@ interface LevelCard {
   bullets: string[]
   gradient: string
   category: string
+  slug: string
 }
 
 interface LevelCardsClientProps {
@@ -34,8 +35,8 @@ export default function LevelCardsClient({ cards }: LevelCardsClientProps) {
             aria-label={`${card.title} credit card category`}
           >
           <Link 
-            href={`/blog?category=${card.category}`}
-            aria-label={`Learn about ${card.title} credit cards`}
+            href={`/${card.slug}`}
+            aria-label={`Read about ${card.title}`}
           >
             <div className={`h-full p-8 rounded-2xl bg-gradient-to-br ${card.gradient} text-white shadow-xl relative overflow-hidden group`}>
               {/* Animated background */}

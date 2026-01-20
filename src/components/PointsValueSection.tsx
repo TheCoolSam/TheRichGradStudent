@@ -1,17 +1,23 @@
 ﻿'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { client } from '@/lib/sanity'
 import { urlFor } from '@/lib/image'
 import Image from 'next/image'
 
 interface PointValueCard {
+  _id: string
   name: string
   logo?: any
   baseValue: number
   bestRedemption: number
   order: number
+  topCards?: CreditCardImage[]
+}
+
+interface CreditCardImage {
+  image: any
+  name: string
 }
 
 interface PointValueData {
@@ -19,69 +25,21 @@ interface PointValueData {
   cards: PointValueCard[]
 }
 
+interface PointsValueSectionProps {
+  data: PointValueData | null
+}
+
 // Configuration
 const CARD_WIDTH = 256
 const CARD_GAP = 32
 const SPACING = CARD_WIDTH + CARD_GAP // 288px
 
-export default function PointsValueSection() {
-  const [data, setData] = useState<PointValueData | null>(null)
+export default function PointsValueSection({ data }: PointsValueSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    async function fetchPointValues() {
-      try {
-        console.log('Fetching point values...')
-        const result = await client.fetch<PointValueData>(
-          `*[_type == "pointValue"][0]{
-            title,
-            cards[]{
-              name,
-              logo,
-              baseValue,
-              bestRedemption,
-              order
-            }
-          }`
-        )
-        console.log('Fetched result:', result)
-        if (result && result.cards && result.cards.length > 0) {
-          console.log('Setting data with', result.cards.length, 'cards')
-          setData(result)
-        } else {
-          console.log('No valid data found')
-        }
-      } catch (error) {
-        console.error('Error fetching point values:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchPointValues()
-  }, [])
-
-  // Show loading state for debugging
-  if (isLoading) {
-    return (
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-rgs-green to-rgs-dark-green">
-        <div className="max-w-7xl mx-auto text-center text-white">
-          <p>Loading points values...</p>
-        </div>
-      </section>
-    )
-  }
-
-  // Show message if no data
+  // Don't render if no data
   if (!data || !data.cards || data.cards.length === 0) {
-    return (
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-rgs-green to-rgs-dark-green">
-        <div className="max-w-7xl mx-auto text-center text-white">
-          <p>No points programs configured yet. Add them in Sanity!</p>
-        </div>
-      </section>
-    )
+    return null
   }
 
   const sortedCards = [...data.cards].sort((a, b) => (a.order || 0) - (b.order || 0))
@@ -216,7 +174,7 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
           </div>
         )}
         <h3 className="font-bold text-lg mb-2 text-rgs-black">{card.name}</h3>
-        <div className="space-y-1 text-sm flex-grow">
+        <div className="space-y-1 text-sm mb-4">
           <p className="text-gray-600">
             Value: <span className="font-bold text-rgs-green">{card.baseValue}¢</span>
           </p>
@@ -225,6 +183,41 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
             <span className="font-bold text-rgs-green">{card.bestRedemption}¢</span>
           </p>
         </div>
+
+        {/* Credit Card Pyramid */}
+        {card.topCards && card.topCards.length > 0 && (
+          <div className="mt-auto">
+            <p className="text-xs text-gray-500 mb-2 text-center">Top Rated Cards</p>
+            <div className="flex flex-col items-center gap-1">
+              {/* Top card */}
+              {card.topCards[0] && (
+                <div className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
+                  <Image
+                    src={urlFor(card.topCards[0].image).width(128).height(80).url()}
+                    alt={card.topCards[0].name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              {/* Bottom two cards */}
+              {card.topCards.length > 1 && (
+                <div className="flex gap-1">
+                  {card.topCards.slice(1, 3).map((creditCard, idx) => (
+                    <div key={idx} className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
+                      <Image
+                        src={urlFor(creditCard.image).width(128).height(80).url()}
+                        alt={creditCard.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </motion.div>
   )

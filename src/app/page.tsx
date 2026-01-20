@@ -1,11 +1,68 @@
 import React from 'react'
 import Link from 'next/link'
+import { client } from '@/lib/sanity'
 import PointsValueSection from '@/components/PointsValueSection'
 import LevelCardsClient from '@/components/LevelCardsClient'
 import HeroSectionClient from '@/components/HeroSectionClient'
 import TeamSectionClient from '@/components/TeamSectionClient'
 import CTASectionClient from '@/components/CTASectionClient'
 import SupportSectionClient from '@/components/SupportSectionClient'
+
+export const revalidate = 60
+
+async function getPointsData() {
+  try {
+    const pointsPrograms = await client.fetch<any[]>(
+      `*[_type == "pointsProgram"] | order(order asc){
+        _id,
+        name,
+        "slug": slug.current,
+        logo,
+        baseValue,
+        bestRedemption,
+        order
+      }`
+    )
+    
+    if (!pointsPrograms || pointsPrograms.length === 0) {
+      return null
+    }
+    
+    const cardsWithTopRated = await Promise.all(
+      pointsPrograms.map(async (program: any) => {
+        const topCards = await client.fetch<any[]>(
+          `*[_type == "creditCard" && references($programId)] | order(
+            select(
+              signupBonusRating == "great" => 4,
+              signupBonusRating == "rgs-wallet" => 4,
+              signupBonusRating == "good" => 3,
+              signupBonusRating == "poor" => 2,
+              true => 1
+            ) desc,
+            publishedAt desc
+          )[0..2]{
+            name,
+            image
+          }`,
+          { programId: program._id }
+        )
+        
+        return {
+          ...program,
+          topCards
+        }
+      })
+    )
+    
+    return {
+      title: 'Maximize Your Points Value',
+      cards: cardsWithTopRated
+    }
+  } catch (error) {
+    console.error('Error fetching point values:', error)
+    return null
+  }
+}
 
 const levelCards = [
   {
@@ -16,7 +73,8 @@ const levelCards = [
       'Get student credit cards'
     ],
     gradient: 'from-emerald-600 to-green-700',
-    category: 'new'
+    category: 'new',
+    slug: 'im-new-here'
   },
   {
     title: 'Every Day Earning',
@@ -26,7 +84,8 @@ const levelCards = [
       '5% cashback'
     ],
     gradient: 'from-green-600 to-emerald-700',
-    category: 'everyday'
+    category: 'everyday',
+    slug: 'everyday-earning'
   },
   {
     title: 'Travel Cards',
@@ -36,7 +95,8 @@ const levelCards = [
       'Travel in style'
     ],
     gradient: 'from-teal-600 to-cyan-700',
-    category: 'travel'
+    category: 'travel',
+    slug: 'travel-cards'
   },
   {
     title: 'Credit Card Pro',
@@ -46,11 +106,14 @@ const levelCards = [
       'Earn large bonuses'
     ],
     gradient: 'from-cyan-600 to-blue-700',
-    category: 'pro'
+    category: 'pro',
+    slug: 'credit-card-pro'
   }
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const pointsData = await getPointsData()
+  
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -71,7 +134,7 @@ export default function HomePage() {
       </section>
 
       {/* Points Value Section */}
-      <PointsValueSection />
+      <PointsValueSection data={pointsData} />
 
       {/* Buy Us a Coffee Section */}
       <SupportSectionClient />

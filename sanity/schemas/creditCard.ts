@@ -84,8 +84,8 @@ export default defineType({
       name: 'pointsProgram',
       title: 'Points Program',
       type: 'reference',
-      to: [{type: 'pointValue'}],
-      description: 'Which points program does this card earn? (Links to Points Value carousel)',
+      to: [{type: 'pointsProgram'}],
+      description: 'Which points program does this card earn? (e.g., Chase Ultimate Rewards)',
       validation: (Rule) => Rule.required(),
       fieldset: 'basic',
     }),
@@ -346,6 +346,22 @@ export default defineType({
       type: 'array',
       of: [{type: 'reference', to: {type: 'tag'}}],
       description: 'Add relevant tags for better organization',
+      fieldset: 'metadata',
+    }),
+    defineField({
+      name: 'category',
+      title: 'Experience Level',
+      type: 'string',
+      options: {
+        list: [
+          { title: "I'm New Here", value: 'new' },
+          { title: 'Everyday Earning', value: 'everyday' },
+          { title: 'Travel Cards', value: 'travel' },
+          { title: 'Credit Card Pro', value: 'pro' }
+        ]
+      },
+      description: 'Which level does this card best fit?',
+      validation: (Rule) => Rule.required(),
       fieldset: 'metadata',
     }),
     defineField({

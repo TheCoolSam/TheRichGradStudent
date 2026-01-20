@@ -9,13 +9,15 @@ The points value carousel now displays the **top 3 credit cards** for each point
 ## 📸 Card Display
 
 Each points program card in the carousel shows:
+
 - **Program logo** (top)
-- **Program name** 
+- **Program name**
 - **Base value** (e.g., 1.25¢ per point)
 - **Best redemption value** (e.g., 2.5¢ per point)
 - **Top 3 credit cards** in pyramid formation (bottom)
 
 ### Pyramid Layout:
+
 ```
      [Card 1]        ← Top rated card (centered)
    [Card 2] [Card 3]  ← 2nd and 3rd best cards
@@ -39,13 +41,16 @@ If ratings are tied, cards are sorted by **Published Date** (newest first).
 ## 🔗 Setting Up the Connection
 
 ### Step 1: Create Points Programs
+
 In Sanity Studio, go to **Point Values** and create programs:
+
 - Chase Ultimate Rewards
 - Amex Membership Rewards
 - Capital One Miles
 - etc.
 
 Make sure each has:
+
 - Name
 - Logo
 - Base Value
@@ -53,14 +58,18 @@ Make sure each has:
 - Display Order
 
 ### Step 2: Create Credit Cards
+
 In Sanity Studio, go to **Credit Card Reviews** and:
+
 1. Fill out all card details
 2. **Select the Points Program** in the dropdown
 3. Set the **Signup Bonus Rating** (Great/Good/Poor/RGS Wallet)
 4. Publish the card
 
 ### Step 3: Automatic Display
+
 The carousel will automatically:
+
 - Find all cards linked to each points program
 - Rank them by rating
 - Show the top 3 in the pyramid
@@ -71,6 +80,7 @@ The carousel will automatically:
 ## 📝 Example Setup
 
 ### Point Value Document:
+
 ```
 Name: Chase Ultimate Rewards
 Base Value: 1.25
@@ -79,6 +89,7 @@ Order: 1
 ```
 
 ### Credit Cards:
+
 ```
 Card 1: Chase Sapphire Preferred
 Points Program: → Chase Ultimate Rewards
@@ -118,6 +129,7 @@ The pyramid will display these 3 cards under "Chase Ultimate Rewards" in the car
 ## 🔄 How Updates Work
 
 When you:
+
 1. ✅ Publish a new credit card → Carousel updates automatically
 2. ✅ Change a card's rating → Pyramid reorders on next page load
 3. ✅ Add a new points program → New carousel card appears

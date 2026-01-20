@@ -6,16 +6,20 @@ import { urlFor } from '@/lib/image'
 
 export const revalidate = 60
 
-async function getCreditCards() {
+async function getCreditCards(category?: string) {
   try {
+    // Build query with optional category filter
+    const categoryFilter = category ? `&& category == "${category}"` : ''
+    
     // Fetch credit card reviews
     const cards = await client.fetch<CreditCard[]>(`
-      *[_type == "creditCard"] | order(name asc){
+      *[_type == "creditCard" ${categoryFilter}] | order(name asc){
         _id,
         name,
         slug,
         image,
         publishedAt,
+        category,
         "author": author->{name, role}
       }
     `)
@@ -27,14 +31,36 @@ async function getCreditCards() {
   }
 }
 
-export default async function CreditCardsPage() {
-  const { cards } = await getCreditCards()
+export default async function CreditCardsPage({
+  searchParams,
+}: {
+  searchParams: { category?: string }
+}) {
+  const category = searchParams.category
+  const { cards } = await getCreditCards(category)
+
+  const categoryTitles: Record<string, string> = {
+    'new': "I'm New Here",
+    'everyday': 'Everyday Earning',
+    'travel': 'Travel Cards',
+    'pro': 'Credit Card Pro'
+  }
 
   return (
     <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Credit Card Reviews</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            {category ? `${categoryTitles[category]} Credit Cards` : 'Credit Card Reviews'}
+          </h1>
+          {category && (
+            <Link 
+              href="/credit-cards" 
+              className="text-rgs-green hover:text-rgs-green/80 inline-flex items-center gap-2"
+            >
+              ← View All Cards
+            </Link>
+          )}
         </div>
 
         {cards.length > 0 ? (

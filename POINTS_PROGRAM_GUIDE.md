@@ -19,13 +19,14 @@ This is where you define the value of different points programs.
 **Location:** Go to Sanity Studio → **Point Values**
 
 **Create ONE document with:**
+
 - **Section Title**: "Maximize Your Points Value"
 - **Cards**: Add one card for each points program
 
 **Example Cards:**
 
 | Program Name      | Base Value (¢) | Best Redemption (¢) | Display Order |
-|-------------------|----------------|---------------------|---------------|
+| ----------------- | -------------- | ------------------- | ------------- |
 | Chase             | 2              | 7                   | 1             |
 | Bilt              | 2              | 4                   | 2             |
 | Capital One       | 1.5            | 6                   | 3             |
@@ -48,6 +49,7 @@ When creating a credit card review, you now select which points program it uses.
 **New Field: "Points Program"**
 
 You'll see a dropdown with these options:
+
 - **Chase Ultimate Rewards** → Links to "Chase" in Point Values
 - **Bilt Rewards** → Links to "Bilt" in Point Values
 - **Capital One Miles** → Links to "Capital One" in Point Values
@@ -90,16 +92,19 @@ You'll see a dropdown with these options:
 ### **The names MUST match!**
 
 For the connection to work automatically in the future:
+
 - If you add a new points program to the **Points Program** dropdown in Credit Card Reviews
 - You should also add a matching card to **Point Values**
 
 **Example:**
+
 - Credit Card dropdown: "Citi ThankYou Points"
 - Point Values card name: "Citi"
 
 ### **Updating Point Values**
 
 When you change a points value in Sanity (e.g., update Chase from 2¢ to 2.5¢):
+
 - ✅ Homepage carousel updates automatically (refresh page)
 - ✅ All cards using that program stay linked
 - ✅ No need to update individual card reviews
@@ -111,6 +116,7 @@ When you change a points value in Sanity (e.g., update Chase from 2¢ to 2.5¢):
 ### On Credit Card Pages:
 
 **Quick Info Box** now shows:
+
 ```
 Quick Info
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━

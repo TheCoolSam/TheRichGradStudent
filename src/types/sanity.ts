@@ -43,7 +43,48 @@ export interface Post {
   excerpt?: string
 }
 
+export interface Article {
+  _id: string
+  _type: 'article'
+  title: string
+  slug: {
+    current: string
+  }
+  mainImage?: {
+    asset: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+  author?: Author
+  publishedAt: string
+  body: any[]
+  categories?: string[]
+  featured?: boolean
+  metaDescription?: string
+  excerpt?: string
+}
+
 export type Rating = 'great' | 'good' | 'poor' | 'rgs-wallet'
+
+export interface PointsProgram {
+  _id: string
+  _type: 'pointsProgram'
+  name: string
+  slug: {
+    current: string
+  }
+  logo: {
+    asset: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+  baseValue: number
+  bestRedemption: number
+  order: number
+  description?: string
+}
 
 export interface CreditCard {
   _id: string
@@ -64,6 +105,7 @@ export interface CreditCard {
   aprOffer?: string
   hasSpendingCap: boolean
   pointsProgram?: string
+  category?: 'new' | 'everyday' | 'travel' | 'pro'
   
   // Value table data
   signupBonusValue?: string

@@ -1,7 +1,8 @@
 import { client } from '@/lib/sanity'
-import { Post, CreditCard } from '@/types/sanity'
+import { Post, CreditCard, Article } from '@/types/sanity'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { urlFor } from '@/lib/image'
 import { PortableText, type PortableTextComponents } from 'next-sanity'
 import Disclaimer from '@/components/Disclaimer'
@@ -75,7 +76,7 @@ interface PageProps {
   }
 }
 
-async function getContent(slug: string): Promise<Post | CreditCard | null> {
+async function getContent(slug: string): Promise<Post | CreditCard | Article | null> {
   try {
     // First, try to fetch as a blog post
     const post = await client.fetch<Post | null>(
@@ -91,6 +92,21 @@ async function getContent(slug: string): Promise<Post | CreditCard | null> {
     )
 
     if (post) return post
+
+    // Try to fetch as an article
+    const article = await client.fetch<Article | null>(
+      `*[_type == "article" && slug.current == $slug][0]{
+        ...,
+        author->{
+          name,
+          role,
+          image
+        }
+      }`,
+      { slug }
+    )
+
+    if (article) return article
 
     // If not found, try to fetch as a credit card review
     const creditCard = await client.fetch<CreditCard | null>(
@@ -115,6 +131,11 @@ async function getContent(slug: string): Promise<Post | CreditCard | null> {
 
 export default async function ContentPage({ params }: PageProps) {
   const content = await getContent(params.slug)
+  
+  // Fetch top cards if this is an article with categories
+  const topCards = content && 'categories' in content && content.categories
+    ? await getTopCardsByCategory(content.categories)
+    : []
 
   if (!content) {
     return (
@@ -153,6 +174,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
 
   const isCreditCard = content._type === 'creditCard'
   const isPost = content._type === 'post'
+  const isArticle = content._type === 'article'
 
   return (
     <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
@@ -274,6 +296,67 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
             <div className="my-12 text-center">
               <DonationButton />
             </div>
+          </>
+        )}
+
+        {/* Article Specific Content */}
+        {isArticle && (
+          <>
+            {/* Main Image */}
+            {(content as Article).mainImage && (
+              <div className="mb-8 rounded-xl overflow-hidden shadow-lg">
+                <Image
+                  src={urlFor((content as Article).mainImage).width(1200).height(675).url()}
+                  alt={(content as Article).title}
+                  width={1200}
+                  height={675}
+                  className="w-full"
+                />
+              </div>
+            )}
+
+            {/* Body Content */}
+            {(content as Article).body && (
+              <div className="prose prose-lg max-w-none mb-12">
+                <PortableText 
+                  value={(content as Article).body}
+                  components={portableTextComponents}
+                />
+              </div>
+            )}
+
+            {/* Top Cards Section */}
+            {topCards.length > 0 && (
+              <div className="my-12 p-8 bg-gradient-to-br from-rgs-green to-emerald-700 rounded-xl">
+                <h2 className="text-3xl font-bold mb-6 text-white text-center">Top Rated Cards</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {topCards.map((card) => (
+                    <Link key={card._id} href={`/${card.slug.current}`}>
+                      <div className="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        {card.image && (
+                          <div className="relative h-40 bg-gradient-to-br from-amber-100 to-orange-100">
+                            <Image
+                              src={urlFor(card.image).width(300).height(200).url()}
+                              alt={card.name}
+                              fill
+                              className="object-contain p-4"
+                            />
+                          </div>
+                        )}
+                        <div className="p-4">
+                          <h3 className="font-bold text-lg mb-2">{card.name}</h3>
+                          {card.signupBonusValue && (
+                            <p className="text-sm text-gray-600">
+                              <span className="font-semibold">Bonus:</span> {card.signupBonusValue}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
 
