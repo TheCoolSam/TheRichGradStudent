@@ -192,8 +192,8 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
   const cardWidth = typeof window !== 'undefined' && window.innerWidth < 640 ? 'w-[200px]' : 'w-64'
 
   return (
-    <motion.div{`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${isDragging ? 'pointer-events-none' : ''}`}
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+    <motion.div
+      className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${isDragging ? 'pointer-events-none' : ''}`}
       initial={false}
       animate={{
         x: `calc(-50% + ${x}px)`,
