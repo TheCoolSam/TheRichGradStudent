@@ -29,13 +29,32 @@ interface PointsValueSectionProps {
   data: PointValueData | null
 }
 
-// Configuration
-const CARD_WIDTH = 256
-const CARD_GAP = 32
-const SPACING = CARD_WIDTH + CARD_GAP // 288px
+// Configuration - responsive card widths
+const getCardWidth = () => {
+  if (typeof window === 'undefined') return 256
+  return window.innerWidth < 640 ? 200 : 256
+}
+const getCardGap = () => {
+  if (typeof window === 'undefined') return 32
+  return window.innerWidth < 640 ? 20 : 32
+}
 
 export default function PointsValueSection({ data }: PointsValueSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [dimensions, setDimensions] = useState({ width: 256, gap: 32 })
+
+  // Update dimensions on mount and resize
+  React.useEffect(() => {
+    const updateDimensions = () => {
+      setDimensions({
+        width: getCardWidth(),
+        gap: getCardGap()
+      })
+    }
+    updateDimensions()
+    window.addEventListener('resize', updateDimensions)
+    return () => window.removeEventListener('resize', updateDimensions)
+  }, [])
 
   // Don't render if no data
   if (!data || !data.cards || data.cards.length === 0) {
@@ -77,10 +96,10 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
           {/* Left Arrow */}
           <button
             onClick={handlePrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-3 rounded-full shadow-lg transition-all hover:scale-110"
+            className="absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg transition-all hover:scale-110"
             aria-label="Previous cards"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
@@ -88,16 +107,16 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
           {/* Right Arrow */}
           <button
             onClick={handleNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-3 rounded-full shadow-lg transition-all hover:scale-110"
+            className="absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg transition-all hover:scale-110"
             aria-label="Next cards"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
 
           {/* Cards Container */}
-          <div className="relative h-[400px] w-full overflow-hidden">
+          <div className="relative h-[360px] sm:h-[400px] w-full overflow-hidden px-2 sm:px-0">
             {sortedCards.map((card, i) => (
               <Card
                 key={card.name}
@@ -105,6 +124,7 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
                 index={i}
                 activeIndex={activeIndex}
                 totalCards={sortedCards.length}
+                spacing={dimensions.width + dimensions.gap}
               />
             ))}
           </div>
@@ -120,9 +140,10 @@ interface CardProps {
   index: number
   activeIndex: number
   totalCards: number
+  spacing: number
 }
 
-const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => {
+const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spacing }) => {
   // Calculate effective index with proper modulo for negative numbers
   const effectiveIndex = ((activeIndex % totalCards) + totalCards) % totalCards
   
@@ -140,10 +161,13 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
   const isCenter = offset === 0
   const isVisible = Math.abs(offset) <= 1
   
-  const x = offset * SPACING
+  const x = offset * spacing
   const scale = isCenter ? 1.1 : 0.95
   const opacity = isCenter ? 1 : isVisible ? 0.7 : 0
   const zIndex = isCenter ? 10 : 1
+  
+  // Responsive card width
+  const cardWidth = typeof window !== 'undefined' && window.innerWidth < 640 ? 'w-[200px]' : 'w-64'
 
   return (
     <motion.div
@@ -162,9 +186,9 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
         damping: 20,
       }}
     >
-      <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-100 w-64 h-[320px] flex flex-col">
+      <div className={`bg-white rounded-lg p-4 sm:p-6 shadow-lg border border-gray-100 ${cardWidth} h-[300px] sm:h-[320px] flex flex-col`}>
         {card.logo && (
-          <div className="relative h-12 mb-4">
+          <div className="relative h-10 sm:h-12 mb-3 sm:mb-4">
             <Image
               src={urlFor(card.logo).width(100).height(50).url()}
               alt={card.name}
@@ -173,8 +197,8 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards }) => 
             />
           </div>
         )}
-        <h3 className="font-bold text-lg mb-2 text-rgs-black">{card.name}</h3>
-        <div className="space-y-1 text-sm mb-4">
+        <h3 className="font-bold text-base sm:text-lg mb-2 text-rgs-black">{card.name}</h3>
+        <div className="space-y-1 text-xs sm:text-sm mb-3 sm:mb-4">
           <p className="text-gray-600">
             Value: <span className="font-bold text-rgs-green">{card.baseValue}¢</span>
           </p>

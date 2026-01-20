@@ -180,50 +180,52 @@ export default function CardValueTable({
 
   return (
     <div className="my-8">
-      <h2 className="text-2xl font-bold mb-4">RGS Value Table</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4">RGS Value Table</h2>
       
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 shadow-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                Cash Back / Points
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                Points Value (2cpp)
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                Max Points Value (7cpp)
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {rows.map((row, index) => (
-              <tr key={index} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {row.category}
-                  {row.hasAsterisk && <span className="text-blue-600">**</span>}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${getRatingColor(row.rating)}`}>
-                  {row.cashBack}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${getRatingColor(row.rating)}`}>
-                  {row.points2cpp}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${getRatingColor(row.rating)}`}>
-                  {row.points7cpp}
-                </td>
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <div className="inline-block min-w-full align-middle px-4 sm:px-0">
+          <table className="min-w-full bg-white border border-gray-300 shadow-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                  Category
+                </th>
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                  Cash Back / Points
+                </th>
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                  Points Value (2cpp)
+                </th>
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                  Max Points Value (7cpp)
+                </th>
               </tr>
-            ))}
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {rows.map((row, index) => (
+                <tr key={index} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                    {row.category}
+                    {row.hasAsterisk && <span className="text-blue-600">**</span>}
+                  </td>
+                  <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm ${getRatingColor(row.rating)}`}>
+                    {row.cashBack}
+                  </td>
+                  <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm ${getRatingColor(row.rating)}`}>
+                    {row.points2cpp}
+                  </td>
+                  <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm ${getRatingColor(row.rating)}`}>
+                    {row.points7cpp}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
+        </div>
       </div>
       
       {card.hasSpendingCap && (
-        <p className="mt-4 text-sm text-gray-600 italic">
+        <p className="mt-4 text-xs sm:text-sm text-gray-600 italic px-4 sm:px-0">
           ** Spending cap applies on these categories
         </p>
       )}
