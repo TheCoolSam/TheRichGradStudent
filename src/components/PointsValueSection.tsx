@@ -155,18 +155,17 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
     </section>
   )
 }
-  isDragging: boolean
-}
 
-const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spacing, isDragg
+interface CardProps {
   card: PointValueCard
   index: number
   activeIndex: number
   totalCards: number
   spacing: number
+  isDragging: boolean
 }
 
-const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spacing }) => {
+const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spacing, isDragging }) => {
   // Calculate effective index with proper modulo for negative numbers
   const effectiveIndex = ((activeIndex % totalCards) + totalCards) % totalCards
   
