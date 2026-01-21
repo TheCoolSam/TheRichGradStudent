@@ -10,6 +10,7 @@ import CardValueTable from '@/components/CardValueTable'
 import DonationButton from '@/components/DonationButton'
 import QuickStatsDashboard from '@/components/QuickStatsDashboard'
 import RecommendedPosts from '@/components/RecommendedPosts'
+import BlogContent from '@/components/BlogContent'
 import { getRecommendedContent } from '@/lib/recommendations'
 
 // Revalidate every 60 seconds
@@ -488,15 +489,17 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
         {/* Blog Post Specific Content */}
         {isPost && (
           <>
-            {/* Body Content */}
-            {(content as Post).body && (
-              <div className="prose prose-lg max-w-none mb-12">
-                <PortableText 
-                  value={(content as Post).body}
-                  components={portableTextComponents}
-                />
-              </div>
-            )}
+            <BlogContent post={content as Post}>
+              <PortableText 
+                value={(content as Post).body}
+                components={portableTextComponents}
+              />
+            </BlogContent>
+
+            {/* Donation Button */}
+            <div className="my-12">
+              <DonationButton />
+            </div>
           </>
         )}
 
