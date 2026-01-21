@@ -21,9 +21,9 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
       case 'article':
         return `/articles/${post.slug}`
       case 'post':
-        return `/blog/${post.slug}`
+        return `/${post.slug}`
       case 'creditCard':
-        return `/credit-cards/${post.slug}`
+        return `/${post.slug}`
       default:
         return '#'
     }
