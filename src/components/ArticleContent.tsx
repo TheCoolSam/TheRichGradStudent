@@ -36,13 +36,15 @@ export default function ArticleContent({ article, children }: ArticleContentProp
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <time dateTime={article.publishedAt}>
-            {new Date(article.publishedAt).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
-          </time>
+          {article.publishedAt && (
+            <time dateTime={article.publishedAt}>
+              {new Date(article.publishedAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+          )}
           
           {article.author && (
             <>
