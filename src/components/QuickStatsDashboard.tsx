@@ -2,12 +2,26 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { CreditCard } from '@/types/sanity'
+import { Rating } from '@/types/sanity'
 import RatingBadge from './RatingBadge'
 import { formatEarningRate } from '@/utils/cardMath'
 
+interface CardStats {
+  annualFee: number
+  annualCredits: number
+  rewardType?: string
+  travelMultiplier?: number
+  groceryMultiplier?: number
+  gasMultiplier?: number
+  diningMultiplier?: number
+  pharmacyMultiplier?: number
+  otherMultiplier?: number
+  signupBonusValue?: string
+  signupBonusRating?: Rating
+}
+
 interface QuickStatsDashboardProps {
-  card: CreditCard
+  card: CardStats
 }
 
 export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) {
