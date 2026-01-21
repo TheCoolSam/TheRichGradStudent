@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import ReactFlow, {
   Node,
   Edge,
@@ -15,7 +16,6 @@ import ReactFlow, {
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { urlFor } from '@/lib/image'
-import Link from 'next/link'
 
 interface CreditCardNode {
   _id: string
@@ -36,6 +36,7 @@ interface CreditCardGraphProps {
 
 // Custom Card Node Component
 function CardNode({ data }: any) {
+  const router = useRouter()
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -47,6 +48,11 @@ function CardNode({ data }: any) {
 
   const cardWidth = isMobile ? 160 : 280
   const cardHeight = isMobile ? 100 : 175
+
+  const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation()
+    router.push(`/${data.slug}`)
+  }
 
   // Get category colors
   const getCategoryColors = (category: string, subCategory?: string) => {
@@ -103,7 +109,7 @@ function CardNode({ data }: any) {
   return (
     <>
       <Handle type="target" position={Position.Top} className="opacity-0" />
-      <Link href={`/${data.slug}`} className="block group">
+      <div className="block group" onClick={handleClick} onTouchEnd={handleClick}>
         <div 
           className={`bg-gradient-to-br ${colors.gradient} rounded-2xl shadow-2xl ${colors.shadow} overflow-hidden border-4 ${colors.border} hover:border-white hover:scale-110 transition-all duration-300 cursor-pointer backdrop-blur-sm relative`}
           style={{ width: cardWidth, height: cardHeight }}
@@ -126,7 +132,7 @@ function CardNode({ data }: any) {
             {data.name}
           </p>
         </div>
-      </Link>
+      </div>
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </>
   )
@@ -229,7 +235,7 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
             category: card.category,
             subCategory: card.subCategory,
           },
-          draggable: true,
+          draggable: !isMobile,
         })
       })
     })
