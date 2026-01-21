@@ -51,6 +51,21 @@ export default defineType({
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
+      name: 'mainArticleType',
+      title: 'Main Article Type',
+      type: 'string',
+      description: '⭐ Set this ONLY for the 5 main homepage articles. Leave blank for all other articles.',
+      options: {
+        list: [
+          {title: "You're Already In (Most Important)", value: 'already-in'},
+          {title: "I'm New Here", value: 'new'},
+          {title: 'Every Day Earning', value: 'everyday'},
+          {title: 'Travel Cards', value: 'travel'},
+          {title: 'Credit Card Pro', value: 'pro'},
+        ],
+      },
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured Article',
       type: 'boolean',

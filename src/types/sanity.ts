@@ -60,6 +60,7 @@ export interface Article {
   publishedAt: string
   body: any[]
   categories?: string[]
+  mainArticleType?: 'already-in' | 'new' | 'everyday' | 'travel' | 'pro'
   featured?: boolean
   metaDescription?: string
   excerpt?: string
