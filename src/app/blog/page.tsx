@@ -8,9 +8,9 @@ export const revalidate = 60
 
 async function getBlogContent() {
   try {
-    // Fetch blog posts with category "blog-post"
+    // Fetch blog posts - get all posts that have a body and are published
     const posts = await client.fetch<Post[]>(`
-      *[_type == "post" && "blog-post" in categories] | order(publishedAt desc){
+      *[_type == "post" && defined(body) && defined(publishedAt)] | order(publishedAt desc){
         _id,
         title,
         slug,

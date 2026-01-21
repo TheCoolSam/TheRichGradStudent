@@ -9,7 +9,7 @@ import { formatEarningRate } from '@/utils/cardMath'
 interface CardStats {
   annualFee: number
   annualCredits: number
-  rewardType?: string
+  rewardType?: 'points' | 'cashback'
   travelMultiplier?: number
   groceryMultiplier?: number
   gasMultiplier?: number
@@ -27,17 +27,17 @@ interface QuickStatsDashboardProps {
 export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) {
   // Calculate net annual fee
   const netAnnualFee = card.annualFee - card.annualCredits
-  const rewardType = card.rewardType || 'points' // Default to points if not specified
+  const rewardType: 'points' | 'cashback' = card.rewardType || 'points' // Default to points if not specified
 
   // Find the best earning rate (excluding signup bonus)
   const earningRates = [
-    card.travelMultiplier,
-    card.groceryMultiplier,
-    card.gasMultiplier,
-    card.diningMultiplier,
-    card.pharmacyMultiplier,
-    card.otherMultiplier
-  ].filter(rate => rate !== undefined && rate > 0)
+    card.travelMultiplier || 0,
+    card.groceryMultiplier || 0,
+    card.gasMultiplier || 0,
+    card.diningMultiplier || 0,
+    card.pharmacyMultiplier || 0,
+    card.otherMultiplier || 0
+  ].filter(rate => rate > 0)
 
   const bestEarnRate = earningRates.length > 0 ? Math.max(...earningRates) : 1
 
