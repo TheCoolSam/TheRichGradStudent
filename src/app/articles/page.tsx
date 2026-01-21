@@ -40,7 +40,3 @@ export default async function ArticlesPage() {
     </main>
   )
 }
-
-    </main>
-  )
-}
