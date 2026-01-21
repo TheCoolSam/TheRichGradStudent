@@ -48,20 +48,76 @@ function CardNode({ data }: any) {
   const cardWidth = isMobile ? 160 : 280
   const cardHeight = isMobile ? 100 : 175
 
+  // Get category colors
+  const getCategoryColors = (category: string, subCategory?: string) => {
+    const effectiveCategory = category === 'pro' && subCategory ? `pro-${subCategory}` : category
+    
+    switch (effectiveCategory) {
+      case 'new':
+        return {
+          gradient: 'from-blue-600 via-blue-500 to-blue-600',
+          border: 'border-blue-400',
+          shadow: 'shadow-blue-500/50',
+          glow: 'rgba(59, 130, 246, 0.5)'
+        }
+      case 'everyday':
+        return {
+          gradient: 'from-green-600 via-green-500 to-green-600',
+          border: 'border-green-400',
+          shadow: 'shadow-green-500/50',
+          glow: 'rgba(34, 197, 94, 0.5)'
+        }
+      case 'travel':
+        return {
+          gradient: 'from-yellow-600 via-yellow-500 to-yellow-600',
+          border: 'border-yellow-400',
+          shadow: 'shadow-yellow-500/50',
+          glow: 'rgba(234, 179, 8, 0.5)'
+        }
+      case 'pro-business':
+        return {
+          gradient: 'from-purple-600 via-purple-500 to-purple-600',
+          border: 'border-purple-400',
+          shadow: 'shadow-purple-500/50',
+          glow: 'rgba(168, 85, 247, 0.5)'
+        }
+      case 'pro-luxury':
+        return {
+          gradient: 'from-red-600 via-red-500 to-red-600',
+          border: 'border-red-400',
+          shadow: 'shadow-red-500/50',
+          glow: 'rgba(239, 68, 68, 0.5)'
+        }
+      default:
+        return {
+          gradient: 'from-gray-700 via-gray-600 to-gray-700',
+          border: 'border-gray-400',
+          shadow: 'shadow-gray-500/50',
+          glow: 'rgba(156, 163, 175, 0.5)'
+        }
+    }
+  }
+
+  const colors = getCategoryColors(data.category, data.subCategory)
+
   return (
     <>
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Link href={`/${data.slug}`} className="block group">
         <div 
-          className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-2xl overflow-hidden border-4 border-rgs-green/50 hover:border-rgs-light-green hover:shadow-rgs-green/30 transition-all duration-300 hover:scale-110 cursor-pointer backdrop-blur-sm"
+          className={`bg-gradient-to-br ${colors.gradient} rounded-2xl shadow-2xl ${colors.shadow} overflow-hidden border-4 ${colors.border} hover:border-white hover:scale-110 transition-all duration-300 cursor-pointer backdrop-blur-sm relative`}
           style={{ width: cardWidth, height: cardHeight }}
         >
+          {/* Animated glow effect */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+               style={{ boxShadow: `inset 0 0 30px ${colors.glow}` }} />
+          
           <div className="w-full h-full relative" style={{ aspectRatio: '16/10' }}>
             <img
               src={urlFor(data.image).width(560).height(350).quality(90).fit('fill').url()}
               alt={data.name}
-              className="w-full h-full object-contain mix-blend-screen p-2"
-              style={{ filter: 'drop-shadow(0 0 20px rgba(0, 255, 136, 0.3))' }}
+              className="w-full h-full object-contain mix-blend-lighten p-3 group-hover:scale-105 transition-transform duration-300"
+              style={{ filter: `drop-shadow(0 0 15px ${colors.glow})` }}
             />
           </div>
         </div>
@@ -83,6 +139,26 @@ const nodeTypes = {
 // Helper function to safely get slug string
 function getSlugString(slug: { current: string } | string): string {
   return typeof slug === 'string' ? slug : slug.current
+}
+
+// Helper function to get arrow color based on target category
+function getArrowColor(targetCategory: string, targetSubCategory?: string): string {
+  const effectiveCategory = targetCategory === 'pro' && targetSubCategory ? `pro-${targetSubCategory}` : targetCategory
+  
+  switch (effectiveCategory) {
+    case 'new':
+      return '#3b82f6' // blue-500
+    case 'everyday':
+      return '#22c55e' // green-500
+    case 'travel':
+      return '#eab308' // yellow-500
+    case 'pro-business':
+      return '#a855f7' // purple-500
+    case 'pro-luxury':
+      return '#ef4444' // red-500
+    default:
+      return '#00ff88' // rgs-green
+  }
 }
 
 export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
@@ -214,18 +290,19 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
 
             // Only connect adjacent levels
             if (Math.abs(sourceIdx - targetIdx) === 1) {
+              const arrowColor = getArrowColor(relatedCard.category, relatedCard.subCategory)
               generatedEdges.push({
                 id: `${card._id}-${relatedCard._id}`,
                 source: card._id,
                 target: relatedCard._id,
                 type: 'smoothstep',
                 animated: true,
-                style: { stroke: '#00ff88', strokeWidth: 3 },
+                style: { stroke: arrowColor, strokeWidth: 4 },
                 markerEnd: {
                   type: MarkerType.ArrowClosed,
-                  color: '#00ff88',
-                  width: 25,
-                  height: 25,
+                  color: arrowColor,
+                  width: 30,
+                  height: 30,
                 },
               })
             }
@@ -253,18 +330,19 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
               )
               
               if (!edgeExists) {
+                const arrowColor = getArrowColor(targetCard.category, targetCard.subCategory)
                 generatedEdges.push({
                   id: `auto-${sourceCard._id}-${targetCard._id}`,
                   source: sourceCard._id,
                   target: targetCard._id,
                   type: 'smoothstep',
                   animated: true,
-                  style: { stroke: '#00ff88', strokeWidth: 2, opacity: 0.7 },
+                  style: { stroke: arrowColor, strokeWidth: 3, opacity: 0.8 },
                   markerEnd: {
                     type: MarkerType.ArrowClosed,
-                    color: '#00ff88',
-                    width: 20,
-                    height: 20,
+                    color: arrowColor,
+                    width: 25,
+                    height: 25,
                   },
                 })
               }
