@@ -66,7 +66,7 @@ const portableTextComponents: PortableTextComponents = {
       )
     },
     creditCardLink: ({ children, value }: any) => {
-      const slug = value?.creditCard?.slug?.current || value?.creditCard
+      const slug = value?.creditCard
       if (!slug) return <>{children}</>
       return (
         <Link href={`/credit-cards/${slug}`} className="text-rgs-green hover:text-rgs-green/80 underline font-semibold">
@@ -75,7 +75,7 @@ const portableTextComponents: PortableTextComponents = {
       )
     },
     articleLink: ({ children, value }: any) => {
-      const slug = value?.article?.slug?.current || value?.article
+      const slug = value?.article
       if (!slug) return <>{children}</>
       return (
         <Link href={`/articles/${slug}`} className="text-blue-600 hover:text-blue-800 underline font-semibold">
@@ -84,7 +84,7 @@ const portableTextComponents: PortableTextComponents = {
       )
     },
     postLink: ({ children, value }: any) => {
-      const slug = value?.post?.slug?.current || value?.post
+      const slug = value?.post
       if (!slug) return <>{children}</>
       return (
         <Link href={`/blog/${slug}`} className="text-purple-600 hover:text-purple-800 underline font-semibold">
@@ -110,6 +110,24 @@ async function getArticle(slug: string): Promise<Article | null> {
     const article = await client.fetch<Article | null>(
       `*[_type == "article" && slug.current == $slug][0]{
         ...,
+        body[]{
+          ...,
+          markDefs[]{
+            ...,
+            _type == "creditCardLink" => {
+              ...,
+              "creditCard": creditCard->slug.current
+            },
+            _type == "articleLink" => {
+              ...,
+              "article": article->slug.current
+            },
+            _type == "postLink" => {
+              ...,
+              "post": post->slug.current
+            }
+          }
+        },
         author->{
           name,
           role,
