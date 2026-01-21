@@ -111,6 +111,22 @@ export default defineType({
       fieldset: 'basic',
     }),
     defineField({
+      name: 'rewardType',
+      title: 'Reward Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Points', value: 'points' },
+          { title: 'Cash Back', value: 'cashback' },
+        ],
+        layout: 'radio',
+      },
+      description: 'Does this card earn points or cash back? (Affects display: 2x vs 2%)',
+      validation: (Rule) => Rule.required(),
+      initialValue: 'points',
+      fieldset: 'basic',
+    }),
+    defineField({
       name: 'affiliateLink',
       title: 'Affiliate Link',
       type: 'url',

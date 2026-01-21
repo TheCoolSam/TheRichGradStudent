@@ -42,6 +42,20 @@ export function formatAsPercentage(value: number | null | undefined): string {
 }
 
 /**
+ * Format earning rate based on reward type
+ * @param value - The numeric value (multiplier)
+ * @param rewardType - 'points' or 'cashback'
+ * @returns Formatted string with proper suffix (e.g., "2x" or "2%")
+ */
+export function formatEarningRate(value: number | null | undefined, rewardType: 'points' | 'cashback'): string {
+  if (typeof value !== 'number' || isNaN(value)) {
+    return 'N/A'
+  }
+  const formattedValue = value % 1 === 0 ? `${value}` : `${value.toFixed(2)}`
+  return rewardType === 'points' ? `${formattedValue}x` : `${formattedValue}%`
+}
+
+/**
  * Get the CSS color class based on rating
  * @param rating - The rating value
  * @returns Tailwind CSS color class

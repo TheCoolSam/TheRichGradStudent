@@ -1,6 +1,6 @@
 import React from 'react'
 import { CreditCard } from '@/types/sanity'
-import { calculateAt2cpp, calculateAt7cpp, formatAsPercentage, getRatingColor } from '@/utils/cardMath'
+import { calculateAt2cpp, calculateAt7cpp, formatAsPercentage, formatEarningRate, getRatingColor } from '@/utils/cardMath'
 
 interface CardValueTableProps {
   card: CreditCard | null | undefined
@@ -113,21 +113,21 @@ export default function CardValueTable({
     },
     {
       category: 'Travel',
-      cashBack: formatAsPercentage(card.travelMultiplier),
+      cashBack: formatEarningRate(card.travelMultiplier, card.rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.travelMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.travelMultiplier)),
       rating: card.travelRating,
     },
     {
       category: 'Grocery',
-      cashBack: formatAsPercentage(card.groceryMultiplier),
+      cashBack: formatEarningRate(card.groceryMultiplier, card.rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.groceryMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.groceryMultiplier)),
       rating: card.groceryRating,
     },
     {
       category: 'Gas',
-      cashBack: formatAsPercentage(card.gasMultiplier),
+      cashBack: formatEarningRate(card.gasMultiplier, card.rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.gasMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.gasMultiplier)),
       rating: card.gasRating,
@@ -135,21 +135,21 @@ export default function CardValueTable({
     },
     {
       category: 'Dining',
-      cashBack: formatAsPercentage(card.diningMultiplier),
+      cashBack: formatEarningRate(card.diningMultiplier, card.rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.diningMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.diningMultiplier)),
       rating: card.diningRating,
     },
     {
       category: 'Pharmacy',
-      cashBack: formatAsPercentage(card.pharmacyMultiplier),
+      cashBack: formatEarningRate(card.pharmacyMultiplier, card.rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.pharmacyMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.pharmacyMultiplier)),
       rating: card.pharmacyRating,
     },
     {
       category: 'Other Purchases',
-      cashBack: formatAsPercentage(card.otherMultiplier),
+      cashBack: formatEarningRate(card.otherMultiplier, card.rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.otherMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.otherMultiplier)),
       rating: card.otherRating,
