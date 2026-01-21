@@ -75,8 +75,9 @@ export default defineType({
       type: 'image',
       options: {
         hotspot: true,
+        accept: 'image/png, image/jpeg, image/webp',
       },
-      description: 'High-quality image of the credit card (recommend 800x500px)',
+      description: '📐 IMPORTANT: Use images with 16:10 aspect ratio (e.g., 800x500px, 1600x1000px). Credit card images work best at this ratio. Minimum 800px wide for best quality.',
       validation: (Rule) => Rule.required(),
       fieldset: 'basic',
     }),

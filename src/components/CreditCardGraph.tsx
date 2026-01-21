@@ -10,6 +10,8 @@ import ReactFlow, {
   useEdgesState,
   MarkerType,
   Panel,
+  Handle,
+  Position,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { urlFor } from '@/lib/image'
@@ -43,27 +45,34 @@ function CardNode({ data }: any) {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  const cardWidth = isMobile ? 150 : 250
-  const cardHeight = isMobile ? 95 : 157
+  const cardWidth = isMobile ? 160 : 280
+  const cardHeight = isMobile ? 100 : 175
 
   return (
-    <Link href={`/${data.slug}`} className="block group">
-      <div 
-        className="bg-white rounded-lg shadow-xl overflow-hidden border-4 border-rgs-green hover:border-rgs-light-green transition-all duration-300 hover:scale-105 cursor-pointer"
-        style={{ width: cardWidth, height: cardHeight }}
-      >
-        <img
-          src={urlFor(data.image).width(cardWidth * 2).height(cardHeight * 2).url()}
-          alt={data.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="text-center mt-2 px-2">
-        <p className="text-white font-semibold text-xs sm:text-sm line-clamp-2">
-          {data.name}
-        </p>
-      </div>
-    </Link>
+    <>
+      <Handle type="target" position={Position.Top} className="opacity-0" />
+      <Link href={`/${data.slug}`} className="block group">
+        <div 
+          className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-2xl overflow-hidden border-4 border-rgs-green/50 hover:border-rgs-light-green hover:shadow-rgs-green/30 transition-all duration-300 hover:scale-110 cursor-pointer backdrop-blur-sm"
+          style={{ width: cardWidth, height: cardHeight }}
+        >
+          <div className="w-full h-full relative" style={{ aspectRatio: '16/10' }}>
+            <img
+              src={urlFor(data.image).width(560).height(350).quality(90).fit('fill').url()}
+              alt={data.name}
+              className="w-full h-full object-contain mix-blend-screen p-2"
+              style={{ filter: 'drop-shadow(0 0 20px rgba(0, 255, 136, 0.3))' }}
+            />
+          </div>
+        </div>
+        <div className="text-center mt-2 px-2">
+          <p className="text-white font-semibold text-xs sm:text-sm line-clamp-2">
+            {data.name}
+          </p>
+        </div>
+      </Link>
+      <Handle type="source" position={Position.Bottom} className="opacity-0" />
+    </>
   )
 }
 

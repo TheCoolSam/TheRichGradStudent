@@ -89,6 +89,7 @@ export interface PointsProgram {
 export interface CreditCard {
   _id: string
   _type: 'creditCard'
+  _updatedAt?: string
   name: string
   slug: {
     current: string
@@ -106,6 +107,8 @@ export interface CreditCard {
   hasSpendingCap: boolean
   pointsProgram?: string
   category?: 'new' | 'everyday' | 'travel' | 'pro'
+  rewardType?: 'points' | 'cashback'
+  rating?: number
   
   // Value table data
   signupBonusValue?: string

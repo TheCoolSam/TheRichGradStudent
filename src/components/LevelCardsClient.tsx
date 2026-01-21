@@ -38,9 +38,10 @@ export default function LevelCardsClient({ cards }: LevelCardsClientProps) {
             href={`/${card.slug}`}
             aria-label={`Read about ${card.title}`}
           >
-            <div className={`h-full p-8 rounded-2xl bg-gradient-to-br ${card.gradient} text-white shadow-xl relative overflow-hidden group`}>
+            <div className={`h-full p-8 rounded-3xl bg-gradient-to-br ${card.gradient} text-white shadow-2xl hover:shadow-[0_20px_60px_rgba(0,255,136,0.3)] relative overflow-hidden group border border-white/20 transition-all duration-500`}>
               {/* Animated background */}
               <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
               
               <h3 className="text-2xl font-bold mb-6 relative z-10">
                 {card.title}

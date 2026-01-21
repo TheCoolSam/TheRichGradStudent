@@ -15,10 +15,9 @@ export default function HeroSectionClient() {
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
-            <span className="text-white">Millionaire Style Travel,</span>
-            <br />
-            <span className="text-rgs-light-green">GRAD STUDENT BUDGET</span>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-8">
+            <span className="block text-white drop-shadow-[0_5px_15px_rgba(255,255,255,0.3)] mb-2">Millionaire Style Travel,</span>
+            <span className="block bg-gradient-to-r from-rgs-light-green via-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-[0_5px_20px_rgba(0,255,136,0.5)] animate-pulse">GRAD STUDENT BUDGET</span>
           </h1>
 
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 drop-shadow-lg leading-relaxed mb-8 sm:mb-12 max-w-4xl mx-auto px-4">

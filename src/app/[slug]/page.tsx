@@ -8,6 +8,7 @@ import { PortableText, type PortableTextComponents } from 'next-sanity'
 import Disclaimer from '@/components/Disclaimer'
 import CardValueTable from '@/components/CardValueTable'
 import DonationButton from '@/components/DonationButton'
+import QuickStatsDashboard from '@/components/QuickStatsDashboard'
 
 // Revalidate every 60 seconds
 export const revalidate = 60
@@ -148,7 +149,8 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
           role,
           image
         },
-        "pointsProgram": pointsProgram->name
+        "pointsProgram": pointsProgram->name,
+        _updatedAt
       }`,
       { slug }
     )
@@ -249,34 +251,67 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
           <>
             {/* Card Image */}
             {(content as CreditCard).image && (
-              <div className="mb-8 max-w-md mx-auto rounded-xl overflow-hidden shadow-lg">
-                <Image
-                  src={urlFor((content as CreditCard).image).width(400).height(250).url()}
-                  alt={(content as CreditCard).name}
-                  width={400}
-                  height={250}
-                  className="w-full"
-                />
+              <div className="mb-10 max-w-2xl mx-auto">
+                <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-rgs-green/30 hover:border-rgs-green hover:shadow-rgs-green/40 transition-all duration-500 group">
+                  <div className="aspect-[16/10] bg-gradient-to-br from-gray-800 via-gray-900 to-black relative">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,136,0.1),transparent_70%)]" />
+                    <Image
+                      src={urlFor((content as CreditCard).image).width(800).height(500).quality(95).url()}
+                      alt={(content as CreditCard).name}
+                      width={800}
+                      height={500}
+                      className="w-full h-full object-contain p-8 mix-blend-screen group-hover:scale-105 transition-transform duration-500"
+                      priority
+                      style={{ filter: 'drop-shadow(0 10px 40px rgba(0, 255, 136, 0.3))' }}
+                    />
+                  </div>
+                </div>
+                <p className="text-center text-base font-semibold text-gray-400 mt-4">{(content as CreditCard).name}</p>
               </div>
             )}
 
             {/* Apply Now Button */}
-            <div className="mb-8 text-center">
+            <div className="mb-10 text-center">
               <a
                 href={(content as CreditCard).affiliateLink}
                 target="_blank"
                 rel="noopener noreferrer sponsored"
-                className="inline-block px-12 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="inline-block px-16 py-5 bg-gradient-to-r from-green-500 via-emerald-600 to-teal-500 text-white font-bold text-xl rounded-2xl shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-110 hover:-translate-y-1 relative overflow-hidden group"
               >
-                <span className="flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                <span className="flex items-center justify-center gap-3 relative z-10">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 group-hover:rotate-12 transition-transform">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                   </svg>
                   Apply Now
                 </span>
               </a>
-              <p className="text-sm text-gray-600 mt-2">Secure Application</p>
+              <div className="mt-2 space-y-1">
+                <p className="text-sm text-gray-600">Secure Application</p>
+                <div className="flex items-center justify-center gap-1 text-xs text-gray-500">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <span>We may earn a commission if approved</span>
+                </div>
+              </div>
             </div>
+
+            {/* Last Updated Timestamp */}
+            {(content as CreditCard)._updatedAt && (
+              <div className="mb-6 text-center">
+                <p className="text-xs text-gray-500 italic">
+                  Last updated: {new Date((content as CreditCard)._updatedAt!).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+              </div>
+            )}
+
+            {/* Quick Stats Dashboard */}
+            <QuickStatsDashboard card={content as CreditCard} />
 
             {/* Quick Info */}
             {((content as CreditCard).spendRequirement || (content as CreditCard).aprOffer || (content as CreditCard).pointsProgram) && (

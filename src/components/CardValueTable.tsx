@@ -1,6 +1,8 @@
 import React from 'react'
 import { CreditCard } from '@/types/sanity'
 import { calculateAt2cpp, calculateAt7cpp, formatAsPercentage, formatEarningRate, getRatingColor } from '@/utils/cardMath'
+import RatingBadge from './RatingBadge'
+import Tooltip from './Tooltip'
 
 interface CardValueTableProps {
   card: CreditCard | null | undefined
@@ -83,6 +85,7 @@ export default function CardValueTable({
   }
   // Calculate net annual fee
   const netAnnualFee = card.annualFee - card.annualCredits
+  const rewardType = card.rewardType || 'points' // Default to points if not specified
   
   const rows: TableRow[] = [
     {
@@ -113,21 +116,21 @@ export default function CardValueTable({
     },
     {
       category: 'Travel',
-      cashBack: formatEarningRate(card.travelMultiplier, card.rewardType),
+      cashBack: formatEarningRate(card.travelMultiplier, rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.travelMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.travelMultiplier)),
       rating: card.travelRating,
     },
     {
       category: 'Grocery',
-      cashBack: formatEarningRate(card.groceryMultiplier, card.rewardType),
+      cashBack: formatEarningRate(card.groceryMultiplier, rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.groceryMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.groceryMultiplier)),
       rating: card.groceryRating,
     },
     {
       category: 'Gas',
-      cashBack: formatEarningRate(card.gasMultiplier, card.rewardType),
+      cashBack: formatEarningRate(card.gasMultiplier, rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.gasMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.gasMultiplier)),
       rating: card.gasRating,
@@ -135,21 +138,21 @@ export default function CardValueTable({
     },
     {
       category: 'Dining',
-      cashBack: formatEarningRate(card.diningMultiplier, card.rewardType),
+      cashBack: formatEarningRate(card.diningMultiplier, rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.diningMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.diningMultiplier)),
       rating: card.diningRating,
     },
     {
       category: 'Pharmacy',
-      cashBack: formatEarningRate(card.pharmacyMultiplier, card.rewardType),
+      cashBack: formatEarningRate(card.pharmacyMultiplier, rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.pharmacyMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.pharmacyMultiplier)),
       rating: card.pharmacyRating,
     },
     {
       category: 'Other Purchases',
-      cashBack: formatEarningRate(card.otherMultiplier, card.rewardType),
+      cashBack: formatEarningRate(card.otherMultiplier, rewardType),
       points2cpp: formatAsPercentage(calculateAt2cpp(card.otherMultiplier)),
       points7cpp: formatAsPercentage(calculateAt7cpp(card.otherMultiplier)),
       rating: card.otherRating,
@@ -182,7 +185,8 @@ export default function CardValueTable({
     <div className="my-8">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4">RGS Value Table</h2>
       
-      <div className="overflow-x-auto -mx-4 sm:mx-0">
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
         <div className="inline-block min-w-full align-middle px-4 sm:px-0">
           <table className="min-w-full bg-white border border-gray-300 shadow-sm">
             <thead className="bg-gray-100">
@@ -191,13 +195,29 @@ export default function CardValueTable({
                   Category
                 </th>
                 <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                  Cash Back / Points
+                  <span className="inline-flex items-center gap-1">
+                    Cash Back / Points
+                  </span>
                 </th>
                 <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                  Points Value (2cpp)
+                  <span className="inline-flex items-center gap-1">
+                    Points Value (2cpp)
+                    <Tooltip content="Cents per point - value when redeemed at 2 cents per point">
+                      <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                      </svg>
+                    </Tooltip>
+                  </span>
                 </th>
                 <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                  Max Points Value (7cpp)
+                  <span className="inline-flex items-center gap-1">
+                    Max Points Value (7cpp)
+                    <Tooltip content="Maximum value when redeemed optimally at 7 cents per point through premium redemptions">
+                      <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                      </svg>
+                    </Tooltip>
+                  </span>
                 </th>
               </tr>
             </thead>
@@ -208,8 +228,15 @@ export default function CardValueTable({
                     {row.category}
                     {row.hasAsterisk && <span className="text-blue-600">**</span>}
                   </td>
-                  <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm ${getRatingColor(row.rating)}`}>
-                    {row.cashBack}
+                  <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm`}>
+                    {row.rating ? (
+                      <div className="flex items-center gap-2">
+                        {row.cashBack}
+                        <RatingBadge rating={row.rating} size="sm" />
+                      </div>
+                    ) : (
+                      row.cashBack
+                    )}
                   </td>
                   <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm ${getRatingColor(row.rating)}`}>
                     {row.points2cpp}
@@ -222,6 +249,55 @@ export default function CardValueTable({
           </tbody>
         </table>
         </div>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {rows.map((row, index) => (
+          <div key={index} className="bg-white border border-gray-300 rounded-lg p-4 shadow-sm">
+            <div className="font-semibold text-gray-900 mb-3 flex items-center justify-between">
+              <span>
+                {row.category}
+                {row.hasAsterisk && <span className="text-blue-600">**</span>}
+              </span>
+              {row.rating && <RatingBadge rating={row.rating} size="sm" />}
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Cash Back / Points:</span>
+                <span className={`font-medium ${getRatingColor(row.rating)}`}>{row.cashBack}</span>
+              </div>
+              {row.points2cpp !== 'N/A' && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">
+                    Value (2cpp)
+                    <Tooltip content="Cents per point - value when redeemed at 2 cents per point">
+                      <svg className="w-3 h-3 text-gray-500 inline ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                      </svg>
+                    </Tooltip>
+                    :
+                  </span>
+                  <span className={`font-medium ${getRatingColor(row.rating)}`}>{row.points2cpp}</span>
+                </div>
+              )}
+              {row.points7cpp !== 'N/A' && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">
+                    Max Value (7cpp)
+                    <Tooltip content="Maximum value when redeemed optimally at 7 cents per point through premium redemptions">
+                      <svg className="w-3 h-3 text-gray-500 inline ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                      </svg>
+                    </Tooltip>
+                    :
+                  </span>
+                  <span className={`font-medium ${getRatingColor(row.rating)}`}>{row.points7cpp}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
       
       {card.hasSpendingCap && (
