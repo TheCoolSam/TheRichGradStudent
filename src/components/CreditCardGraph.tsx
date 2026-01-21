@@ -152,12 +152,36 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
     // Generate edges based on relationships
     const generatedEdges: Edge[] = []
     
+    // Debug logging (development only)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('=== CREDIT CARD GRAPH DEBUG ===')
+      console.log('Total cards:', cards.length)
+      cards.forEach(card => {
+        console.log(`\nCard: ${card.name}`)
+        console.log(`  - Category: ${card.category}${card.subCategory ? `-${card.subCategory}` : ''}`)
+        console.log(`  - Slug: ${getSlugString(card.slug)}`)
+        console.log(`  - Issuer: ${card.issuer}`)
+        console.log(`  - Points Program: ${card.pointsProgramName || 'N/A'}`)
+        console.log(`  - Related Slugs:`, card.relatedCardsSlugs || [])
+      })
+      console.log('\n=== CHECKING RELATIONSHIPS ===')
+    }
+    
     cards.forEach(card => {
       if (card.relatedCardsSlugs && Array.isArray(card.relatedCardsSlugs) && card.relatedCardsSlugs.length > 0) {
         card.relatedCardsSlugs.forEach(relatedSlug => {
           if (!relatedSlug) return // Skip if slug is null/undefined
           
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`\nChecking: ${card.name} -> ${relatedSlug}`)
+          }
+          
           const relatedCard = cards.find(c => getSlugString(c.slug) === relatedSlug)
+          
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`  Found card: ${relatedCard?.name || 'NOT FOUND'}`)
+          }
+          
           if (relatedCard) {
             // Only create edge if cards are in adjacent levels
             const sourceLevel = card.category === 'pro' && card.subCategory 
@@ -170,6 +194,14 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
             const levelOrder = ['new', 'everyday', 'travel', 'pro-business', 'pro-luxury']
             const sourceIdx = levelOrder.indexOf(sourceLevel)
             const targetIdx = levelOrder.indexOf(targetLevel)
+            
+            if (process.env.NODE_ENV === 'development') {
+              const levelDiff = Math.abs(sourceIdx - targetIdx)
+              console.log(`  Source Level: ${sourceLevel} (index ${sourceIdx})`)
+              console.log(`  Target Level: ${targetLevel} (index ${targetIdx})`)
+              console.log(`  Level Difference: ${levelDiff}`)
+              console.log(`  Is Adjacent? ${levelDiff === 1 ? '✓ YES - Arrow will be created' : '✗ NO - Arrow will NOT be created (not adjacent)'}`)
+            }
 
             // Only connect adjacent levels
             if (Math.abs(sourceIdx - targetIdx) === 1) {
@@ -232,6 +264,18 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
         })
       }
     })
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('\n=== GENERATED EDGES SUMMARY ===')
+      console.log('Total edges:', generatedEdges.length)
+      generatedEdges.forEach(edge => {
+        const source = cards.find(c => c._id === edge.source)
+        const target = cards.find(c => c._id === edge.target)
+        const edgeType = edge.id.startsWith('auto-') ? 'AUTO' : 'EXPLICIT'
+        console.log(`${source?.name} → ${target?.name} (${edgeType})`)
+      })
+      console.log('=== DEBUG END ===\n')
+    }
 
     setNodes(generatedNodes)
     setEdges(generatedEdges)

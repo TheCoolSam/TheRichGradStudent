@@ -1,5 +1,19 @@
 # Credit Card Data Entry Guide
 
+## ⚠️ IMPORTANT: Arrow Connection Rules
+
+**Arrows only appear between cards in ADJACENT levels.** This means:
+- ✅ New → Everyday (works)
+- ✅ Everyday → Travel (works)
+- ✅ Travel → Pro-Business or Pro-Luxury (works)
+- ✅ Pro-Business → Pro-Luxury (works)
+- ❌ New → Travel (skips Everyday, won't work)
+- ❌ Everyday → Pro-Business (skips Travel, won't work)
+
+If you add a related card but don't see an arrow, check the browser console for detailed debugging information showing why the connection failed.
+
+---
+
 ## Required Fields for Millionaire Guide Graph
 
 For each credit card in Sanity, you need to populate these new fields:
@@ -198,15 +212,41 @@ Level 5: Pro - Luxury
 
 ## How Arrows Work
 
-The graph automatically creates arrows between cards based on:
+The graph creates arrows between cards in **two ways**:
 
-1. **Explicit relationships** via the "Related Cards" field
-2. **Auto-generated connections** for cards with the same issuer or points program in adjacent levels
+### 1. **Explicit Relationships** (via the "Related Cards" field)
+- ⚠️ **Only works between ADJACENT levels** (exactly 1 level apart)
+- You add the relationship in Sanity by selecting related cards
+- Creates bold, bright green arrows (strokeWidth: 3)
+- Direction matters: Adding Card B to Card A's relatedCards creates A → B
 
-For example:
-- Chase Rise → Freedom Flex/Unlimited (both arrows shown)
-- Freedom cards → Chase Sapphire Preferred (arrows converge)
-- Chase Sapphire Preferred splits to Reserve, Ink Cash, and Ink Unlimited
+### 2. **Auto-Generated Connections** (same issuer/program)
+- Automatically connects cards with the same `issuer` OR `pointsProgram`
+- Also **only between adjacent levels**
+- Creates lighter, thinner arrows (strokeWidth: 2, opacity: 0.7)
+- Helps show progression within the same bank or rewards program
+
+### Debugging Your Arrows
+
+If arrows don't appear:
+1. Open browser console (F12) and navigate to /millionaire-guide
+2. Look for the "=== CREDIT CARD GRAPH DEBUG ===" section
+3. Check each relationship attempt for:
+   - "Found card: NOT FOUND" = slug mismatch
+   - "Level Difference: 2" or higher = not adjacent
+   - "Is Adjacent? ✗ NO" = explains why arrow wasn't created
+
+### Examples:
+
+**✅ This Works:**
+- Chase Rise (new) → Freedom Flex (everyday) = 1 level apart ✓
+- Freedom cards (everyday) → Sapphire Preferred (travel) = 1 level apart ✓
+- Marriott Business (pro-business) → Marriott Brilliant (pro-luxury) = 1 level apart ✓
+
+**❌ This Won't Work:**
+- Chase Rise (new) → Sapphire Preferred (travel) = 2 levels apart ✗
+- Freedom Flex (everyday) → Sapphire Reserve (pro-luxury) = 3 levels apart ✗
+- Sapphire Preferred (travel) → Chase Ink Cash (pro-business) = 1 level apart ✓ **BUT different program type**
 
 ---
 

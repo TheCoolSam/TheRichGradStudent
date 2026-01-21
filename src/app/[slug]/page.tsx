@@ -268,8 +268,14 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
                 rel="noopener noreferrer sponsored"
                 className="inline-block px-12 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
-                Apply Now
+                <span className="flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                  Apply Now
+                </span>
               </a>
+              <p className="text-sm text-gray-600 mt-2">Secure Application</p>
             </div>
 
             {/* Quick Info */}

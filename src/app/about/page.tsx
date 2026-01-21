@@ -65,7 +65,7 @@ export default function AboutPage() {
           <motion.div variants={itemVariants} className="space-y-6 text-lg text-gray-700 leading-relaxed">
             <p>
               We started The Rich Grad Student because we realized something crucial: graduate students 
-              are in a unique position to master the points and miles game. We have time to research, 
+              are in a unique position to master the points and miles game. We are problem solvers, 
               we're constantly traveling for conferences and research, and we're living on tight budgets 
               where every dollar counts.
             </p>

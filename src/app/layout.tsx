@@ -58,6 +58,12 @@ export default function RootLayout({
                 >
                   Blog
                 </Link>
+                <Link 
+                  href="/privacy" 
+                  className="text-white/80 hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </Link>
               </div>
             </div>
             
