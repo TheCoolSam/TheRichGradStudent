@@ -136,12 +136,13 @@ export default async function ArticlePage({ params }: PageProps) {
   }
 
   // Get recommended content
-  const recommendedContent = await getRecommendedContent(
-    article._id,
-    article.tags?.map(t => typeof t === 'string' ? t : t._id) || [],
-    article.manualRecommendations || [],
-    'article'
-  )
+  const recommendedContent = await getRecommendedContent({
+    currentDocId: article._id,
+    currentType: 'article',
+    currentTags: article.tags?.map(t => typeof t === 'string' ? { _id: t } : t) || [],
+    currentCategories: article.categories || [],
+    manualRecommendations: article.manualRecommendations || [],
+  })
 
   return (
     <main className="min-h-screen py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
