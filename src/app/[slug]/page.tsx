@@ -366,15 +366,15 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
             {((content as CreditCard).spendRequirement || (content as CreditCard).aprOffer || (content as CreditCard).pointsProgram) && (
               <div className="mb-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
                 <h3 className="font-bold text-lg mb-3">Quick Info</h3>
-                {(content as CreditCard).pointsProgram && (
-                  <p className="mb-2">
-                    <strong>Points Program:</strong> {
-                      typeof (content as CreditCard).pointsProgram === 'string' 
-                        ? ((content as CreditCard).pointsProgram === 'Cash Back' ? 'Cash Back Card (No Points)' : (content as CreditCard).pointsProgram)
-                        : ((content as CreditCard).pointsProgram as { _id: string; name: string }).name
-                    }
-                  </p>
-                )}
+                {(content as CreditCard).pointsProgram && (() => {
+                  const pp = (content as CreditCard).pointsProgram
+                  const programName = typeof pp === 'string' ? pp : pp?.name
+                  return (
+                    <p className="mb-2">
+                      <strong>Points Program:</strong> {programName === 'Cash Back' ? 'Cash Back Card (No Points)' : programName}
+                    </p>
+                  )
+                })()}
                 {(content as CreditCard).spendRequirement && (
                   <p className="mb-2">
                     <strong>Spend Requirement:</strong> {(content as CreditCard).spendRequirement}
