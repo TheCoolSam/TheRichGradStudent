@@ -154,11 +154,13 @@ async function getLevelCards() {
 export default async function HomePage() {
   const pointsData = await getPointsData()
   const levelCards = await getLevelCards()
+  const mainArticles = await getMainArticles()
+  const alreadyInSlug = mainArticles['already-in']?.slug || 'youre-already-in'
   
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <HeroSectionClient />
+      <HeroSectionClient alreadyInSlug={alreadyInSlug} />
 
       {/* Level Selector Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">

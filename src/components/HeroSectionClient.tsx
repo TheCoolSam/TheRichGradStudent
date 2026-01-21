@@ -3,7 +3,11 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 
-export default function HeroSectionClient() {
+interface HeroSectionClientProps {
+  alreadyInSlug: string
+}
+
+export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientProps) {
   return (
     <section className="relative bg-gradient-to-br from-rgs-black via-rgs-off-black to-rgs-dark-green min-h-[600px] flex items-center">
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
@@ -27,7 +31,7 @@ export default function HeroSectionClient() {
           </p>
 
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center items-center max-w-4xl mx-auto px-4">
-            <Link href="/articles/youre-already-in">
+            <Link href={`/articles/${alreadyInSlug}`}>
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
