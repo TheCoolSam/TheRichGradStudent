@@ -50,6 +50,36 @@ export default defineType({
               },
             ],
           },
+          {
+            title: 'Article Link',
+            name: 'articleLink',
+            type: 'object',
+            icon: () => '📄',
+            fields: [
+              {
+                title: 'Article',
+                name: 'article',
+                type: 'reference',
+                to: [{type: 'article'}],
+                description: 'Select an article to link to',
+              },
+            ],
+          },
+          {
+            title: 'Blog Post Link',
+            name: 'postLink',
+            type: 'object',
+            icon: () => '📝',
+            fields: [
+              {
+                title: 'Blog Post',
+                name: 'post',
+                type: 'reference',
+                to: [{type: 'post'}],
+                description: 'Select a blog post to link to',
+              },
+            ],
+          },
         ],
       },
     }),
