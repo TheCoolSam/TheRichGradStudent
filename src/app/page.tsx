@@ -43,21 +43,23 @@ async function getFeaturedContent() {
       return []
     }
 
-    return features.map((feature) => {
-      const content = feature.content
-      if (!content) return null
+    return features
+      .map((feature) => {
+        const content = feature.content
+        if (!content) return null
 
-      const excerpt = feature.excerpt || content.description || content.excerpt || ''
-      const type = content._type as 'article' | 'post' | 'creditCard'
+        const excerpt = feature.excerpt || content.description || content.excerpt || ''
+        const type = content._type as 'article' | 'post' | 'creditCard'
 
-      return {
-        title: content.title,
-        excerpt: excerpt.substring(0, 150),
-        slug: content.slug,
-        type,
-        mainImage: content.mainImage,
-      }
-    }).filter(Boolean)
+        return {
+          title: content.title,
+          excerpt: excerpt.substring(0, 150),
+          slug: content.slug,
+          type,
+          mainImage: content.mainImage,
+        }
+      })
+      .filter((item): item is Exclude<typeof item, null> => item !== null)
   } catch (error) {
     console.error('Error fetching featured content:', error)
     return []
