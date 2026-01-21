@@ -449,6 +449,14 @@ export default defineType({
       fieldset: 'metadata',
     }),
     defineField({
+      name: 'rating',
+      title: 'Overall Card Rating',
+      type: 'number',
+      description: 'Overall rating out of 5 stars (supports decimals like 4.5)',
+      validation: (Rule) => Rule.min(0).max(5).precision(1),
+      fieldset: 'metadata',
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured Card',
       type: 'boolean',
