@@ -252,52 +252,81 @@ export default function CardValueTable({
       </div>
 
       {/* Mobile Card View */}
-      <div className="md:hidden space-y-4">
-        {rows.map((row, index) => (
-          <div key={index} className="bg-white border border-gray-300 rounded-lg p-4 shadow-sm">
-            <div className="font-semibold text-gray-900 mb-3 flex items-center justify-between">
-              <span>
-                {row.category}
-                {row.hasAsterisk && <span className="text-blue-600">**</span>}
-              </span>
-              {row.rating && <RatingBadge rating={row.rating} size="sm" />}
-            </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Cash Back / Points:</span>
-                <span className={`font-medium ${getRatingColor(row.rating)}`}>{row.cashBack}</span>
+      <div className="md:hidden space-y-3">
+        {rows.map((row, index) => {
+          // Determine if this is a key metric row
+          const isKeyMetric = ['Signup Bonus', 'Net Annual Fee', 'Travel', 'Dining'].includes(row.category)
+          
+          return (
+            <div 
+              key={index} 
+              className={`bg-white border-2 rounded-xl p-4 shadow-sm transition-all hover:shadow-md ${
+                isKeyMetric ? 'border-rgs-green/30 bg-gradient-to-br from-white to-green-50/30' : 'border-gray-200'
+              }`}
+            >
+              {/* Header Row */}
+              <div className="flex items-start justify-between mb-3 pb-3 border-b border-gray-100">
+                <div>
+                  <h3 className={`font-bold text-gray-900 ${isKeyMetric ? 'text-base' : 'text-sm'}`}>
+                    {row.category}
+                    {row.hasAsterisk && <span className="text-blue-600 ml-1">**</span>}
+                  </h3>
+                  {isKeyMetric && <span className="text-xs text-green-600 font-medium">Key Metric</span>}
+                </div>
+                {row.rating && (
+                  <RatingBadge rating={row.rating} size="sm" />
+                )}
               </div>
-              {row.points2cpp !== 'N/A' && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">
-                    Value (2cpp)
-                    <Tooltip content="Cents per point - value when redeemed at 2 cents per point">
-                      <svg className="w-3 h-3 text-gray-500 inline ml-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                      </svg>
-                    </Tooltip>
-                    :
+
+              {/* Data Grid */}
+              <div className="space-y-2.5">
+                {/* Cash Back / Points Value */}
+                <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                  <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                    {rewardType === 'cashback' ? 'Cash Back' : 'Points'}
                   </span>
-                  <span className={`font-medium ${getRatingColor(row.rating)}`}>{row.points2cpp}</span>
-                </div>
-              )}
-              {row.points7cpp !== 'N/A' && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">
-                    Max Value (7cpp)
-                    <Tooltip content="Maximum value when redeemed optimally at 7 cents per point through premium redemptions">
-                      <svg className="w-3 h-3 text-gray-500 inline ml-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                      </svg>
-                    </Tooltip>
-                    :
+                  <span className={`font-bold text-sm ${getRatingColor(row.rating)} ${isKeyMetric ? 'text-base' : ''}`}>
+                    {row.cashBack}
                   </span>
-                  <span className={`font-medium ${getRatingColor(row.rating)}`}>{row.points7cpp}</span>
                 </div>
-              )}
+
+                {/* 2cpp Value */}
+                {row.points2cpp !== 'N/A' && (
+                  <div className="flex items-center justify-between py-2 px-3 bg-blue-50 rounded-lg">
+                    <span className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                      Value @ 2cpp
+                      <Tooltip content="Value when redeemed at 2 cents per point">
+                        <svg className="w-3.5 h-3.5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                        </svg>
+                      </Tooltip>
+                    </span>
+                    <span className={`font-semibold text-sm ${getRatingColor(row.rating)}`}>
+                      {row.points2cpp}
+                    </span>
+                  </div>
+                )}
+
+                {/* 7cpp Max Value */}
+                {row.points7cpp !== 'N/A' && (
+                  <div className="flex items-center justify-between py-2 px-3 bg-green-50 rounded-lg">
+                    <span className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                      Max @ 7cpp
+                      <Tooltip content="Maximum value when redeemed optimally at 7cpp">
+                        <svg className="w-3.5 h-3.5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                        </svg>
+                      </Tooltip>
+                    </span>
+                    <span className={`font-semibold text-sm ${getRatingColor(row.rating)}`}>
+                      {row.points7cpp}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
       
       {card.hasSpendingCap && (
