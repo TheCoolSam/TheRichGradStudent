@@ -5,6 +5,7 @@ import { client } from '@/lib/sanity'
 import PointsValueSection from '@/components/PointsValueSection'
 import LevelCardsClient from '@/components/LevelCardsClient'
 import HeroSectionClient from '@/components/HeroSectionClient'
+import { FeaturedContentSection } from '@/components/FeaturedContentSection'
 
 // Dynamic imports for below-the-fold components
 const TeamSectionClient = dynamic(() => import('@/components/TeamSectionClient'), {
@@ -18,6 +19,50 @@ const SupportSectionClient = dynamic(() => import('@/components/SupportSectionCl
 })
 
 export const revalidate = 60
+
+async function getFeaturedContent() {
+  try {
+    const features = await client.fetch<any[]>(
+      `*[_type == "homepageFeature"] | order(order asc){
+        _id,
+        title,
+        excerpt,
+        order,
+        content->{
+          _type,
+          title,
+          "slug": slug.current,
+          mainImage,
+          excerpt,
+          description
+        }
+      }`
+    )
+
+    if (!features || features.length === 0) {
+      return []
+    }
+
+    return features.map((feature) => {
+      const content = feature.content
+      if (!content) return null
+
+      const excerpt = feature.excerpt || content.description || content.excerpt || ''
+      const type = content._type as 'article' | 'post' | 'creditCard'
+
+      return {
+        title: content.title,
+        excerpt: excerpt.substring(0, 150),
+        slug: content.slug,
+        type,
+        mainImage: content.mainImage,
+      }
+    }).filter(Boolean)
+  } catch (error) {
+    console.error('Error fetching featured content:', error)
+    return []
+  }
+}
 
 async function getPointsData() {
   try {
@@ -156,11 +201,19 @@ export default async function HomePage() {
   const levelCards = await getLevelCards()
   const mainArticles = await getMainArticles()
   const alreadyInSlug = mainArticles['already-in']?.slug || 'youre-already-in'
+  const featuredContent = await getFeaturedContent()
   
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
       <HeroSectionClient alreadyInSlug={alreadyInSlug} />
+
+      {/* Featured Content Section */}
+      {featuredContent.length > 0 && (
+        <div className="bg-gray-50">
+          <FeaturedContentSection items={featuredContent} />
+        </div>
+      )}
 
       {/* Level Selector Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">

@@ -90,7 +90,7 @@ export default async function RootLayout({
             </div>
             
             <div className="mt-8 pt-8 border-t border-gray-800 text-center text-white/70 text-sm">
-              <p>© 2026 The Rich Grad Student. All rights reserved.</p>
+              <p>© 2026 The Rich Grad Student LLC. All rights reserved.</p>
             </div>
           </div>
         </footer>
