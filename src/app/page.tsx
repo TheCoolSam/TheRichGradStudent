@@ -105,18 +105,6 @@ async function getLevelCards() {
   
   return [
     {
-      title: "You're Already In",
-      bullets: [
-        'Understand the game',
-        'Why you\'re losing money',
-        'The truth about credit cards'
-      ],
-      gradient: 'from-red-600 to-rose-700',
-      category: 'already-in',
-      slug: mainArticles['already-in']?.slug || 'youre-already-in',
-      isPrimary: true
-    },
-    {
       title: "I'm New Here",
       bullets: [
         'Build your credit score',

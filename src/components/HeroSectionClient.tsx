@@ -27,15 +27,19 @@ export default function HeroSectionClient() {
           </p>
 
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center items-center max-w-4xl mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="px-4 sm:px-6 py-3 sm:py-4 bg-white/10 backdrop-blur-md border-2 border-rgs-light-green rounded-full shadow-lg text-center w-full sm:w-auto"
-            >
-              <span className="text-white font-bold text-sm sm:text-base md:text-lg">YOU'RE ALREADY IN THE CREDIT CARD GAME.</span>
-              <span className="text-white font-bold text-sm sm:text-base md:text-lg sm:ml-2 block sm:inline">DON'T LET IT PLAY YOU.</span>
-            </motion.div>
+            <Link href="/articles/youre-already-in">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="px-4 sm:px-6 py-3 sm:py-4 bg-white/10 backdrop-blur-md border-2 border-rgs-light-green rounded-full shadow-lg text-center w-full sm:w-auto cursor-pointer"
+              >
+                <span className="text-white font-bold text-sm sm:text-base md:text-lg">YOU'RE ALREADY IN THE CREDIT CARD GAME.</span>
+                <span className="text-white font-bold text-sm sm:text-base md:text-lg sm:ml-2 block sm:inline">DON'T LET IT PLAY YOU.</span>
+              </motion.div>
+            </Link>
             
             <Link href="/millionaire-guide">
               <motion.div
