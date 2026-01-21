@@ -75,7 +75,7 @@ const portableTextComponents: PortableTextComponents = {
       const slug = value?.creditCard?.slug?.current || value?.creditCard
       if (!slug) return <>{children}</>
       return (
-        <Link href={`/credit-cards/${slug}`} className="text-rgs-green hover:text-rgs-green/80 underline font-semibold">
+        <Link href={`/${slug}`} className="text-rgs-green hover:text-rgs-green/80 underline font-semibold">
           {children}
         </Link>
       )
@@ -93,7 +93,7 @@ const portableTextComponents: PortableTextComponents = {
       const slug = value?.post?.slug?.current || value?.post
       if (!slug) return <>{children}</>
       return (
-        <Link href={`/blog/${slug}`} className="text-purple-600 hover:text-purple-800 underline font-semibold">
+        <Link href={`/${slug}`} className="text-purple-600 hover:text-purple-800 underline font-semibold">
           {children}
         </Link>
       )

@@ -70,7 +70,7 @@ const portableTextComponents: PortableTextComponents = {
       const slug = value?.creditCard
       if (!slug) return <>{children}</>
       return (
-        <Link href={`/credit-cards/${slug}`} className="text-rgs-green hover:text-rgs-green/80 underline font-semibold">
+        <Link href={`/${slug}`} className="text-rgs-green hover:text-rgs-green/80 underline font-semibold">
           {children}
         </Link>
       )
