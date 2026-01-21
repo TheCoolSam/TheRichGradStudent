@@ -5,9 +5,7 @@ export interface RecommendedContent {
   _type: 'article' | 'post' | 'creditCard'
   title: string
   name?: string // for credit cards
-  slug: {
-    current: string
-  }
+  slug: string // Already extracted as string from slug.current in queries
   excerpt?: string
   description?: string // for credit cards
   mainImage?: any

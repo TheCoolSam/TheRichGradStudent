@@ -16,11 +16,11 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
   const getSlugPath = (post: RecommendedContent) => {
     switch (post._type) {
       case 'article':
-        return `/articles/${post.slug.current}`
+        return `/articles/${post.slug}`
       case 'post':
-        return `/blog/${post.slug.current}`
+        return `/blog/${post.slug}`
       case 'creditCard':
-        return `/credit-cards/${post.slug.current}`
+        return `/credit-cards/${post.slug}`
       default:
         return '#'
     }

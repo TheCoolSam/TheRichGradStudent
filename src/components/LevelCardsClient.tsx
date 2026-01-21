@@ -35,7 +35,7 @@ export default function LevelCardsClient({ cards }: LevelCardsClientProps) {
             aria-label={`${card.title} credit card category`}
           >
           <Link 
-            href={`/${card.slug}`}
+            href={`/articles/${card.slug}`}
             aria-label={`Read about ${card.title}`}
           >
             <div className={`h-full p-8 rounded-3xl bg-gradient-to-br ${card.gradient} text-white shadow-2xl hover:shadow-[0_20px_60px_rgba(0,255,136,0.3)] relative overflow-hidden group border border-white/20 transition-all duration-500`}>
