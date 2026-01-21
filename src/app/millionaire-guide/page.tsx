@@ -2,6 +2,8 @@ import { client } from '@/lib/sanity'
 import CreditCardGraph from '@/components/CreditCardGraph'
 import type { CreditCard } from '@/types/sanity'
 
+export const revalidate = 30
+
 async function getCreditCards() {
   const query = `*[_type == "creditCard"] | order(category asc, rating desc) {
     _id,
@@ -17,8 +19,10 @@ async function getCreditCards() {
   }`
 
   const cards = await client.fetch(query)
+  console.log(`[Millionaire Guide] Fetched ${cards.length} cards`)
+  
   // Filter out cards without required fields
-  return cards.filter((card: any) => 
+  const filtered = cards.filter((card: any) => 
     card._id && 
     card.name && 
     card.slug && 
@@ -26,6 +30,9 @@ async function getCreditCards() {
     card.issuer && 
     card.image
   )
+  
+  console.log(`[Millionaire Guide] After filtering: ${filtered.length} cards`)
+  return filtered
 }
 
 export default async function MillionaireGuidePage() {
