@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import Magnetic from './Magnetic'
 
 interface LevelCard {
   title: string
@@ -20,28 +19,33 @@ export default function LevelCardsClient({ cards }: LevelCardsClientProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {cards.map((card, index) => (
-        <Magnetic key={card.category} strength={0.2} tiltStrength={10}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            whileHover={{
-              y: -10,
-              transition: { type: 'spring', stiffness: 300, damping: 30 }
-            }}
-            className="cursor-pointer h-full"
-            role="article"
-            aria-label={`${card.title} credit card category`}
-          >
+        <motion.div
+          key={card.category}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ 
+            duration: 0.6, 
+            delay: index * 0.15,
+            ease: [0.22, 1, 0.36, 1]
+          }}
+          whileHover={{
+            y: -8,
+            scale: 1.02,
+            transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
+          }}
+          className="cursor-pointer h-full"
+          role="article"
+          aria-label={`${card.title} credit card category`}
+        >
           <Link 
             href={`/articles/${card.slug}`}
             aria-label={`Read about ${card.title}`}
           >
-            <div className={`h-full p-8 rounded-3xl bg-gradient-to-br ${card.gradient} text-white shadow-2xl hover:shadow-[0_20px_60px_rgba(0,255,136,0.3)] relative overflow-hidden group border border-white/20 transition-all duration-500`}>
+            <div className={`h-full p-8 rounded-3xl bg-gradient-to-br ${card.gradient} text-white shadow-xl hover:shadow-2xl relative overflow-hidden group border border-white/20 transition-shadow duration-300`}>
               {/* Animated background */}
               <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-all duration-300"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></div>
               
               <h3 className="text-2xl font-bold mb-6 relative z-10">
                 {card.title}
@@ -57,7 +61,8 @@ export default function LevelCardsClient({ cards }: LevelCardsClientProps) {
               </ul>
             </div>
           </Link>
-        </motion.div>        </Magnetic>      ))}
+        </motion.div>
+      ))}
     </div>
   )
 }

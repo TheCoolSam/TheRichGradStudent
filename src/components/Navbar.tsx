@@ -30,10 +30,15 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-white hover:text-rgs-light-green transition-all duration-200 font-semibold px-4 py-2 rounded-lg hover:bg-rgs-green/10 relative group"
+                className="text-white hover:text-rgs-light-green transition-colors duration-300 font-semibold px-4 py-2 rounded-lg hover:bg-rgs-green/20 relative group"
               >
-                {link.label}
-                <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-rgs-light-green group-hover:w-3/4 group-hover:left-1/8 transition-all duration-300"></span>
+                <span className="relative z-10">{link.label}</span>
+                <motion.span 
+                  className="absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-rgs-light-green"
+                  initial={{ width: 0 }}
+                  whileHover={{ width: '70%' }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                />
               </Link>
             ))}
           </div>

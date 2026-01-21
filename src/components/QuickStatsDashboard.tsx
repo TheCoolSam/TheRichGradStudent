@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 import { CreditCard } from '@/types/sanity'
 import RatingBadge from './RatingBadge'
 import { formatEarningRate } from '@/utils/cardMath'
@@ -24,46 +25,66 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
 
   const bestEarnRate = earningRates.length > 0 ? Math.max(...earningRates) : 1
 
+  const cards = [
+    {
+      title: 'Signup Bonus',
+      value: card.signupBonusValue || 'N/A',
+      gradient: 'from-green-50 to-emerald-50',
+      border: 'border-2 border-green-300',
+      badge: card.signupBonusRating,
+    },
+    {
+      title: 'Best Earn Rate',
+      value: formatEarningRate(bestEarnRate, rewardType),
+      subtitle: rewardType === 'points' ? 'Points' : 'Cash Back',
+      gradient: 'from-blue-50 to-cyan-50',
+      border: 'border border-blue-200',
+    },
+    {
+      title: 'Net Annual Fee',
+      value: `$${netAnnualFee}`,
+      subtitle: netAnnualFee < 0 ? 'Net Credit!' : netAnnualFee === 0 ? 'Free!' : 'After Credits',
+      gradient: 'from-purple-50 to-pink-50',
+      border: 'border border-purple-200',
+    },
+  ]
+
   return (
-    <div className="my-10 grid grid-cols-2 lg:grid-cols-3 gap-6 animate-slideUp">
-      {/* Signup Bonus */}
-      <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
-        <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-2">
-          Signup Bonus
-        </div>
-        <div className="text-2xl font-bold text-gray-900 mb-2">
-          {card.signupBonusValue || 'N/A'}
-        </div>
-        {card.signupBonusRating && (
-          <RatingBadge rating={card.signupBonusRating} size="sm" />
-        )}
-      </div>
-
-      {/* Best Earning Rate */}
-      <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 rounded-lg p-4 shadow-sm">
-        <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-2">
-          Best Earn Rate
-        </div>
-        <div className="text-2xl font-bold text-gray-900 mb-2">
-          {formatEarningRate(bestEarnRate, rewardType)}
-        </div>
-        <div className="text-xs text-gray-600">
-          {rewardType === 'points' ? 'Points' : 'Cash Back'}
-        </div>
-      </div>
-
-      {/* Net Annual Fee */}
-      <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4 shadow-sm">
-        <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-2">
-          Net Annual Fee
-        </div>
-        <div className="text-2xl font-bold text-gray-900 mb-2">
-          ${netAnnualFee}
-        </div>
-        <div className="text-xs text-gray-600">
-          {netAnnualFee < 0 ? 'Net Credit!' : netAnnualFee === 0 ? 'Free!' : 'After Credits'}
-        </div>
-      </div>
+    <div className="my-10 grid grid-cols-2 lg:grid-cols-3 gap-6">
+      {cards.map((cardData, index) => (
+        <motion.div
+          key={cardData.title}
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{
+            duration: 0.5,
+            delay: index * 0.1,
+            ease: [0.22, 1, 0.36, 1]
+          }}
+          whileHover={{
+            scale: 1.05,
+            y: -5,
+            transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
+          }}
+          className={`bg-gradient-to-br ${cardData.gradient} ${cardData.border} rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer`}
+        >
+          <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-2">
+            {cardData.title}
+          </div>
+          <div className="text-2xl font-bold text-gray-900 mb-2">
+            {cardData.value}
+          </div>
+          {cardData.badge && (
+            <RatingBadge rating={cardData.badge} size="sm" />
+          )}
+          {cardData.subtitle && (
+            <div className="text-xs text-gray-600">
+              {cardData.subtitle}
+            </div>
+          )}
+        </motion.div>
+      ))}
     </div>
   )
 }

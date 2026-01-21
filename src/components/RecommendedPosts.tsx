@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 import { urlFor } from '@/lib/image'
 import type { RecommendedContent } from '@/lib/recommendations'
 
@@ -69,21 +70,41 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-rgs-black mb-8 text-center">
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-3xl font-bold text-rgs-black mb-8 text-center"
+        >
           Recommended for You
-        </h2>
+        </motion.h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {posts.slice(0, 3).map((post) => {
+          {posts.slice(0, 3).map((post, index) => {
             const image = getImage(post)
             const imageUrl = image ? urlFor(image).width(400).height(250).url() : null
 
             return (
-              <Link
+              <motion.div
                 key={post._id}
-                href={getSlugPath(post)}
-                className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.15,
+                  ease: [0.22, 1, 0.36, 1]
+                }}
+                whileHover={{ 
+                  y: -8,
+                  transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
+                }}
               >
+                <Link
+                  href={getSlugPath(post)}
+                  className="block h-full bg-white rounded-lg shadow-md hover:shadow-2xl transition-shadow duration-300 overflow-hidden group"
+                >
                 {/* Image */}
                 {imageUrl && (
                   <div className="relative h-48 w-full overflow-hidden bg-gray-100">
@@ -92,7 +113,7 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
                       alt={getTitle(post)}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                       loading="lazy"
                     />
                   </div>
@@ -120,12 +141,12 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
                   )}
 
                   {/* Read More Link */}
-                  <div className="mt-4 flex items-center text-rgs-green font-semibold group-hover:translate-x-1 transition-transform">
+                  <div className="mt-4 flex items-center text-rgs-green font-semibold group-hover:translate-x-2 transition-transform duration-300">
                     <span>
                       {post._type === 'creditCard' ? 'View Card' : 'Read More'}
                     </span>
                     <svg
-                      className="ml-2 w-4 h-4"
+                      className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -140,6 +161,7 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
                   </div>
                 </div>
               </Link>
+            </motion.div>
             )
           })}
         </div>
