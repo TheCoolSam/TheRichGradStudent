@@ -7,6 +7,7 @@ import { urlFor } from '@/lib/image'
 import { PortableText, type PortableTextComponents } from 'next-sanity'
 import DonationButton from '@/components/DonationButton'
 import RecommendedPosts from '@/components/RecommendedPosts'
+import ArticleContent from '@/components/ArticleContent'
 import { getRecommendedContent } from '@/lib/recommendations'
 
 export const revalidate = 60
@@ -165,63 +166,7 @@ export default async function ArticlePage({ params }: PageProps) {
   return (
     <main className="min-h-screen py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
       <article className="max-w-4xl mx-auto">
-        {/* Header */}
-        <header className="mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
-            {article.title}
-          </h1>
-          
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
-            <time dateTime={article.publishedAt}>
-              {new Date(article.publishedAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </time>
-            
-            {article.author && (
-              <>
-                <span className="hidden sm:inline">•</span>
-                <div className="flex items-center gap-2">
-                  {article.author.image && (
-                    <Image
-                      src={urlFor(article.author.image).width(40).height(40).url()}
-                      alt={article.author.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                  )}
-                  <div>
-                    <p className="font-medium text-gray-900">{article.author.name}</p>
-                    {article.author.role && (
-                      <p className="text-xs text-gray-500">{article.author.role}</p>
-                    )}
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {article.mainImage && (
-            <div className="rounded-xl overflow-hidden shadow-2xl mb-8">
-              <Image
-                src={urlFor(article.mainImage).width(1200).height(675).url()}
-                alt={article.title}
-                width={1200}
-                height={675}
-                priority
-                className="w-full h-auto"
-              />
-            </div>
-          )}
-        </header>
-
-        {/* Content */}
-        <div className="prose prose-lg max-w-none mb-12">
-          <PortableText value={article.body} components={portableTextComponents} />
-        </div>
+        <ArticleContent article={article} portableTextComponents={portableTextComponents} />
 
         {/* Donation Button */}
         <div className="my-12">

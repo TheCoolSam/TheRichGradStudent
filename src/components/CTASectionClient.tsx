@@ -26,16 +26,24 @@ export default function CTASectionClient() {
           Join thousands of grad students traveling the world on points
         </motion.p>
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Link
-            href="/blog"
-            className="inline-block px-10 py-4 bg-white text-rgs-green font-bold rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-          >
-            Start Learning Now
+          <Link href="/blog">
+            <motion.div
+              whileHover={{ 
+                scale: 1.08, 
+                y: -3,
+                boxShadow: '0 20px 50px rgba(255, 255, 255, 0.3)'
+              }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="inline-block px-10 py-4 bg-white text-rgs-green font-bold rounded-lg shadow-lg cursor-pointer"
+            >
+              Start Learning Now
+            </motion.div>
           </Link>
         </motion.div>
       </div>

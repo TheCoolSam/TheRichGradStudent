@@ -108,26 +108,32 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
 
         <div className="relative max-w-5xl mx-auto">
           {/* Left Arrow */}
-          <button
+          <motion.button
             onClick={handlePrevious}
-            className="absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg transition-all hover:scale-110"
+            className="absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
             aria-label="Previous cards"
+            whileHover={{ scale: 1.15, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)' }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2 }}
           >
             <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-          </button>
+          </motion.button>
 
           {/* Right Arrow */}
-          <button
+          <motion.button
             onClick={handleNext}
-            className="absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg transition-all hover:scale-110"
+            className="absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
             aria-label="Next cards"
+            whileHover={{ scale: 1.15, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)' }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2 }}
           >
             <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
-          </button>
+          </motion.button>
 
           {/* Cards Container */}
           <motion.div 

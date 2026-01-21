@@ -1,51 +1,79 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import { client } from '@/lib/sanity'
 import { Article } from '@/types/sanity'
 import Link from 'next/link'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 import { urlFor } from '@/lib/image'
 
-export const revalidate = 60
+export default function ArticlesPage() {
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
 
-async function getArticles() {
-  try {
-    // Fetch articles (not posts)
-    const articles = await client.fetch<Article[]>(`
-      *[_type == "article"] | order(publishedAt desc){
-        _id,
-        title,
-        slug,
-        mainImage,
-        publishedAt,
-        excerpt,
-        mainArticleType,
-        "author": author->{name, role}
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const data = await client.fetch<Article[]>(`
+          *[_type == "article"] | order(publishedAt desc){
+            _id,
+            title,
+            slug,
+            mainImage,
+            publishedAt,
+            excerpt,
+            mainArticleType,
+            "author": author->{name, role}
+          }
+        `)
+        setArticles(data || [])
+      } catch (error) {
+        console.error('Error fetching from Sanity:', error)
+      } finally {
+        setLoading(false)
       }
-    `)
-    
-    return { articles: articles || [] }
-  } catch (error) {
-    console.error('Error fetching from Sanity:', error)
-    return { articles: [] }
-  }
-}
-
-export default async function ArticlesPage() {
-  const { articles } = await getArticles()
+    }
+    fetchArticles()
+  }, [])
 
   return (
     <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
+        <motion.div 
+          className="mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Articles</h1>
-        </div>
+        </motion.div>
 
-        {articles.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-12 h-12 border-4 border-rgs-green border-t-transparent rounded-full"
+            />
+          </div>
+        ) : articles.length > 0 ? (
           <section>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {articles.map((article, index) => (
-                <div key={article._id}>
+                <motion.div 
+                  key={article._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.5, 
+                    delay: index * 0.1,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
+                  whileHover={{ y: -8 }}
+                >
                   <Link href={`/articles/${article.slug.current}`}>
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full hover:shadow-2xl transition-all duration-300">
+                    <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full hover:shadow-2xl transition-shadow duration-300 group">
                       {article.mainImage && (
                         <div className="relative h-48 bg-gray-100">
                           <Image
@@ -55,12 +83,12 @@ export default async function ArticlesPage() {
                             priority={index < 3}
                             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             quality={85}
-                            className="object-cover"
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                         </div>
                       )}
                       <div className="p-6">
-                        <h3 className="text-xl font-bold mb-2">{article.title}</h3>
+                        <h3 className="text-xl font-bold mb-2 group-hover:text-rgs-green transition-colors duration-300">{article.title}</h3>
                         {article.excerpt && (
                           <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                             {article.excerpt}
@@ -81,7 +109,7 @@ export default async function ArticlesPage() {
                       </div>
                     </div>
                   </Link>
-                </div>
+                </motion.div>
               ))}
             </div>
           </section>
