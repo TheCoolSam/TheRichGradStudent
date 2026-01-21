@@ -80,6 +80,30 @@ export default defineType({
       description: '📐 IMPORTANT: Use images with 16:10 aspect ratio (e.g., 800x500px, 1600x1000px). Credit card images work best at this ratio. Minimum 800px wide for best quality.',
       validation: (Rule) => Rule.required(),
       fieldset: 'basic',
+      fields: [
+        {
+          name: 'size',
+          type: 'string',
+          title: 'Image Size',
+          description: 'Choose how large this image should display',
+          options: {
+            list: [
+              {title: 'Small (25%)', value: 'small'},
+              {title: 'Medium (50%)', value: 'medium'},
+              {title: 'Large (75%)', value: 'large'},
+              {title: 'Full Width (100%)', value: 'full'},
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'medium',
+        },
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+          description: 'Important for SEO and accessibility',
+        },
+      ],
     }),
     defineField({
       name: 'pointsProgram',

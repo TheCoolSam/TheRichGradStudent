@@ -37,7 +37,31 @@ export default {
                 hotspot: true
               },
               description: 'Program logo (recommend square format, 200x200px)',
-              validation: (Rule: any) => Rule.required()
+              validation: (Rule: any) => Rule.required(),
+              fields: [
+                {
+                  name: 'size',
+                  type: 'string',
+                  title: 'Image Size',
+                  description: 'Choose how large this image should display',
+                  options: {
+                    list: [
+                      {title: 'Small (25%)', value: 'small'},
+                      {title: 'Medium (50%)', value: 'medium'},
+                      {title: 'Large (75%)', value: 'large'},
+                      {title: 'Full Width (100%)', value: 'full'},
+                    ],
+                    layout: 'radio',
+                  },
+                  initialValue: 'medium',
+                },
+                {
+                  name: 'alt',
+                  type: 'string',
+                  title: 'Alternative text',
+                  description: 'Important for SEO and accessibility',
+                },
+              ],
             },
             {
               name: 'baseValue',
