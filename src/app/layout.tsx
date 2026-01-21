@@ -12,16 +12,16 @@ export const metadata: Metadata = {
   description: 'We believe graduate students have the most to gain from mastering the points travel game. Ultimate millionaire guide to credit cards for grad students.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { isEnabled } = draftMode()
+  const { isEnabled } = await draftMode()
   
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} font-sans antialiased bg-gradient-to-br from-rgs-black via-rgs-off-black to-rgs-dark-green`}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         {isEnabled && (
           <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-500 text-black px-4 py-2 text-center font-bold">
             Preview Mode Enabled
@@ -31,27 +31,21 @@ export default function RootLayout({
           </div>
         )}
         <Navbar />
-        <div className={`${isEnabled ? "pt-28" : "pt-20"} min-h-screen`}>
-          <div className="animate-fadeIn">
-            {children}
-          </div>
+        <div className={isEnabled ? "pt-28" : "pt-16"}>
+          {children}
         </div>
         
-        <footer className="bg-gradient-to-b from-rgs-off-black to-rgs-black text-white py-16 mt-24 border-t border-rgs-green/50 shadow-[0_-10px_40px_rgba(0,255,136,0.1)]">
+        <footer className="bg-rgs-off-black text-white py-12 mt-20 border-t border-rgs-green">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-start mb-8">
-              <div className="mb-8 md:mb-0">
-                <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-rgs-light-green to-emerald-400 bg-clip-text text-transparent">The Rich Grad Student</h3>
-                <p className="text-white/90 text-base font-medium mb-2">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="mb-6 md:mb-0">
+                <h3 className="text-xl font-bold mb-2">The Rich Grad Student</h3>
+                <p className="text-white/80 text-sm">
                   Millionaire Style Travel, GRAD STUDENT BUDGET
-                </p>
-                <p className="text-white/60 text-sm max-w-md">
-                  Master the credit card points game and travel like a millionaire on a grad student budget.
                 </p>
               </div>
               
-              <div className="flex flex-col gap-6">
-                <div className="flex gap-6">
+              <div className="flex gap-8">
                 <Link 
                   href="/" 
                   className="text-white/80 hover:text-white transition-colors"
