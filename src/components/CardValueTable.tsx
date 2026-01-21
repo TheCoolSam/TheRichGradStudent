@@ -186,33 +186,39 @@ export default function CardValueTable({
       <h2 className="text-2xl sm:text-3xl font-bold mb-4">RGS Value Table</h2>
       
       {/* Desktop Table View */}
-      <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
-        <div className="inline-block min-w-full align-middle px-4 sm:px-0">
-          <table className="min-w-full bg-white border border-gray-300 shadow-sm">
+      <div className="hidden md:block overflow-x-auto">
+        <div className="inline-block min-w-full align-middle">
+          <table className="w-full bg-white border border-gray-300 shadow-sm table-fixed">
+            <colgroup>
+              <col style={{ width: '20%' }} />
+              <col style={{ width: '28%' }} />
+              <col style={{ width: '26%' }} />
+              <col style={{ width: '26%' }} />
+            </colgroup>
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                   Category
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                   <span className="inline-flex items-center gap-1">
                     Cash Back / Points
                   </span>
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                   <span className="inline-flex items-center gap-1">
-                    Points Value (2cpp)
-                    <Tooltip content="Cents per point - value when redeemed at 2 cents per point">
+                    Value (2cpp)
+                    <Tooltip content="Value when redeemed at 2 cents per point">
                       <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                       </svg>
                     </Tooltip>
                   </span>
                 </th>
-                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                   <span className="inline-flex items-center gap-1">
-                    Max Points Value (7cpp)
-                    <Tooltip content="Maximum value when redeemed optimally at 7 cents per point through premium redemptions">
+                    Max Value (7cpp)
+                    <Tooltip content="Maximum value when redeemed optimally at 7 cents per point">
                       <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                       </svg>
@@ -224,11 +230,11 @@ export default function CardValueTable({
             <tbody className="divide-y divide-gray-200">
               {rows.map((row, index) => (
                 <tr key={index} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900">
                     {row.category}
                     {row.hasAsterisk && <span className="text-blue-600">**</span>}
                   </td>
-                  <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm`}>
+                  <td className={`px-4 py-3 text-sm`}>
                     {row.rating ? (
                       <div className="flex items-center gap-2">
                         {row.cashBack}
@@ -238,10 +244,10 @@ export default function CardValueTable({
                       row.cashBack
                     )}
                   </td>
-                  <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm ${getRatingColor(row.rating)}`}>
+                  <td className={`px-4 py-3 text-sm ${getRatingColor(row.rating)}`}>
                     {row.points2cpp}
                   </td>
-                  <td className={`px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm ${getRatingColor(row.rating)}`}>
+                  <td className={`px-4 py-3 text-sm ${getRatingColor(row.rating)}`}>
                     {row.points7cpp}
                   </td>
                 </tr>
