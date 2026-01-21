@@ -166,7 +166,9 @@ export default async function ArticlePage({ params }: PageProps) {
   return (
     <main className="min-h-screen py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
       <article className="max-w-4xl mx-auto">
-        <ArticleContent article={article} portableTextComponents={portableTextComponents} />
+        <ArticleContent article={article}>
+          <PortableText value={article.body} components={portableTextComponents} />
+        </ArticleContent>
 
         {/* Donation Button */}
         <div className="my-12">

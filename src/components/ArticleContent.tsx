@@ -3,15 +3,15 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { urlFor } from '@/lib/image'
-import { PortableText, type PortableTextComponents } from 'next-sanity'
 import { Article } from '@/types/sanity'
+import { ReactNode } from 'react'
 
 interface ArticleContentProps {
   article: Article
-  portableTextComponents: PortableTextComponents
+  children: ReactNode // The PortableText content rendered in the server component
 }
 
-export default function ArticleContent({ article, portableTextComponents }: ArticleContentProps) {
+export default function ArticleContent({ article, children }: ArticleContentProps) {
   return (
     <>
       {/* Header */}
@@ -94,7 +94,7 @@ export default function ArticleContent({ article, portableTextComponents }: Arti
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
       >
-        <PortableText value={article.body} components={portableTextComponents} />
+        {children}
       </motion.div>
     </>
   )
