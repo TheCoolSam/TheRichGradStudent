@@ -61,42 +61,42 @@ function CardNode({ data }: any) {
     switch (effectiveCategory) {
       case 'new':
         return {
-          gradient: 'from-blue-600 via-blue-500 to-blue-600',
+          gradient: 'from-blue-600/20 via-blue-500/15 to-blue-600/20',
           border: 'border-blue-400',
           shadow: 'shadow-blue-500/50',
           glow: 'rgba(59, 130, 246, 0.5)'
         }
       case 'everyday':
         return {
-          gradient: 'from-green-600 via-green-500 to-green-600',
+          gradient: 'from-green-600/20 via-green-500/15 to-green-600/20',
           border: 'border-green-400',
           shadow: 'shadow-green-500/50',
           glow: 'rgba(34, 197, 94, 0.5)'
         }
       case 'travel':
         return {
-          gradient: 'from-yellow-600 via-yellow-500 to-yellow-600',
+          gradient: 'from-yellow-600/20 via-yellow-500/15 to-yellow-600/20',
           border: 'border-yellow-400',
           shadow: 'shadow-yellow-500/50',
           glow: 'rgba(234, 179, 8, 0.5)'
         }
       case 'pro-business':
         return {
-          gradient: 'from-purple-600 via-purple-500 to-purple-600',
+          gradient: 'from-purple-600/20 via-purple-500/15 to-purple-600/20',
           border: 'border-purple-400',
           shadow: 'shadow-purple-500/50',
           glow: 'rgba(168, 85, 247, 0.5)'
         }
       case 'pro-luxury':
         return {
-          gradient: 'from-red-600 via-red-500 to-red-600',
+          gradient: 'from-red-600/20 via-red-500/15 to-red-600/20',
           border: 'border-red-400',
           shadow: 'shadow-red-500/50',
           glow: 'rgba(239, 68, 68, 0.5)'
         }
       default:
         return {
-          gradient: 'from-gray-700 via-gray-600 to-gray-700',
+          gradient: 'from-gray-700/20 via-gray-600/15 to-gray-700/20',
           border: 'border-gray-400',
           shadow: 'shadow-gray-500/50',
           glow: 'rgba(156, 163, 175, 0.5)'
