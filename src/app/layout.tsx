@@ -5,11 +5,29 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { draftMode } from 'next/headers'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({ 
+  subsets: ['latin'], 
+  variable: '--font-inter',
+  display: 'swap',
+  preload: true,
+})
 
 export const metadata: Metadata = {
   title: 'The Rich Grad Student | Millionaire Style Travel, GRAD STUDENT BUDGET',
   description: 'We believe graduate students have the most to gain from mastering the points travel game. Ultimate millionaire guide to credit cards for grad students.',
+  keywords: 'credit cards, travel points, graduate students, travel hacking, credit card rewards, points and miles',
+  authors: [{ name: 'The Rich Grad Student' }],
+  openGraph: {
+    title: 'The Rich Grad Student | Millionaire Style Travel, GRAD STUDENT BUDGET',
+    description: 'Ultimate millionaire guide to credit cards for grad students',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The Rich Grad Student',
+    description: 'Ultimate millionaire guide to credit cards for grad students',
+  },
+  metadataBase: new URL('https://therichgradstudent.com'),
 }
 
 export default async function RootLayout({
@@ -21,6 +39,10 @@ export default async function RootLayout({
   
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+      </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         {isEnabled && (
           <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-500 text-black px-4 py-2 text-center font-bold">

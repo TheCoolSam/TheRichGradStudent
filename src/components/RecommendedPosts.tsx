@@ -86,12 +86,14 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
               >
                 {/* Image */}
                 {imageUrl && (
-                  <div className="relative h-48 w-full overflow-hidden">
+                  <div className="relative h-48 w-full overflow-hidden bg-gray-100">
                     <Image
                       src={imageUrl}
                       alt={getTitle(post)}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
                     />
                   </div>
                 )}

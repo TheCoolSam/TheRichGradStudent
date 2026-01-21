@@ -1,12 +1,21 @@
 import React from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { client } from '@/lib/sanity'
 import PointsValueSection from '@/components/PointsValueSection'
 import LevelCardsClient from '@/components/LevelCardsClient'
 import HeroSectionClient from '@/components/HeroSectionClient'
-import TeamSectionClient from '@/components/TeamSectionClient'
-import CTASectionClient from '@/components/CTASectionClient'
-import SupportSectionClient from '@/components/SupportSectionClient'
+
+// Dynamic imports for below-the-fold components
+const TeamSectionClient = dynamic(() => import('@/components/TeamSectionClient'), {
+  loading: () => <div className="py-20 bg-gray-50" />,
+})
+const CTASectionClient = dynamic(() => import('@/components/CTASectionClient'), {
+  loading: () => <div className="py-20" />,
+})
+const SupportSectionClient = dynamic(() => import('@/components/SupportSectionClient'), {
+  loading: () => <div className="py-20" />,
+})
 
 export const revalidate = 60
 
