@@ -337,6 +337,22 @@ export default function CardValueTable({
         })}
       </div>
       
+      {/* Legend / Key */}
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 className="font-bold text-sm mb-3 text-gray-900">Table Key:</h3>
+        <div className="space-y-2 text-xs sm:text-sm text-gray-700">
+          <div>
+            <strong className="text-gray-900">Points Value:</strong> Average value of points. This applies when points are transferred to a partner hotel or airline for travel
+          </div>
+          <div>
+            <strong className="text-gray-900">Max Points Value:</strong> Our best redemption of points!
+          </div>
+          <div>
+            <strong className="text-gray-900">RGS Wallet:</strong> To indicate why we keep this card in our wallet and what we use it for. It is the highest cash back you can earn across all cards for that specific category.
+          </div>
+        </div>
+      </div>
+      
       {card.hasSpendingCap && (
         <p className="mt-4 text-xs sm:text-sm text-gray-600 italic px-4 sm:px-0">
           ** Spending cap applies on these categories
