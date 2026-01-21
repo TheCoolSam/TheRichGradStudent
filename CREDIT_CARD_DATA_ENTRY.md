@@ -3,6 +3,7 @@
 ## ⚠️ IMPORTANT: Arrow Connection Rules
 
 **Arrows only appear between cards in ADJACENT levels.** This means:
+
 - ✅ New → Everyday (works)
 - ✅ Everyday → Travel (works)
 - ✅ Travel → Pro-Business or Pro-Luxury (works)
@@ -19,12 +20,15 @@ If you add a related card but don't see an arrow, check the browser console for 
 For each credit card in Sanity, you need to populate these new fields:
 
 ### 1. **Issuer** (Required)
+
 The bank that provides the card.
 
 ### 2. **Sub-Category** (Optional - Pro cards only)
+
 For cards with category = "pro", specify if they're business or luxury.
 
 ### 3. **Related Cards** (Optional but Recommended)
+
 Cards that come before/after this one in a recommended progression path.
 
 ---
@@ -34,42 +38,49 @@ Cards that come before/after this one in a recommended progression path.
 ### Chase Cards
 
 **Chase Rise**
+
 - Issuer: `Chase`
 - Category: `new`
 - Sub-Category: (leave empty)
 - Related Cards: `Freedom Flex`, `Freedom Unlimited`
 
 **Freedom Flex**
+
 - Issuer: `Chase`
 - Category: `everyday`
 - Sub-Category: (leave empty)
 - Related Cards: `Chase Sapphire Preferred`
 
 **Freedom Unlimited**
+
 - Issuer: `Chase`
 - Category: `everyday`
 - Sub-Category: (leave empty)
 - Related Cards: `Chase Sapphire Preferred`
 
 **Chase Sapphire Preferred**
+
 - Issuer: `Chase`
 - Category: `travel`
 - Sub-Category: (leave empty)
 - Related Cards: `Chase Sapphire Reserve`, `Chase Business Ink Cash`, `Chase Business Ink Unlimited`
 
 **Chase Sapphire Reserve**
+
 - Issuer: `Chase`
 - Category: `pro`
 - Sub-Category: `luxury`
 - Related Cards: (none)
 
 **Chase Business Ink Cash**
+
 - Issuer: `Chase`
 - Category: `pro`
 - Sub-Category: `business`
 - Related Cards: (none)
 
 **Chase Business Ink Unlimited**
+
 - Issuer: `Chase`
 - Category: `pro`
 - Sub-Category: `business`
@@ -80,6 +91,7 @@ Cards that come before/after this one in a recommended progression path.
 ### American Express Cards
 
 **Blue Cash Everyday® Card**
+
 - Issuer: `American Express`
 - Category: `everyday`
 - Sub-Category: (leave empty)
@@ -90,6 +102,7 @@ Cards that come before/after this one in a recommended progression path.
 ### Discover Cards
 
 **Discover Student**
+
 - Issuer: `Discover`
 - Category: `new`
 - Sub-Category: (leave empty)
@@ -100,6 +113,7 @@ Cards that come before/after this one in a recommended progression path.
 ### Citi Cards
 
 **Citi Custom Cash**
+
 - Issuer: `Citi`
 - Category: `everyday`
 - Sub-Category: (leave empty)
@@ -110,6 +124,7 @@ Cards that come before/after this one in a recommended progression path.
 ### Capital One Cards
 
 **Capital One Venture X**
+
 - Issuer: `Capital One`
 - Category: `travel`
 - Sub-Category: (leave empty)
@@ -120,12 +135,14 @@ Cards that come before/after this one in a recommended progression path.
 ### Marriott Cards
 
 **Marriott Bonvoy Business**
+
 - Issuer: `Chase`
 - Category: `pro`
 - Sub-Category: `business`
 - Related Cards: `Marriott Brilliant`
 
 **Marriott Brilliant**
+
 - Issuer: `Chase`
 - Category: `pro`
 - Sub-Category: `luxury`
@@ -136,6 +153,7 @@ Cards that come before/after this one in a recommended progression path.
 ### Hilton Cards
 
 **Hilton Honors Surpass**
+
 - Issuer: `American Express`
 - Category: `travel`
 - Sub-Category: (leave empty)
@@ -146,6 +164,7 @@ Cards that come before/after this one in a recommended progression path.
 ### IHG Cards
 
 **IHG Preferred**
+
 - Issuer: `Chase`
 - Category: `travel`
 - Sub-Category: (leave empty)
@@ -156,6 +175,7 @@ Cards that come before/after this one in a recommended progression path.
 ### Hyatt Cards
 
 **World of Hyatt Credit Card**
+
 - Issuer: `Chase`
 - Category: `travel`
 - Sub-Category: (leave empty)
@@ -166,6 +186,7 @@ Cards that come before/after this one in a recommended progression path.
 ### BILT Cards
 
 **BILT Palladium**
+
 - Issuer: `Wells Fargo`
 - Category: `pro`
 - Sub-Category: `luxury`
@@ -180,14 +201,14 @@ Level 1: I'm New Here
 ├── Chase Rise (Chase)
 └── Discover Student (Discover)
     ↓ (arrows)
-    
+
 Level 2: Everyday Earning
 ├── Freedom Flex (Chase) ←─── from Chase Rise
 ├── Freedom Unlimited (Chase) ←─── from Chase Rise
 ├── Blue Cash Everyday (Amex)
 └── Citi Custom Cash (Citi)
     ↓ (arrows)
-    
+
 Level 3: Travel Cards
 ├── Chase Sapphire Preferred (Chase) ←─── from Freedom Flex/Unlimited
 ├── Capital One Venture X (Capital One)
@@ -195,13 +216,13 @@ Level 3: Travel Cards
 ├── IHG Preferred (Chase)
 └── World of Hyatt (Chase)
     ↓ (arrows)
-    
+
 Level 4: Pro - Business
 ├── Chase Business Ink Cash (Chase) ←─── from Sapphire Preferred
 ├── Chase Business Ink Unlimited (Chase) ←─── from Sapphire Preferred
 └── Marriott Bonvoy Business (Chase)
     ↓ (arrows)
-    
+
 Level 5: Pro - Luxury
 ├── Chase Sapphire Reserve (Chase) ←─── from Sapphire Preferred
 ├── Marriott Brilliant (Chase) ←─── from Marriott Business
@@ -215,12 +236,14 @@ Level 5: Pro - Luxury
 The graph creates arrows between cards in **two ways**:
 
 ### 1. **Explicit Relationships** (via the "Related Cards" field)
+
 - ⚠️ **Only works between ADJACENT levels** (exactly 1 level apart)
 - You add the relationship in Sanity by selecting related cards
 - Creates bold, bright green arrows (strokeWidth: 3)
 - Direction matters: Adding Card B to Card A's relatedCards creates A → B
 
 ### 2. **Auto-Generated Connections** (same issuer/program)
+
 - Automatically connects cards with the same `issuer` OR `pointsProgram`
 - Also **only between adjacent levels**
 - Creates lighter, thinner arrows (strokeWidth: 2, opacity: 0.7)
@@ -229,6 +252,7 @@ The graph creates arrows between cards in **two ways**:
 ### Debugging Your Arrows
 
 If arrows don't appear:
+
 1. Open browser console (F12) and navigate to /millionaire-guide
 2. Look for the "=== CREDIT CARD GRAPH DEBUG ===" section
 3. Check each relationship attempt for:
@@ -239,11 +263,13 @@ If arrows don't appear:
 ### Examples:
 
 **✅ This Works:**
+
 - Chase Rise (new) → Freedom Flex (everyday) = 1 level apart ✓
 - Freedom cards (everyday) → Sapphire Preferred (travel) = 1 level apart ✓
 - Marriott Business (pro-business) → Marriott Brilliant (pro-luxury) = 1 level apart ✓
 
 **❌ This Won't Work:**
+
 - Chase Rise (new) → Sapphire Preferred (travel) = 2 levels apart ✗
 - Freedom Flex (everyday) → Sapphire Reserve (pro-luxury) = 3 levels apart ✗
 - Sapphire Preferred (travel) → Chase Ink Cash (pro-business) = 1 level apart ✓ **BUT different program type**
@@ -255,7 +281,7 @@ If arrows don't appear:
 1. Go to https://therichgradstudent.sanity.studio/
 2. Open each credit card document
 3. Fill in the "Issuer" field (required for all cards)
-4. For Pro-level cards, set the "Sub-Category" 
+4. For Pro-level cards, set the "Sub-Category"
 5. Add "Related Cards" references for progression paths
 6. Save each document
 

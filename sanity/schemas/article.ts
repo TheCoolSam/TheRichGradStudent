@@ -117,6 +117,16 @@ export default defineType({
       of: [{type: 'reference', to: {type: 'tag'}}],
     }),
     defineField({
+      name: 'recommendedPosts',
+      title: 'Recommended Content',
+      type: 'array',
+      of: [
+        {type: 'reference', to: [{type: 'article'}, {type: 'post'}, {type: 'creditCard'}]}
+      ],
+      description: '📌 Manually select 1-3 related articles, blog posts, or credit cards. If empty, automatically shows content with shared tags.',
+      validation: (Rule) => Rule.max(3),
+    }),
+    defineField({
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',

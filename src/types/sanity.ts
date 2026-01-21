@@ -38,6 +38,9 @@ export interface Post {
   publishedAt: string
   body: any[]
   category?: 'new' | 'everyday' | 'travel' | 'pro'
+  categories?: string[]
+  tags?: Array<{ _id: string }>
+  manualRecommendations?: string[]
   featured?: boolean
   metaDescription?: string
   excerpt?: string
@@ -60,6 +63,8 @@ export interface Article {
   publishedAt: string
   body: any[]
   categories?: string[]
+  tags?: Array<{ _id: string }>
+  manualRecommendations?: string[]
   mainArticleType?: 'already-in' | 'new' | 'everyday' | 'travel' | 'pro'
   featured?: boolean
   metaDescription?: string
@@ -106,8 +111,11 @@ export interface CreditCard {
   spendRequirement?: string
   aprOffer?: string
   hasSpendingCap: boolean
-  pointsProgram?: string
+  pointsProgram?: string | { _id: string; name: string }
   category?: 'new' | 'everyday' | 'travel' | 'pro'
+  categories?: string[]
+  tags?: Array<{ _id: string }>
+  manualRecommendations?: string[]
   rewardType?: 'points' | 'cashback'
   rating?: number
   

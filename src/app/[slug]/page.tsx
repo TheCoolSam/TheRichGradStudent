@@ -9,6 +9,8 @@ import Disclaimer from '@/components/Disclaimer'
 import CardValueTable from '@/components/CardValueTable'
 import DonationButton from '@/components/DonationButton'
 import QuickStatsDashboard from '@/components/QuickStatsDashboard'
+import RecommendedPosts from '@/components/RecommendedPosts'
+import { getRecommendedContent } from '@/lib/recommendations'
 
 // Revalidate every 60 seconds
 export const revalidate = 60
@@ -118,7 +120,9 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
           name,
           role,
           image
-        }
+        },
+        tags[]->{ _id },
+        "manualRecommendations": recommendedPosts[]->_id
       }`,
       { slug }
     )
@@ -133,7 +137,9 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
           name,
           role,
           image
-        }
+        },
+        tags[]->{ _id },
+        "manualRecommendations": recommendedPosts[]->_id
       }`,
       { slug }
     )
@@ -149,7 +155,9 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
           role,
           image
         },
-        "pointsProgram": pointsProgram->name,
+        "pointsProgram": pointsProgram->{_id, name},
+        tags[]->{ _id },
+        "manualRecommendations": recommendedPosts[]->_id,
         _updatedAt
       }`,
       { slug }
@@ -169,6 +177,20 @@ export default async function ContentPage({ params }: PageProps) {
   const topCards = content && 'categories' in content && content.categories
     ? await getTopCardsByCategory(content.categories)
     : []
+
+  // Fetch recommended content
+  let recommendations: any[] = []
+  if (content) {
+    const contentAny = content as any
+    recommendations = await getRecommendedContent({
+      currentDocId: contentAny._id,
+      currentType: contentAny._type,
+      currentTags: contentAny.tags || [],
+      currentCategories: contentAny.categories || [],
+      currentPointsProgram: contentAny.pointsProgram?._id ? { _id: contentAny.pointsProgram._id } : undefined,
+      manualRecommendations: contentAny.manualRecommendations || [],
+    })
+  }
 
   if (!content) {
     return (
@@ -450,6 +472,9 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
         {/* Disclaimer - Auto-appended to all content */}
         <Disclaimer />
       </article>
+
+      {/* Recommended Posts Section */}
+      <RecommendedPosts posts={recommendations} />
     </main>
   )
 }
