@@ -45,9 +45,13 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.08, y: -2 }}
-                whileTap={{ scale: 0.96 }}
-                transition={{ delay: 0.6, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ scale: 1.06, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25
+                }}
                 className="px-4 sm:px-6 py-3 sm:py-4 bg-white/10 backdrop-blur-md border-2 border-rgs-light-green rounded-full shadow-lg hover:shadow-[0_10px_30px_rgba(0,255,136,0.3)] text-center w-full sm:w-auto cursor-pointer transition-shadow duration-300"
               >
                 <span className="text-white font-bold text-sm sm:text-base md:text-lg">YOU'RE ALREADY IN THE CREDIT CARD GAME.</span>
@@ -59,9 +63,13 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.08, y: -2 }}
-                whileTap={{ scale: 0.96 }}
-                transition={{ delay: 0.8, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ scale: 1.06, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25
+                }}
                 className="px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-rgs-green to-rgs-light-green rounded-full shadow-xl hover:shadow-[0_15px_40px_rgba(0,255,136,0.4)] border-2 border-white/30 w-full sm:w-auto text-center cursor-pointer transition-shadow duration-300"
               >
                 <span className="text-white font-bold text-base sm:text-lg md:text-xl">ULTIMATE MILLIONAIRE GUIDE</span>
