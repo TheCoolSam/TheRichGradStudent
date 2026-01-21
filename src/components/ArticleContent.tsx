@@ -3,11 +3,31 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { urlFor } from '@/lib/image'
-import { Article } from '@/types/sanity'
 import { ReactNode } from 'react'
 
+interface ArticleMetadata {
+  title: string
+  publishedAt?: string
+  mainImage?: {
+    asset: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+  author?: {
+    name: string
+    role?: string
+    image?: {
+      asset: {
+        _ref: string
+        _type: 'reference'
+      }
+    }
+  }
+}
+
 interface ArticleContentProps {
-  article: Article
+  article: ArticleMetadata
   children: ReactNode // The PortableText content rendered in the server component
 }
 
