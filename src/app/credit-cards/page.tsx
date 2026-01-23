@@ -20,7 +20,8 @@ async function getCreditCards(category?: string) {
         image,
         publishedAt,
         category,
-        "author": author->{name, role}
+        "author": author->{name, role},
+        "pointsProgram": pointsProgram->{_id, name}
       }
     `)
     
