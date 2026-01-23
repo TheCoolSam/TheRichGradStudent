@@ -66,8 +66,7 @@ export default defineType({
       title: 'Show in Points Value Carousel',
       type: 'boolean',
       description: 'Enable to display this program in the homepage points carousel. Disable for cash back cards or programs without transferable points.',
-      initialValue: true,
-      validation: (Rule) => Rule.required()
+      initialValue: true
     })
   ],
   preview: {
