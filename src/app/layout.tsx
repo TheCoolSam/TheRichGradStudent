@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   description: 'We believe graduate students have the most to gain from mastering the points travel game. Ultimate millionaire guide to credit cards for grad students.',
   keywords: 'credit cards, travel points, graduate students, travel hacking, credit card rewards, points and miles',
   authors: [{ name: 'The Rich Grad Student' }],
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
   openGraph: {
     title: 'The Rich Grad Student | Millionaire Style Travel, GRAD STUDENT BUDGET',
     description: 'Ultimate millionaire guide to credit cards for grad students',
