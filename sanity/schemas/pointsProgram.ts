@@ -60,6 +60,13 @@ export default defineType({
       type: 'text',
       rows: 3,
       description: 'Brief description of the points program and its benefits'
+    }),
+    defineField({
+      name: 'showInCarousel',
+      title: 'Show in Points Value Carousel',
+      type: 'boolean',
+      description: 'Enable to display this program in the homepage points carousel. Disable for cash back cards or programs without transferable points.',
+      initialValue: true
     })
   ],
   preview: {

@@ -90,6 +90,7 @@ export interface PointsProgram {
   bestRedemption: number
   order: number
   description?: string
+  showInCarousel?: boolean
 }
 
 export interface CreditCard {
