@@ -69,7 +69,7 @@ async function getFeaturedContent() {
 async function getPointsData() {
   try {
     const pointsPrograms = await client.fetch<any[]>(
-      `*[_type == "pointsProgram"] | order(order asc){
+      `*[_type == "pointsProgram" && showInCarousel == true] | order(order asc){
         _id,
         name,
         "slug": slug.current,
