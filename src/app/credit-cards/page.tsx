@@ -6,20 +6,28 @@ import { urlFor } from '@/lib/image'
 
 export const revalidate = 60
 
-async function getCreditCards(category?: string) {
+async function getCreditCards(category?: string, rewardType?: string) {
   try {
-    // Build query with optional category filter
-    const categoryFilter = category ? `&& category == "${category}"` : ''
+    // Build query with optional filters
+    const filters = []
+    if (category) {
+      filters.push(`category == "${category}"`)
+    }
+    if (rewardType) {
+      filters.push(`rewardType == "${rewardType}"`)
+    }
+    const filterString = filters.length > 0 ? `&& (${filters.join(' && ')})` : ''
     
     // Fetch credit card reviews
     const cards = await client.fetch<CreditCard[]>(`
-      *[_type == "creditCard" ${categoryFilter}] | order(name asc){
+      *[_type == "creditCard" ${filterString}] | order(name asc){
         _id,
         name,
         slug,
         image,
         publishedAt,
         category,
+        rewardType,
         "author": author->{name, role},
         "pointsProgram": pointsProgram->{_id, name}
       }
@@ -35,10 +43,11 @@ async function getCreditCards(category?: string) {
 export default async function CreditCardsPage({
   searchParams,
 }: {
-  searchParams: { category?: string }
+  searchParams: { category?: string; rewardType?: string }
 }) {
   const category = searchParams.category
-  const { cards } = await getCreditCards(category)
+  const rewardType = searchParams.rewardType
+  const { cards } = await getCreditCards(category, rewardType)
 
   const categoryTitles: Record<string, string> = {
     'new': "I'm New Here",
@@ -62,6 +71,50 @@ export default async function CreditCardsPage({
               ← View All Cards
             </Link>
           )}
+          
+          {/* Reward Type Filter */}
+          <div className="mt-6 flex flex-wrap gap-3">
+            <span className="text-sm font-semibold text-gray-700 self-center">Filter by:</span>
+            <Link
+              href={{
+                pathname: '/credit-cards',
+                query: { ...(category && { category }) }
+              }}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                !rewardType
+                  ? 'bg-rgs-green text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              All Cards
+            </Link>
+            <Link
+              href={{
+                pathname: '/credit-cards',
+                query: { ...(category && { category }), rewardType: 'points' }
+              }}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                rewardType === 'points'
+                  ? 'bg-rgs-green text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Points Cards
+            </Link>
+            <Link
+              href={{
+                pathname: '/credit-cards',
+                query: { ...(category && { category }), rewardType: 'cashback' }
+              }}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                rewardType === 'cashback'
+                  ? 'bg-rgs-green text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Cash Back Cards
+            </Link>
+          </div>
         </div>
 
         {cards.length > 0 ? (
@@ -85,7 +138,18 @@ export default async function CreditCardsPage({
                         </div>
                       )}
                       <div className="p-6">
-                        <h3 className="text-xl font-bold mb-2">{card.name}</h3>
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="text-xl font-bold flex-1">{card.name}</h3>
+                          {card.rewardType && (
+                            <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${
+                              card.rewardType === 'points' 
+                                ? 'bg-blue-100 text-blue-800' 
+                                : 'bg-green-100 text-green-800'
+                            }`}>
+                              {card.rewardType === 'points' ? 'Points' : 'Cash Back'}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-gray-600 mb-4">
                           {new Date(card.publishedAt).toLocaleDateString('en-US', {
                             year: 'numeric',
