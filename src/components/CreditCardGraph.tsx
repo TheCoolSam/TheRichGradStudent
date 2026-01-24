@@ -25,6 +25,7 @@ interface CreditCardNode {
   subCategory?: 'business' | 'luxury'
   issuer: string
   image: any
+  pointsProgram?: { name: string }
   pointsProgramName?: string
   relatedCardsSlugs?: string[] | null
   rating: number
@@ -167,6 +168,14 @@ function getArrowColor(targetCategory: string, targetSubCategory?: string): stri
   }
 }
 
+// Helper to get family name (grouping key)
+function getCardFamily(card: CreditCardNode): string {
+  // Prefer points program name, fallback to issuer
+  if (card.pointsProgram && card.pointsProgram.name) return card.pointsProgram.name
+  if (card.pointsProgramName) return card.pointsProgramName
+  return card.issuer || 'Other'
+}
+
 export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -193,7 +202,7 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
     }
 
     // define families (Swimlanes)
-    const families = Array.from(new Set(cards.map(c => c.pointsProgramName || c.issuer))).sort()
+    const families = Array.from(new Set(cards.map(c => getCardFamily(c)))).sort()
 
     // Group cards by Level AND Family
     const cardsByLevelAndFamily: Record<string, Record<string, CreditCardNode[]>> = {}
@@ -209,7 +218,7 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
     // Populate
     cards.forEach(card => {
       const lvl = (card.category === 'pro' && card.subCategory) ? `pro-${card.subCategory}` : card.category
-      const fam = card.pointsProgramName || card.issuer
+      const fam = getCardFamily(card)
       if (cardsByLevelAndFamily[lvl] && cardsByLevelAndFamily[lvl][fam]) {
         cardsByLevelAndFamily[lvl][fam].push(card)
       }
