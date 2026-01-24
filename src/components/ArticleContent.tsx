@@ -90,7 +90,7 @@ export default function ArticleContent({ article, children }: ArticleContentProp
           )}
         </motion.div>
 
-        {article.mainImage && (
+        {article.mainImage?.asset && (
           <motion.div
             className="rounded-xl overflow-hidden shadow-2xl mb-8 group"
             initial={{ opacity: 0, scale: 0.95 }}

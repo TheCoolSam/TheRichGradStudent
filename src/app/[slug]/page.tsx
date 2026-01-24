@@ -335,7 +335,7 @@ export default async function ContentPage({ params }: PageProps) {
         {isCreditCard && (
           <>
             {/* Card Image */}
-            {(content as CreditCard).image && (
+            {(content as CreditCard).image?.asset && (
               <div className="mb-10 max-w-2xl mx-auto">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-rgs-green/30 hover:border-rgs-green hover:shadow-rgs-green/40 transition-all duration-500 group">
                   <div className="aspect-[16/10] bg-gradient-to-br from-gray-800 via-gray-900 to-black relative">
@@ -459,7 +459,7 @@ export default async function ContentPage({ params }: PageProps) {
         {isArticle && (
           <>
             {/* Main Image */}
-            {(content as Article).mainImage && (
+            {(content as Article).mainImage?.asset && (
               <div className="mb-8 rounded-xl overflow-hidden shadow-lg">
                 <Image
                   src={urlFor((content as Article).mainImage!).width(1200).height(675).url()}
@@ -489,7 +489,7 @@ export default async function ContentPage({ params }: PageProps) {
                   {topCards.map((card: CreditCard) => (
                     <Link key={card._id} href={`/${card.slug.current}`}>
                       <div className="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                        {card.image && (
+                        {card.image?.asset && (
                           <div className="relative h-40 bg-gradient-to-br from-amber-100 to-orange-100">
                             <Image
                               src={urlFor(card.image).width(300).height(200).url()}
