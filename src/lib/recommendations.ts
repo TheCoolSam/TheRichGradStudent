@@ -1,5 +1,3 @@
-import { client } from './sanity'
-
 export interface RecommendedContent {
   _id: string
   _type: 'article' | 'post' | 'creditCard'
@@ -8,8 +6,8 @@ export interface RecommendedContent {
   slug: string // Already extracted as string from slug.current in queries
   excerpt?: string
   description?: string // for credit cards
-  mainImage?: any
-  image?: any // for credit cards
+  mainImage?: { asset?: { _id: string; url: string } }
+  image?: { asset?: { _id: string; url: string } } // for credit cards
   categories?: string[]
   tags?: Array<{ _id: string }>
   publishedAt?: string
@@ -39,6 +37,7 @@ export async function getRecommendedContent({
   currentPointsProgram,
   manualRecommendations = [],
 }: GetRecommendationsParams): Promise<RecommendedContent[]> {
+  const { client } = await import('./sanity')
   try {
     // Step 1: If manual recommendations exist, fetch them
     if (manualRecommendations.length > 0) {
@@ -115,6 +114,7 @@ async function getAutoRecommendations({
   limit,
   excludeIds,
 }: AutoRecommendationsParams): Promise<RecommendedContent[]> {
+  const { client } = await import('./sanity')
   const tagIds = currentTags.map((t) => t._id)
   
   // Fetch all potential recommendations (articles, posts, cards)
@@ -156,7 +156,7 @@ async function getAutoRecommendations({
     if (
       currentPointsProgram &&
       content._type === 'creditCard' &&
-      (content as any).pointsProgram?._id === currentPointsProgram._id
+      (content as RecommendedContent & { pointsProgram?: { _id: string } }).pointsProgram?._id === currentPointsProgram._id
     ) {
       score += 5
     }

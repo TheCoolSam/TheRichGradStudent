@@ -36,7 +36,7 @@ export interface Post {
   }
   author: Author
   publishedAt: string
-  body: any[]
+  body: Array<Record<string, unknown>>
   category?: 'new' | 'everyday' | 'travel' | 'pro'
   categories?: string[]
   tags?: Array<{ _id: string }>
@@ -61,7 +61,7 @@ export interface Article {
   }
   author?: Author
   publishedAt: string
-  body: any[]
+  body: Array<Record<string, unknown>>
   categories?: string[]
   tags?: Array<{ _id: string }>
   manualRecommendations?: string[]
@@ -108,7 +108,7 @@ export interface CreditCard {
     }
   }
   affiliateLink: string
-  introContent?: any[]
+  introContent?: Array<Record<string, unknown>>
   spendRequirement?: string
   aprOffer?: string
   hasSpendingCap: boolean
@@ -153,7 +153,7 @@ export interface CreditCard {
   miscBenefits?: string
   miscRating?: Rating
   
-  additionalInfo?: any[]
+  additionalInfo?: Array<Record<string, unknown>>
   
   author?: Author
   publishedAt: string
