@@ -342,45 +342,46 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
       }
     })
 
-    // Also auto-generate edges for cards with same issuer in adjacent levels
-    Object.entries(cardsByLevel).forEach(([level, levelCards]) => {
+    // Also auto-generate edges for cards with same issuer in adjacent levels WITHIN SAME FAMILY
+    families.forEach(fam => {
       const levelOrder = ['new', 'everyday', 'travel', 'pro-business', 'pro-luxury']
-      const currentIdx = levelOrder.indexOf(level)
-      const nextLevel = levelOrder[currentIdx + 1]
 
-      if (nextLevel && cardsByLevel[nextLevel]) {
-        levelCards.forEach(sourceCard => {
-          cardsByLevel[nextLevel].forEach(targetCard => {
-            // Connect if same issuer or same points program
-            if ((sourceCard.issuer && targetCard.issuer && sourceCard.issuer === targetCard.issuer) ||
-              (sourceCard.pointsProgramName && targetCard.pointsProgramName && sourceCard.pointsProgramName === targetCard.pointsProgramName)) {
+      levelOrder.forEach((level, index) => {
+        const nextLevel = levelOrder[index + 1]
+        if (!nextLevel) return
 
-              // Check if edge doesn't already exist
-              const edgeExists = generatedEdges.some(
-                e => e.source === sourceCard._id && e.target === targetCard._id
-              )
+        const sourceCards = cardsByLevelAndFamily[level]?.[fam] || []
+        const targetCards = cardsByLevelAndFamily[nextLevel]?.[fam] || []
 
-              if (!edgeExists) {
-                const arrowColor = getArrowColor(targetCard.category, targetCard.subCategory)
-                generatedEdges.push({
-                  id: `auto-${sourceCard._id}-${targetCard._id}`,
-                  source: sourceCard._id,
-                  target: targetCard._id,
-                  type: 'smoothstep',
-                  animated: true,
-                  style: { stroke: arrowColor, strokeWidth: 3, opacity: 0.8 },
-                  markerEnd: {
-                    type: MarkerType.ArrowClosed,
-                    color: arrowColor,
-                    width: 25,
-                    height: 25,
-                  },
-                })
-              }
+        if (sourceCards.length === 0 || targetCards.length === 0) return
+
+        sourceCards.forEach(sourceCard => {
+          targetCards.forEach(targetCard => {
+            // Connect them!
+            const edgeExists = generatedEdges.some(
+              e => e.source === sourceCard._id && e.target === targetCard._id
+            )
+
+            if (!edgeExists) {
+              const arrowColor = getArrowColor(targetCard.category, targetCard.subCategory)
+              generatedEdges.push({
+                id: `auto-${sourceCard._id}-${targetCard._id}`,
+                source: sourceCard._id,
+                target: targetCard._id,
+                type: 'smoothstep',
+                animated: true,
+                style: { stroke: arrowColor, strokeWidth: 3, opacity: 0.8 },
+                markerEnd: {
+                  type: MarkerType.ArrowClosed,
+                  color: arrowColor,
+                  width: 25,
+                  height: 25,
+                },
+              })
             }
           })
         })
-      }
+      })
     })
 
     if (process.env.NODE_ENV === 'development') {
