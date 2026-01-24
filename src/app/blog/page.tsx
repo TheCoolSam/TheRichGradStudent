@@ -20,7 +20,7 @@ async function getBlogContent() {
         "author": author->{name, role}
       }
     `)
-    
+
     return { posts: posts || [] }
   } catch (error) {
     console.error('Error fetching from Sanity:', error)
@@ -46,7 +46,7 @@ export default async function BlogPage() {
                 <div key={post._id}>
                   <Link href={`/${post.slug.current}`}>
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full hover:shadow-2xl transition-all duration-300">
-                      {post.mainImage && (
+                      {post.mainImage?.asset && (
                         <div className="relative h-48 bg-gray-100">
                           <Image
                             src={urlFor(post.mainImage).width(400).height(250).url()}

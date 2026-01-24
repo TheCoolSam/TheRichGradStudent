@@ -66,7 +66,7 @@ export default function ArticlesGrid({ articles }: ArticlesGridProps) {
                     </div>
                   )}
                   <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-rgs-green transition-colors duration-300">{article.title}</h3>
+                    <h3 className="text-xl font-bold mb-2">{article.title}</h3>
                     {article.excerpt && (
                       <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                         {article.excerpt}
