@@ -44,10 +44,11 @@ export default function ArticleContent({ article, children }: ArticleContentProp
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.h1
-          className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-rgs-black"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          style={{ fontFamily: 'var(--font-playfair), serif' }}
         >
           {article.title}
         </motion.h1>
@@ -110,7 +111,7 @@ export default function ArticleContent({ article, children }: ArticleContentProp
 
       {/* Content */}
       <motion.div
-        className="prose prose-lg max-w-none mb-12"
+        className="prose prose-lg max-w-none mb-12 prose-headings:font-heading"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
