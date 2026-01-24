@@ -462,18 +462,7 @@ export default async function ContentPage({ params }: PageProps) {
         {/* Article Specific Content */}
         {isArticle && (
           <>
-            {/* Main Image */}
-            {(content as Article).mainImage?.asset && (
-              <div className="mb-8 rounded-xl overflow-hidden shadow-lg">
-                <Image
-                  src={urlFor((content as Article).mainImage!).width(1200).height(675).url()}
-                  alt={(content as Article).title}
-                  width={1200}
-                  height={675}
-                  className="w-full"
-                />
-              </div>
-            )}
+            {/* Main image removed - only shows on listing pages */}
 
             {/* Body Content */}
             {(content as Article).body && (

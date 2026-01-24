@@ -157,25 +157,15 @@ export default defineType({
       fieldset: 'basic',
     }),
     defineField({
-      name: 'rgsWalletCategories',
-      title: 'RGS Wallet Categories',
-      type: 'array',
-      of: [{ type: 'string' }],
-      options: {
-        list: [
-          { title: 'Groceries', value: 'Groceries' },
-          { title: 'Dining', value: 'Dining' },
-          { title: 'Travel', value: 'Travel' },
-          { title: 'Gas', value: 'Gas' },
-          { title: 'Pharmacy', value: 'Pharmacy' },
-          { title: 'Online Shopping', value: 'Online Shopping' },
-          { title: 'Rotating Categories', value: 'Rotating Categories' },
-          { title: 'Everything Else', value: 'Everything Else' },
-        ],
-      },
-      description: 'Select categories where YOU use this card (appears in QuickStats bubble)',
+      name: 'canConvertToPoints',
+      title: 'Can Convert to Points?',
+      type: 'boolean',
+      description: 'Check if this cashback card can be converted to points (e.g. Chase Freedom -> Ultimate Rewards)',
+      initialValue: false,
+      hidden: ({ document }) => document?.rewardType !== 'cashback',
       fieldset: 'basic',
     }),
+    // NOTE: RGS Wallet categories are now derived from category ratings with 'rgs-wallet' value
     defineField({
       name: 'affiliateLink',
       title: 'Affiliate Link',

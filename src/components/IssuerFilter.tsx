@@ -3,25 +3,24 @@
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useCallback } from 'react'
 
-const ISSUERS = [
-    { label: 'All', value: '' },
-    { label: 'Chase', value: 'Chase' },
-    { label: 'Amex', value: 'American Express' },
-    { label: 'Citi', value: 'Citi' },
-    { label: 'Capital One', value: 'Capital One' },
-    { label: 'Discover', value: 'Discover' },
-    { label: 'Barclays', value: 'Barclays' },
-    { label: 'Wells Fargo', value: 'Wells Fargo' },
-    { label: 'US Bank', value: 'US Bank' },
-    { label: 'Bank of America', value: 'Bank of America' },
-]
+// ISSUERS constant removed in favor of dynamic props
 
-export default function IssuerFilter() {
+interface IssuerFilterProps {
+    issuers?: Array<{ label: string; value: string }>
+}
+
+export default function IssuerFilter({ issuers = [] }: IssuerFilterProps) {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
     const currentIssuer = searchParams.get('issuer') || ''
+
+    // Combine "All" with fetched issuers
+    const allIssuers = [
+        { label: 'All', value: '' },
+        ...issuers
+    ]
 
     const createQueryString = useCallback(
         (name: string, value: string) => {
@@ -41,9 +40,21 @@ export default function IssuerFilter() {
         router.push(queryString ? `${pathname}?${queryString}` : pathname)
     }
 
+    // Fallback to hardcoded list if no issuers provided? 
+    // Ideally we rely on passed props, but if empty initially we could show defaults or nothing.
+    // For now assuming props will be passed, or we show just "All".
+    const displayIssuers = allIssuers.length > 1 ? allIssuers : [
+        { label: 'All', value: '' },
+        { label: 'Chase', value: 'Chase' },
+        { label: 'Amex', value: 'American Express' },
+        { label: 'Citi', value: 'Citi' },
+        { label: 'Capital One', value: 'Capital One' },
+        { label: 'Discover', value: 'Discover' },
+    ]
+
     return (
         <div className="mt-4 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {ISSUERS.map((issuer) => (
+            {displayIssuers.map((issuer) => (
                 <button
                     key={issuer.value || 'all'}
                     onClick={() => handleIssuerChange(issuer.value)}

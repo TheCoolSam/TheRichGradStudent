@@ -91,7 +91,7 @@ export default defineType({
       name: 'featured',
       title: 'Featured Post',
       type: 'boolean',
-      description: 'Mark as featured to show prominently on blog page',
+      description: 'Mark as featured to show on homepage. Featured posts appear first, then filled with most recent.',
       initialValue: false,
     }),
     defineField({

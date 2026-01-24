@@ -3,6 +3,7 @@ import { Post } from '@/types/sanity'
 import Link from 'next/link'
 import Image from 'next/image'
 import { urlFor } from '@/lib/image'
+import EmailSignup from '@/components/EmailSignup'
 
 export const revalidate = 60
 
@@ -36,6 +37,9 @@ export default async function BlogPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog Posts</h1>
+          <div className="mt-8">
+            <EmailSignup />
+          </div>
         </div>
 
         {/* Blog Posts Section */}

@@ -18,7 +18,7 @@ async function getCreditCards(category?: string, rewardType?: string, issuer?: s
       filters.push(`rewardType == "${rewardType}"`)
     }
     if (issuer) {
-      filters.push(`issuer == "${issuer}"`)
+      filters.push(`issuer->name == "${issuer}"`)
     }
     const filterString = filters.length > 0 ? `&& (${filters.join(' && ')})` : ''
 
@@ -29,7 +29,7 @@ async function getCreditCards(category?: string, rewardType?: string, issuer?: s
         name,
         slug,
         image,
-        issuer,
+        "issuer": issuer->name,
         publishedAt,
         category,
         rewardType,
@@ -38,10 +38,18 @@ async function getCreditCards(category?: string, rewardType?: string, issuer?: s
       }
     `)
 
-    return { cards: cards || [] }
+    // Fetch issuers for filter
+    const issuers = await client.fetch<Array<{ name: string; slug: { current: string } }>>(`
+      *[_type == "issuer"] | order(order asc){
+        name,
+        slug
+      }
+    `)
+
+    return { cards: cards || [], issuers: issuers || [] }
   } catch (error) {
     console.error('Error fetching from Sanity:', error)
-    return { cards: [] }
+    return { cards: [], issuers: [] }
   }
 }
 
@@ -53,7 +61,7 @@ export default async function CreditCardsPage({
   const category = searchParams.category
   const rewardType = searchParams.rewardType
   const issuer = searchParams.issuer
-  const { cards } = await getCreditCards(category, rewardType, issuer)
+  const { cards, issuers } = await getCreditCards(category, rewardType, issuer)
 
   const categoryTitles: Record<string, string> = {
     'new': "I'm New Here",
@@ -120,7 +128,7 @@ export default async function CreditCardsPage({
           </div>
 
           {/* Issuer Filter */}
-          <IssuerFilter />
+          <IssuerFilter issuers={issuers.map(i => ({ label: i.name, value: i.name }))} />
         </div>
 
         {cards.length > 0 ? (

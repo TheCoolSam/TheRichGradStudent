@@ -109,12 +109,18 @@ export interface CreditCard {
       _type: 'reference'
     }
   }
-  issuer?: string
+  issuer?: string | {
+    _id: string
+    name: string
+    slug: { current: string }
+    logo?: { asset: { _ref: string; url: string } }
+  }
   affiliateLink: string
   introContent?: PortableTextBlock[]
   spendRequirement?: string
   aprOffer?: string
   hasSpendingCap: boolean
+  canConvertToPoints?: boolean
   pointsProgram?: string | {
     _id: string;
     name: string;
@@ -127,7 +133,7 @@ export interface CreditCard {
   manualRecommendations?: string[]
   rewardType?: 'points' | 'cashback'
   rating?: number
-  rgsWalletCategories?: string[]
+  // rgsWalletCategories deprecated in favor of derived category ratings
 
   // Value table data
   signupBonusValue?: string

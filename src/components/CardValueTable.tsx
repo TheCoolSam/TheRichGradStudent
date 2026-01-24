@@ -200,7 +200,7 @@ export default function CardValueTable({
     },
   ]
 
-  const showPointsColumns = rewardType === 'points'
+  const showPointsColumns = rewardType === 'points' || (card.canConvertToPoints === true)
 
   return (
     <div className="my-8">

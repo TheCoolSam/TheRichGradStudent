@@ -6,8 +6,10 @@ import PointsValueSection from '@/components/PointsValueSection'
 import LevelCardsClient from '@/components/LevelCardsClient'
 import HeroSectionClient from '@/components/HeroSectionClient'
 import { FeaturedContentSection } from '@/components/FeaturedContentSection'
+import FeaturedBlogsSection from '@/components/FeaturedBlogsSection'
 
 // Dynamic imports for below-the-fold components
+
 const TeamSectionClient = dynamic(() => import('@/components/TeamSectionClient'), {
   loading: () => <div className="py-20 bg-gray-50" />,
 })
@@ -19,6 +21,55 @@ const SupportSectionClient = dynamic(() => import('@/components/SupportSectionCl
 })
 
 export const revalidate = 60
+
+async function getFeaturedBlogs() {
+  try {
+    // First get featured posts, then fill with most recent
+    const featured = await client.fetch<Array<{
+      _id: string
+      title: string
+      slug: { current: string }
+      excerpt?: string
+      mainImage?: { asset?: { _id: string; url: string }; alt?: string }
+      publishedAt: string
+      author?: { name: string }
+    }>>(
+      `*[_type == "post" && featured == true] | order(publishedAt desc)[0...3]{
+        _id,
+        title,
+        slug,
+        excerpt,
+        mainImage,
+        publishedAt,
+        author->{ name }
+      }`
+    )
+
+    // If we have fewer than 3 featured, fill with recent posts
+    if (featured.length < 3) {
+      const excludeIds = featured.map(p => p._id)
+      const remaining = 3 - featured.length
+      const recent = await client.fetch<typeof featured>(
+        `*[_type == "post" && !(_id in $excludeIds)] | order(publishedAt desc)[0...$remaining]{
+          _id,
+          title,
+          slug,
+          excerpt,
+          mainImage,
+          publishedAt,
+          author->{ name }
+        }`,
+        { excludeIds, remaining: remaining - 1 }
+      )
+      return [...featured, ...recent]
+    }
+
+    return featured
+  } catch (error) {
+    console.error('Error fetching featured blogs:', error)
+    return []
+  }
+}
 
 async function getFeaturedContent() {
   try {
@@ -276,6 +327,7 @@ export default async function HomePage() {
   const mainArticles = await getMainArticles()
   const alreadyInSlug = mainArticles['already-in']?.slug || 'youre-already-in'
   const featuredContent = await getFeaturedContent()
+  const featuredBlogs = await getFeaturedBlogs()
 
   return (
     <main className="min-h-screen">
@@ -304,8 +356,13 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Featured Blogs Section */}
+      <FeaturedBlogsSection posts={featuredBlogs} />
+
       {/* Points Value Section */}
       <PointsValueSection data={pointsData} />
+
+
 
       {/* Buy Us a Coffee Section */}
       <SupportSectionClient />

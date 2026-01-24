@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import SearchModal from './SearchModal'
 
@@ -36,7 +37,14 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center group">
+            <Link href="/" className="flex items-center gap-3 group">
+              <Image
+                src="/icon.svg"
+                alt="RGS Logo"
+                width={40}
+                height={40}
+                className="group-hover:scale-110 transition-transform duration-300"
+              />
               <span className="text-2xl font-bold text-white group-hover:text-rgs-light-green transition-colors duration-300">The Rich Grad Student</span>
             </Link>
 

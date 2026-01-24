@@ -18,11 +18,27 @@ interface CardStats {
   otherMultiplier?: number
   signupBonusValue?: string
   signupBonusRating?: Rating
-  rgsWalletCategories?: string[]
+  // Category ratings (used to derive RGS Wallet categories)
+  travelRating?: string
+  groceryRating?: string
+  gasRating?: string
+  diningRating?: string
+  pharmacyRating?: string
+  otherRating?: string
 }
 
 interface QuickStatsDashboardProps {
   card: CardStats
+}
+
+// Map category names for display
+const categoryLabels: Record<string, string> = {
+  travel: 'Travel',
+  grocery: 'Groceries',
+  gas: 'Gas',
+  dining: 'Dining',
+  pharmacy: 'Pharmacy',
+  other: 'Other',
 }
 
 export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) {
@@ -41,6 +57,15 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
   ].filter(rate => rate > 0)
 
   const bestEarnRate = earningRates.length > 0 ? Math.max(...earningRates) : 1
+
+  // Derive RGS Wallet categories from ratings where value is 'rgs-wallet'
+  const rgsWalletCategories: string[] = []
+  if (card.travelRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.travel)
+  if (card.groceryRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.grocery)
+  if (card.gasRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.gas)
+  if (card.diningRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.dining)
+  if (card.pharmacyRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.pharmacy)
+  if (card.otherRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.other)
 
   // Build cards array - conditionally include RGS Wallet if categories exist
   const cards = [
@@ -67,11 +92,11 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
     },
   ]
 
-  // Add RGS Wallet bubble if categories are defined
-  if (card.rgsWalletCategories && card.rgsWalletCategories.length > 0) {
+  // Add RGS Wallet bubble if any categories have rgs-wallet rating
+  if (rgsWalletCategories.length > 0) {
     cards.push({
       title: 'RGS Wallet',
-      value: card.rgsWalletCategories.slice(0, 3).join(', '),
+      value: rgsWalletCategories.slice(0, 3).join(', '),
       subtitle: 'We use this card for',
       gradient: 'from-amber-50 to-orange-50',
       border: 'border border-amber-200',
@@ -120,4 +145,5 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
     </div>
   )
 }
+
 
