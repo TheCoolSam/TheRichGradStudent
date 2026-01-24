@@ -66,7 +66,7 @@ export default function AboutPage() {
             <p>
               We started The Rich Grad Student because we realized something crucial: graduate students 
               are in a unique position to master the points and miles game. We are problem solvers, 
-              we're constantly traveling for conferences and research, and we're living on tight budgets 
+              we&apos;re constantly traveling for conferences and research, and we&apos;re living on tight budgets 
               where every dollar counts.
             </p>
             

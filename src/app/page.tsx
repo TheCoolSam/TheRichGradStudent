@@ -22,7 +22,20 @@ export const revalidate = 60
 
 async function getFeaturedContent() {
   try {
-    const features = await client.fetch<any[]>(
+    const features = await client.fetch<Array<{
+      _id: string
+      title: string
+      excerpt?: string
+      order: number
+      content: {
+        _type: string
+        title: string
+        slug: string
+        mainImage?: unknown
+        excerpt?: string
+        description?: string
+      }
+    }>>(
       `*[_type == "homepageFeature"] | order(order asc){
         _id,
         title,
@@ -68,7 +81,15 @@ async function getFeaturedContent() {
 
 async function getPointsData() {
   try {
-    const pointsPrograms = await client.fetch<any[]>(
+    const pointsPrograms = await client.fetch<Array<{
+      _id: string
+      name: string
+      slug: string
+      logo: unknown
+      baseValue: number
+      bestRedemption: number
+      order: number
+    }>>(
       `*[_type == "pointsProgram" && (showInCarousel != false)] | order(order asc){
         _id,
         name,
@@ -85,8 +106,8 @@ async function getPointsData() {
     }
     
     const cardsWithTopRated = await Promise.all(
-      pointsPrograms.map(async (program: any) => {
-        const topCards = await client.fetch<any[]>(
+      pointsPrograms.map(async (program) => {
+        const topCards = await client.fetch<Array<{ name: string; image: unknown }>>(
           `*[_type == "creditCard" && references($programId)] | order(
             select(
               signupBonusRating == "great" => 4,
@@ -114,15 +135,21 @@ async function getPointsData() {
       title: 'Maximize Your Points Value',
       cards: cardsWithTopRated
     }
-  } catch (error) {
-    console.error('Error fetching point values:', error)
+  } catch {
+    console.error('Error fetching point values')
     return null
   }
 }
 
 async function getMainArticles() {
   try {
-    const articles = await client.fetch<any[]>(
+    const articles = await client.fetch<Array<{
+      _id: string
+      title: string
+      slug: string
+      mainArticleType: string
+      excerpt?: string
+    }>>(
       `*[_type == "article" && defined(mainArticleType)]{
         _id,
         title,
@@ -133,7 +160,7 @@ async function getMainArticles() {
     )
     
     // Create a map of article type to article
-    const articleMap: Record<string, any> = {}
+    const articleMap: Record<string, { _id: string; title: string; slug: string; mainArticleType: string; excerpt?: string }> = {}
     articles.forEach(article => {
       if (article.mainArticleType) {
         articleMap[article.mainArticleType] = article
