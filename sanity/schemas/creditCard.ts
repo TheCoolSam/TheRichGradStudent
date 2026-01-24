@@ -110,8 +110,13 @@ export default defineType({
       title: 'Points Program',
       type: 'reference',
       to: [{type: 'pointsProgram'}],
-      description: 'Which points program does this card earn? (e.g., Chase Ultimate Rewards)',
-      validation: (Rule) => Rule.required(),
+      description: 'Which points program does this card earn? (skip for pure cash-back cards)',
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const rewardType = (context?.document as any)?.rewardType
+          if (rewardType === 'cashback') return true
+          return value ? true : 'Required for points-earning cards'
+        }),
       fieldset: 'basic',
     }),
     defineField({
