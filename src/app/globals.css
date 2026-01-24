@@ -67,12 +67,12 @@
 }
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  /* White text always */
-  --background-start-rgb: 5, 46, 36;
-  /* Deep Rich Green */
-  --background-end-rgb: 15, 60, 48;
-  /* Slightly lighter Green gradient */
+  --foreground-rgb: 17, 24, 39;
+  /* Dark Gray Text */
+  --background-start-rgb: 240, 245, 243;
+  /* Very pale sage (top) */
+  --background-end-rgb: 139, 163, 154;
+  /* Muted sage green (bottom) */
 }
 
 body {
