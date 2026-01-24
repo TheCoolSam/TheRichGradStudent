@@ -35,82 +35,14 @@ interface BlogContentProps {
 export default function BlogContent({ post, children }: BlogContentProps) {
   return (
     <>
-      {/* Header */}
+      {/* Header Image Only */}
       <motion.header
         className="mb-8 sm:mb-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        <motion.h1
-          className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {post.title}
-        </motion.h1>
 
-        <motion.div
-          className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          {post.publishedAt && (
-            <time dateTime={post.publishedAt}>
-              {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </time>
-          )}
-
-          {post.publishedAt && post._updatedAt && (() => {
-            const publishedDate = new Date(post.publishedAt).getTime()
-            const updatedDate = new Date(post._updatedAt).getTime()
-            const twentyFourHours = 24 * 60 * 60 * 1000
-            if ((updatedDate - publishedDate) > twentyFourHours) {
-              return (
-                <>
-                  <span className="text-gray-400">•</span>
-                  <span className="text-xs text-gray-500 italic">
-                    Updated {new Date(post._updatedAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </span>
-                </>
-              )
-            }
-            return null
-          })()}
-
-          {post.author && (
-            <>
-              <span className="hidden sm:inline">•</span>
-              <div className="flex items-center gap-2">
-                {post.author.image && (
-                  <Image
-                    src={urlFor(post.author.image).width(40).height(40).url()}
-                    alt={post.author.name}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                )}
-                <div>
-                  <p className="font-medium text-gray-900">{post.author.name}</p>
-                  {post.author.role && (
-                    <p className="text-xs text-gray-500">{post.author.role}</p>
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-        </motion.div>
 
         {post.mainImage && (
           <motion.div
