@@ -179,7 +179,7 @@ export default async function ArticlePage({ params }: PageProps) {
           ]}
         />
         <ArticleContent article={article}>
-          <PortableText value={article.body} components={portableTextComponents} />
+          <PortableText value={article.body as any} components={portableTextComponents} />
         </ArticleContent>
 
         {/* Donation Button */}

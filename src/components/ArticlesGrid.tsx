@@ -27,7 +27,7 @@ export default function ArticlesGrid({ articles }: ArticlesGridProps) {
 
   return (
     <>
-      <motion.div 
+      <motion.div
         className="mb-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -39,18 +39,18 @@ export default function ArticlesGrid({ articles }: ArticlesGridProps) {
       <section>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, index) => (
-            <motion.div 
+            <motion.div
               key={article._id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.5, 
+              transition={{
+                duration: 0.5,
                 delay: index * 0.1,
                 ease: [0.22, 1, 0.36, 1]
               }}
               whileHover={{ y: -8 }}
             >
-              <Link href={`/articles/${article.slug.current}`}>
+              <Link href={article.slug?.current ? `/articles/${article.slug.current}` : '#'}>
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full hover:shadow-2xl transition-shadow duration-300 group">
                   {article.mainImage && (
                     <div className="relative h-48 bg-gray-100">

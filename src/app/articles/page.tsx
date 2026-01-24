@@ -7,7 +7,7 @@ export const revalidate = 60
 async function getArticles() {
   try {
     const articles = await client.fetch<Article[]>(`
-      *[_type == "article"] | order(publishedAt desc){
+      *[_type == "article" && defined(slug.current)] | order(publishedAt desc){
         _id,
         title,
         slug,
@@ -18,7 +18,7 @@ async function getArticles() {
         "author": author->{name, role}
       }
     `)
-    
+
     return { articles: articles || [] }
   } catch (error) {
     console.error('Error fetching from Sanity:', error)
