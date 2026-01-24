@@ -21,9 +21,9 @@ interface TableRow {
   hasAsterisk?: boolean
 }
 
-export default function CardValueTable({ 
-  card, 
-  isLoading = false, 
+export default function CardValueTable({
+  card,
+  isLoading = false,
   error = null,
   spendingCapAmount = 25000,
   spendingCapPeriod = 'annually'
@@ -86,7 +86,7 @@ export default function CardValueTable({
   // Calculate net annual fee
   const netAnnualFee = card.annualFee - card.annualCredits
   const rewardType = card.rewardType || 'points' // Default to points if not specified
-  
+
   const rows: TableRow[] = [
     {
       category: 'Signup Bonus',
@@ -184,7 +184,7 @@ export default function CardValueTable({
   return (
     <div className="my-8">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4">RGS Value Table</h2>
-      
+
       {/* Desktop Table View */}
       <div className="hidden md:block overflow-x-auto">
         <div className="inline-block min-w-full align-middle">
@@ -208,7 +208,7 @@ export default function CardValueTable({
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                   <span className="inline-flex items-center gap-1">
                     Value (2cpp)
-                    <Tooltip content="Value when redeemed at 2 cents per point">
+                    <Tooltip content="Value when redeemed at 2 cents per point" placement="bottom">
                       <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                       </svg>
@@ -218,7 +218,7 @@ export default function CardValueTable({
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                   <span className="inline-flex items-center gap-1">
                     Max Value (7cpp)
-                    <Tooltip content="Maximum value when redeemed optimally at 7 cents per point">
+                    <Tooltip content="Maximum value when redeemed optimally at 7 cents per point" placement="left">
                       <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                       </svg>
@@ -252,8 +252,8 @@ export default function CardValueTable({
                   </td>
                 </tr>
               ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -262,13 +262,12 @@ export default function CardValueTable({
         {rows.map((row, index) => {
           // Determine if this is a key metric row
           const isKeyMetric = ['Signup Bonus', 'Net Annual Fee', 'Travel', 'Dining'].includes(row.category)
-          
+
           return (
-            <div 
-              key={index} 
-              className={`bg-white border-2 rounded-xl p-3 shadow-sm transition-all hover:shadow-md ${
-                isKeyMetric ? 'border-rgs-green/30 bg-gradient-to-br from-white to-green-50/30' : 'border-gray-200'
-              }`}
+            <div
+              key={index}
+              className={`bg-white border-2 rounded-xl p-3 shadow-sm transition-all hover:shadow-md ${isKeyMetric ? 'border-rgs-green/30 bg-gradient-to-br from-white to-green-50/30' : 'border-gray-200'
+                }`}
             >
               {/* Header Row */}
               <div className="flex items-start justify-between mb-2.5 pb-2.5 border-b border-gray-100">
@@ -336,7 +335,7 @@ export default function CardValueTable({
           )
         })}
       </div>
-      
+
       {/* Legend / Key */}
       <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
         <h3 className="font-bold text-sm mb-3 text-gray-900">Table Key:</h3>
@@ -352,7 +351,7 @@ export default function CardValueTable({
           </div>
         </div>
       </div>
-      
+
       {card.hasSpendingCap && (
         <p className="mt-4 text-xs sm:text-sm text-gray-600 italic px-4 sm:px-0">
           ** Spending cap applies on these categories

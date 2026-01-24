@@ -5,10 +5,25 @@ import React, { useState } from 'react'
 interface TooltipProps {
   content: string
   children: React.ReactNode
+  placement?: 'top' | 'bottom' | 'left' | 'right'
 }
 
-export default function Tooltip({ content, children }: TooltipProps) {
+export default function Tooltip({ content, children, placement = 'right' }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false)
+
+  const positionClasses = {
+    top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+    bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+    left: 'right-full top-1/2 -translate-y-1/2 mr-2',
+    right: 'left-full top-1/2 -translate-y-1/2 ml-2'
+  }
+
+  const arrowClasses = {
+    top: 'top-full left-1/2 -translate-x-1/2 border-t-gray-900 border-x-transparent border-b-transparent',
+    bottom: 'bottom-full left-1/2 -translate-x-1/2 border-b-gray-900 border-x-transparent border-t-transparent',
+    left: 'left-full top-1/2 -translate-y-1/2 border-l-gray-900 border-y-transparent border-r-transparent',
+    right: 'right-full top-1/2 -translate-y-1/2 border-r-gray-900 border-y-transparent border-l-transparent'
+  }
 
   return (
     <div className="relative inline-block">
@@ -20,9 +35,9 @@ export default function Tooltip({ content, children }: TooltipProps) {
         {children}
       </div>
       {isVisible && (
-        <div className="absolute z-50 px-3 py-2 text-sm font-normal text-white bg-gray-900 rounded-lg shadow-lg -top-2 left-full ml-2 whitespace-nowrap max-w-xs">
+        <div className={`absolute z-50 px-3 py-2 text-sm font-normal text-white bg-gray-900 rounded-lg shadow-lg whitespace-nowrap max-w-xs ${positionClasses[placement]}`}>
           {content}
-          <div className="absolute top-1/2 right-full -translate-y-1/2 border-8 border-transparent border-r-gray-900"></div>
+          <div className={`absolute border-4 ${arrowClasses[placement]}`}></div>
         </div>
       )}
     </div>
