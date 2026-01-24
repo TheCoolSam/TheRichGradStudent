@@ -136,17 +136,14 @@ async function getPointsData() {
       })
     )
 
-  })
-    )
-
-  return {
-    title: 'Maximize Your Points Value',
-    cards: cardsWithTopRated as any // Cast to satisfy strict type checking
+    return {
+      title: 'Maximize Your Points Value',
+      cards: cardsWithTopRated as any // Cast to satisfy strict type checking
+    }
+  } catch {
+    console.error('Error fetching point values')
+    return null
   }
-} catch {
-  console.error('Error fetching point values')
-  return null
-}
 }
 
 async function getMainArticles() {
