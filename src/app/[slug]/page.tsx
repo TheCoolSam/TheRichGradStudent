@@ -56,19 +56,22 @@ const portableTextComponents: PortableTextComponents = {
     },
   },
   block: {
-    h1: ({ children }: any) => <h1 className="text-4xl font-bold mt-8 mb-4">{children}</h1>,
-    h2: ({ children }: any) => <h2 className="text-3xl font-bold mt-8 mb-4">{children}</h2>,
-    h3: ({ children }: any) => <h3 className="text-2xl font-bold mt-6 mb-3">{children}</h3>,
-    h4: ({ children }: any) => <h4 className="text-xl font-bold mt-6 mb-3">{children}</h4>,
-    h5: ({ children }: any) => <h5 className="text-lg font-bold mt-4 mb-2">{children}</h5>,
-    h6: ({ children }: any) => <h6 className="text-base font-bold mt-4 mb-2">{children}</h6>,
-    normal: ({ children }: any) => <p className="mb-4 leading-relaxed">{children}</p>,
+    h1: ({ children }: any) => <h1 className="text-4xl font-bold mt-12 mb-6 font-heading text-rgs-black">{children}</h1>,
+    h2: ({ children }: any) => <h2 className="text-3xl font-bold mt-10 mb-5 font-heading text-rgs-black">{children}</h2>,
+    h3: ({ children }: any) => <h3 className="text-2xl font-bold mt-8 mb-4 font-heading text-rgs-black">{children}</h3>,
+    h4: ({ children }: any) => <h4 className="text-xl font-bold mt-6 mb-3 font-heading text-rgs-black">{children}</h4>,
+    blockquote: ({ children }: any) => (
+      <blockquote className="border-l-4 border-rgs-green pl-6 py-2 my-8 italic text-lg text-gray-700 bg-gray-50 rounded-r-lg">
+        {children}
+      </blockquote>
+    ),
+    normal: ({ children }: any) => <p className="mb-6 leading-relaxed text-gray-800 text-lg">{children}</p>,
   },
   marks: {
     link: ({ children, value }: any) => {
       const rel = !value.href.startsWith('/') ? 'noreferrer noopener' : undefined
       return (
-        <a href={value.href} rel={rel} className="text-blue-600 hover:text-blue-800 underline">
+        <a href={value.href} rel={rel} className="text-rgs-green hover:text-emerald-700 underline decoration-2 decoration-rgs-green/30 underline-offset-2 transition-colors font-medium">
           {children}
         </a>
       )
