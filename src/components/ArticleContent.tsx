@@ -40,23 +40,7 @@ export default function ArticleContent({ article, children }: ArticleContentProp
       <ReadingProgress />
 
       {/* Article Main Image */}
-      {article.mainImage?.asset && (
-        <motion.div
-          className="rounded-xl overflow-hidden shadow-2xl mb-8 group max-w-4xl mx-auto"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <Image
-            src={urlFor(article.mainImage).width(1200).height(675).url()}
-            alt={article.title}
-            width={1200}
-            height={675}
-            priority
-            className="w-full h-auto group-hover:scale-105 transition-transform duration-700"
-          />
-        </motion.div>
-      )}
+      {/* Article Main Image removed per request */}
 
       {/* Content */}
       <motion.div
