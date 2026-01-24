@@ -31,7 +31,12 @@ async function getFeaturedContent() {
         _type: string
         title: string
         slug: string
-        mainImage?: unknown
+        mainImage?: {
+          asset?: {
+            _id: string
+            url: string
+          }
+        }
         excerpt?: string
         description?: string
       }
