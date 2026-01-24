@@ -4,10 +4,12 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { urlFor } from '@/lib/image'
 import { ReactNode } from 'react'
+import Timestamp from './Timestamp'
 
 interface ArticleMetadata {
   title: string
   publishedAt?: string
+  _updatedAt?: string
   mainImage?: {
     asset: {
       _ref: string
@@ -35,13 +37,13 @@ export default function ArticleContent({ article, children }: ArticleContentProp
   return (
     <>
       {/* Header */}
-      <motion.header 
+      <motion.header
         className="mb-8 sm:mb-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        <motion.h1 
+        <motion.h1
           className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -49,23 +51,20 @@ export default function ArticleContent({ article, children }: ArticleContentProp
         >
           {article.title}
         </motion.h1>
-        
-        <motion.div 
+
+        <motion.div
           className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           {article.publishedAt && (
-            <time dateTime={article.publishedAt}>
-              {new Date(article.publishedAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </time>
+            <Timestamp
+              publishedAt={article.publishedAt}
+              updatedAt={article._updatedAt}
+            />
           )}
-          
+
           {article.author && (
             <>
               <span className="hidden sm:inline">•</span>
@@ -91,7 +90,7 @@ export default function ArticleContent({ article, children }: ArticleContentProp
         </motion.div>
 
         {article.mainImage && (
-          <motion.div 
+          <motion.div
             className="rounded-xl overflow-hidden shadow-2xl mb-8 group"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -110,7 +109,7 @@ export default function ArticleContent({ article, children }: ArticleContentProp
       </motion.header>
 
       {/* Content */}
-      <motion.div 
+      <motion.div
         className="prose prose-lg max-w-none mb-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

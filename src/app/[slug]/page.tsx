@@ -11,6 +11,8 @@ import DonationButton from '@/components/DonationButton'
 import QuickStatsDashboard from '@/components/QuickStatsDashboard'
 import RecommendedPosts from '@/components/RecommendedPosts'
 import BlogContent from '@/components/BlogContent'
+import Breadcrumbs from '@/components/Breadcrumbs'
+import Timestamp from '@/components/Timestamp'
 import { getRecommendedContent } from '@/lib/recommendations'
 
 // Revalidate every 60 seconds
@@ -144,6 +146,7 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
     const post = await client.fetch<Post | null>(
       `*[_type == "post" && slug.current == $slug][0]{
         ...,
+        _updatedAt,
         author->{
           name,
           role,
@@ -262,6 +265,28 @@ export default async function ContentPage({ params }: PageProps) {
   return (
     <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <article className="max-w-4xl mx-auto">
+        {/* Breadcrumbs */}
+        <Breadcrumbs
+          items={
+            isCreditCard
+              ? [
+                { label: 'Home', href: '/' },
+                { label: 'Credit Cards', href: '/credit-cards' },
+                { label: (content as CreditCard).name },
+              ]
+              : isPost
+                ? [
+                  { label: 'Home', href: '/' },
+                  { label: 'Blog', href: '/' },
+                  { label: (content as Post).title },
+                ]
+                : [
+                  { label: 'Home', href: '/' },
+                  { label: 'Articles', href: '/articles' },
+                  { label: (content as Article).title },
+                ]
+          }
+        />
         {/* Header */}
         <header className="mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
@@ -348,17 +373,12 @@ export default async function ContentPage({ params }: PageProps) {
             </div>
 
             {/* Last Updated Timestamp */}
-            {(content as CreditCard)._updatedAt && (
-              <div className="mb-6 text-center">
-                <p className="text-xs text-gray-500 italic">
-                  Last updated: {new Date((content as CreditCard)._updatedAt!).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </p>
-              </div>
-            )}
+            <div className="mb-6 flex justify-center">
+              <Timestamp
+                publishedAt={(content as CreditCard).publishedAt}
+                updatedAt={(content as CreditCard)._updatedAt}
+              />
+            </div>
 
             {/* Quick Stats Dashboard */}
             <QuickStatsDashboard card={content as CreditCard} />

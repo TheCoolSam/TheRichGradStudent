@@ -8,6 +8,7 @@ import { PortableText, type PortableTextComponents } from 'next-sanity'
 import DonationButton from '@/components/DonationButton'
 import RecommendedPosts from '@/components/RecommendedPosts'
 import ArticleContent from '@/components/ArticleContent'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import { getRecommendedContent } from '@/lib/recommendations'
 
 export const revalidate = 60
@@ -19,15 +20,15 @@ const portableTextComponents: PortableTextComponents = {
       if (!value?.asset?._ref) {
         return null
       }
-      
+
       const sizeClasses = {
         small: 'max-w-md mx-auto',
         medium: 'max-w-2xl mx-auto',
         large: 'max-w-full',
       }
-      
+
       const sizeClass = sizeClasses[value.size as keyof typeof sizeClasses] || sizeClasses.large
-      
+
       return (
         <div className={`my-8 ${sizeClass}`}>
           <div className="rounded-lg overflow-hidden shadow-lg">
@@ -111,6 +112,7 @@ async function getArticle(slug: string): Promise<Article | null> {
     const article = await client.fetch<Article | null>(
       `*[_type == "article" && slug.current == $slug][0]{
         ...,
+        _updatedAt,
         body[]{
           ...,
           markDefs[]{
@@ -166,6 +168,13 @@ export default async function ArticlePage({ params }: PageProps) {
   return (
     <main className="min-h-screen py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
       <article className="max-w-4xl mx-auto">
+        <Breadcrumbs
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Articles', href: '/articles' },
+            { label: article.title },
+          ]}
+        />
         <ArticleContent article={article}>
           <PortableText value={article.body} components={portableTextComponents} />
         </ArticleContent>

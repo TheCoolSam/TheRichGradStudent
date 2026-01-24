@@ -24,6 +24,7 @@ export interface Author {
 export interface Post {
   _id: string
   _type: 'post'
+  _updatedAt?: string
   title: string
   slug: {
     current: string
@@ -49,6 +50,7 @@ export interface Post {
 export interface Article {
   _id: string
   _type: 'article'
+  _updatedAt?: string
   title: string
   slug: {
     current: string
@@ -107,6 +109,7 @@ export interface CreditCard {
       _type: 'reference'
     }
   }
+  issuer?: string
   affiliateLink: string
   introContent?: Array<Record<string, unknown>>
   spendRequirement?: string
@@ -119,42 +122,42 @@ export interface CreditCard {
   manualRecommendations?: string[]
   rewardType?: 'points' | 'cashback'
   rating?: number
-  
+
   // Value table data
   signupBonusValue?: string
   signupBonusRating?: Rating
   annualFee: number
   annualCredits: number
-  
+
   travelMultiplier: number
   travelRating?: Rating
-  
+
   groceryMultiplier: number
   groceryRating?: Rating
-  
+
   gasMultiplier: number
   gasRating?: Rating
-  
+
   diningMultiplier: number
   diningRating?: Rating
-  
+
   pharmacyMultiplier: number
   pharmacyRating?: Rating
-  
+
   otherMultiplier: number
   otherRating?: Rating
-  
+
   loungeBenefits?: string
   loungeRating?: Rating
-  
+
   partnerBenefits?: string
   partnerRating?: Rating
-  
+
   miscBenefits?: string
   miscRating?: Rating
-  
+
   additionalInfo?: Array<Record<string, unknown>>
-  
+
   author?: Author
   publishedAt: string
   featured?: boolean
