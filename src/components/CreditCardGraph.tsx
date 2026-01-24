@@ -192,50 +192,75 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
       'pro-luxury': 1600,
     }
 
-    // Group cards by effective level
-    const cardsByLevel: Record<string, CreditCardNode[]> = {
-      new: [],
-      everyday: [],
-      travel: [],
-      'pro-business': [],
-      'pro-luxury': [],
-    }
+    // define families (Swimlanes)
+    const families = Array.from(new Set(cards.map(c => c.pointsProgramName || c.issuer))).sort()
 
+    // Group cards by Level AND Family
+    const cardsByLevelAndFamily: Record<string, Record<string, CreditCardNode[]>> = {}
+
+    // Initialize structure
+    Object.keys(levels).forEach(lvl => {
+      cardsByLevelAndFamily[lvl] = {}
+      families.forEach(fam => {
+        cardsByLevelAndFamily[lvl][fam] = []
+      })
+    })
+
+    // Populate
     cards.forEach(card => {
-      if (card.category === 'pro' && card.subCategory) {
-        cardsByLevel[`pro-${card.subCategory}`].push(card)
-      } else {
-        cardsByLevel[card.category].push(card)
+      const lvl = (card.category === 'pro' && card.subCategory) ? `pro-${card.subCategory}` : card.category
+      const fam = card.pointsProgramName || card.issuer
+      if (cardsByLevelAndFamily[lvl] && cardsByLevelAndFamily[lvl][fam]) {
+        cardsByLevelAndFamily[lvl][fam].push(card)
       }
     })
 
-    // Calculate horizontal spacing and create nodes
+    // Calculate positions
     const generatedNodes: Node[] = []
-    const horizontalSpacing = isMobile ? 200 : 350
-    const startX = isMobile ? 100 : 200
+    const familyWidth = isMobile ? 200 : 350 // Width reserved for each family column
+    const familySpacing = isMobile ? 20 : 50 // Gap between families
+    const startX = 0
 
-    Object.entries(cardsByLevel).forEach(([level, levelCards]) => {
-      const totalWidth = (levelCards.length - 1) * horizontalSpacing
-      const startXPos = startX - totalWidth / 2
+    families.forEach((fam, famIndex) => {
+      // X-range for this family
+      const familyStartX = startX + (famIndex * (familyWidth + familySpacing))
 
-      levelCards.forEach((card, index) => {
-        generatedNodes.push({
-          id: card._id,
-          type: 'cardNode',
-          position: {
-            x: startXPos + index * horizontalSpacing,
-            y: levels[level],
-          },
-          data: {
-            name: card.name,
-            slug: getSlugString(card.slug),
-            image: card.image,
-            issuer: card.issuer,
-            pointsProgram: card.pointsProgramName,
-            category: card.category,
-            subCategory: card.subCategory,
-          },
-          draggable: !isMobile,
+      Object.keys(levels).forEach(lvl => {
+        const levelCards = cardsByLevelAndFamily[lvl][fam]
+        if (levelCards.length === 0) return
+
+        // Center cards within the family swimlane
+        // If multiple cards in same family & level, stack them or spread them slightly?
+        // Let's spread them vertically slightly if needed, or horizontally tight
+        // Actually, usually users have 1 card per level per family. 
+        // If they have 2 (e.g. Freedom Flex + Freedom Unlimited), we spread them.
+
+        const cardSpacing = isMobile ? 120 : 180
+        const totalLevelWidth = (levelCards.length - 1) * cardSpacing
+        const levelStartX = familyStartX + (familyWidth - totalLevelWidth) / 2 - (isMobile ? 80 : 140) // simplistic centering
+
+        levelCards.forEach((card, index) => {
+          // Shift X slightly for multiples to avoid collision
+          const xPos = familyStartX + (familyWidth / 2) + ((index - (levelCards.length - 1) / 2) * cardSpacing) - (isMobile ? 80 : 140)
+
+          generatedNodes.push({
+            id: card._id,
+            type: 'cardNode',
+            position: {
+              x: xPos,
+              y: levels[lvl] + (index % 2 === 1 ? 50 : 0), // Slight stagger if multiple
+            },
+            data: {
+              name: card.name,
+              slug: getSlugString(card.slug),
+              image: card.image,
+              issuer: card.issuer,
+              pointsProgram: card.pointsProgramName,
+              category: card.category,
+              subCategory: card.subCategory,
+            },
+            draggable: !isMobile,
+          })
         })
       })
     })
