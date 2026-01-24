@@ -36,10 +36,10 @@ export default defineType({
           description: 'Choose how large this image should display',
           options: {
             list: [
-              {title: 'Small (25%)', value: 'small'},
-              {title: 'Medium (50%)', value: 'medium'},
-              {title: 'Large (75%)', value: 'large'},
-              {title: 'Full Width (100%)', value: 'full'},
+              { title: 'Small (25%)', value: 'small' },
+              { title: 'Medium (50%)', value: 'medium' },
+              { title: 'Large (75%)', value: 'large' },
+              { title: 'Full Width (100%)', value: 'full' },
             ],
             layout: 'radio',
           },
@@ -76,13 +76,13 @@ export default defineType({
       name: 'categories',
       title: 'Categories',
       type: 'array',
-      of: [{type: 'string'}],
+      of: [{ type: 'string' }],
       options: {
         list: [
-          {title: 'New Here', value: 'new'},
-          {title: 'Every Day Earning', value: 'everyday'},
-          {title: 'Travel Cards', value: 'travel'},
-          {title: 'Credit Card Pro', value: 'pro'},
+          { title: 'New Here', value: 'new' },
+          { title: 'Every Day Earning', value: 'everyday' },
+          { title: 'Travel Cards', value: 'travel' },
+          { title: 'Credit Card Pro', value: 'pro' },
         ],
       },
       validation: (Rule) => Rule.required().min(1),
@@ -106,14 +106,14 @@ export default defineType({
       name: 'tags',
       title: 'Tags',
       type: 'array',
-      of: [{type: 'reference', to: {type: 'tag'}}],
+      of: [{ type: 'reference', to: { type: 'tag' } }],
     }),
     defineField({
       name: 'recommendedPosts',
       title: 'Recommended Content',
       type: 'array',
       of: [
-        {type: 'reference', to: [{type: 'article'}, {type: 'post'}, {type: 'creditCard'}]}
+        { type: 'reference', to: [{ type: 'article' }, { type: 'post' }, { type: 'creditCard' }] }
       ],
       description: '📌 Manually select 1-3 related articles, blog posts, or credit cards. If empty, automatically shows content with shared tags.',
       validation: (Rule) => Rule.max(3),
@@ -127,45 +127,7 @@ export default defineType({
     defineField({
       name: 'body',
       title: 'Body',
-      type: 'array',
-      of: [
-        {
-          type: 'block',
-        },
-        {
-          type: 'image',
-          options: {
-            hotspot: true,
-          },
-          fields: [
-            {
-              name: 'alt',
-              type: 'string',
-              title: 'Alternative text',
-              description: 'Important for SEO and accessibility.',
-            },
-            {
-              name: 'caption',
-              type: 'string',
-              title: 'Caption',
-              description: 'Optional caption displayed below the image (e.g., "Cape Kudu Hotel. Photo Credit: RGS")',
-            },
-            {
-              name: 'size',
-              type: 'string',
-              title: 'Image Size',
-              options: {
-                list: [
-                  { title: 'Small (50%)', value: 'small' },
-                  { title: 'Medium (75%)', value: 'medium' },
-                  { title: 'Large (100%)', value: 'large' },
-                ],
-              },
-              initialValue: 'large',
-            },
-          ],
-        },
-      ],
+      type: 'blockContent',
     }),
   ],
   preview: {

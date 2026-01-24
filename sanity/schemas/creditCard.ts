@@ -167,8 +167,7 @@ export default defineType({
     defineField({
       name: 'introContent',
       title: 'Why We Opened It',
-      type: 'array',
-      of: [{ type: 'block' }],
+      type: 'blockContent',
       description: 'Tell your story - why did you choose this card?',
       fieldset: 'intro',
     }),
@@ -392,8 +391,7 @@ export default defineType({
     defineField({
       name: 'additionalInfo',
       title: 'Additional Information',
-      type: 'array',
-      of: [{ type: 'block' }],
+      type: 'blockContent',
       description: 'Extra details, tips, or important notes about this card',
       fieldset: 'additional',
     }),
