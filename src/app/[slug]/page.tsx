@@ -190,6 +190,7 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
           image
         },
         "pointsProgram": pointsProgram->{_id, name, baseValue, bestRedemption},
+        "annualCreditsNotes": annualCreditsNotes,
         tags[]->{ _id },
         "manualRecommendations": recommendedPosts[]->_id,
         _updatedAt
