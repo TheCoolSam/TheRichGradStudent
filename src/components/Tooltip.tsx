@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface TooltipProps {
   content: string
@@ -29,26 +30,25 @@ export default function Tooltip({ content, children, placement = 'right' }: Tool
     let top = 0
     let left = 0
 
-    // Tooltip dimensions (approximate for calculation, or could measure ref)
-    // Assuming max-width 320px (xs)
-    const OFFSET = 10
+    // Gap between trigger and tooltip
+    const GAP = 12
 
     switch (placement) {
       case 'top':
-        top = rect.top + scrollY - OFFSET
+        top = rect.top + scrollY - GAP
         left = rect.left + scrollX + rect.width / 2
         break
       case 'bottom':
-        top = rect.bottom + scrollY + OFFSET
+        top = rect.bottom + scrollY + GAP
         left = rect.left + scrollX + rect.width / 2
         break
       case 'left':
         top = rect.top + scrollY + rect.height / 2
-        left = rect.left + scrollX - OFFSET
+        left = rect.left + scrollX - GAP
         break
       case 'right':
         top = rect.top + scrollY + rect.height / 2
-        left = rect.right + scrollX + OFFSET
+        left = rect.right + scrollX + GAP
         break
     }
 
@@ -70,34 +70,42 @@ export default function Tooltip({ content, children, placement = 'right' }: Tool
       >
         {children}
       </div>
-      {mounted && isVisible && createPortal(
-        <div
-          className="absolute z-[9999] pointer-events-none"
-          style={{
-            top: coords.top,
-            left: coords.left,
-          }}
-        >
-          <div
-            className={`px-3 py-2 text-sm font-normal text-white bg-gray-900 rounded-lg shadow-xl whitespace-nowrap max-w-xs relative
-              ${placement === 'top' ? '-translate-y-full -translate-x-1/2' : ''}
-              ${placement === 'bottom' ? '-translate-x-1/2' : ''}
-              ${placement === 'left' ? '-translate-x-full -translate-y-1/2' : ''}
-              ${placement === 'right' ? '-translate-y-1/2' : ''}
-            `}
-          >
-            {content}
-            {/* Arrow */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {isVisible && (
             <div
-              className={`absolute border-4 border-transparent
-                ${placement === 'top' ? 'top-full left-1/2 -translate-x-1/2 border-t-gray-900' : ''}
-                ${placement === 'bottom' ? 'bottom-full left-1/2 -translate-x-1/2 border-b-gray-900' : ''}
-                ${placement === 'left' ? 'left-full top-1/2 -translate-y-1/2 border-l-gray-900' : ''}
-                ${placement === 'right' ? 'right-full top-1/2 -translate-y-1/2 border-r-gray-900' : ''}
-              `}
-            />
-          </div>
-        </div>,
+              className="absolute z-[9999] pointer-events-none"
+              style={{
+                top: coords.top,
+                left: coords.left,
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className={`px-3 py-2 text-sm font-medium text-white bg-rgs-black/95 backdrop-blur-md border border-rgs-green/30 rounded-lg shadow-xl whitespace-nowrap max-w-xs relative
+                  ${placement === 'top' ? '-translate-y-full -translate-x-1/2' : ''}
+                  ${placement === 'bottom' ? '-translate-x-1/2' : ''}
+                  ${placement === 'left' ? '-translate-x-full -translate-y-1/2' : ''}
+                  ${placement === 'right' ? '-translate-y-1/2' : ''}
+                `}
+              >
+                {content}
+                {/* Arrow */}
+                <div
+                  className={`absolute w-3 h-3 bg-rgs-black/95 border-rgs-green/30 transform rotate-45
+                    ${placement === 'top' ? 'top-full left-1/2 -ml-1.5 -mt-1.5 border-b border-r' : ''}
+                    ${placement === 'bottom' ? 'bottom-full left-1/2 -ml-1.5 -mb-1.5 border-t border-l' : ''}
+                    ${placement === 'left' ? 'left-full top-1/2 -mt-1.5 -ml-1.5 border-t border-r' : ''}
+                    ${placement === 'right' ? 'right-full top-1/2 -mt-1.5 -mr-1.5 border-b border-l' : ''}
+                  `}
+                />
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
         document.body
       )}
     </>
