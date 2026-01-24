@@ -52,7 +52,7 @@ export default function ArticlesGrid({ articles }: ArticlesGridProps) {
             >
               <Link href={article.slug?.current ? `/articles/${article.slug.current}` : '#'}>
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full hover:shadow-2xl transition-shadow duration-300 group">
-                  {article.mainImage && (
+                  {article.mainImage?.asset && (
                     <div className="relative h-48 bg-gray-100">
                       <Image
                         src={urlFor(article.mainImage).width(400).height(250).url()}
