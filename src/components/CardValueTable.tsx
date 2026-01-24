@@ -21,45 +21,15 @@ interface TableRow {
   note?: string
 }
 
-// ... inside component ...
 
-const rows: TableRow[] = [
-  // ...
-  {
-    category: 'Annual Credits',
-    cashBack: `$${card.annualCredits}`,
-    points2cpp: 'N/A',
-    points7cpp: 'N/A',
-    note: card.annualCreditsNotes,
-  },
-  // ...
-]
-
-  // ... inside render (Desktop) ...
-
-  < td className = {`px-4 py-3 text-sm`}>
-  {
-    row.rating ? (
-      <div className="flex items-center gap-2">
-        {row.cashBack}
-        <RatingBadge rating={row.rating} size="sm" />
-      </div>
-    ) : (
-      <div className="flex flex-col">
-        <span>{row.cashBack}</span>
-        {row.note && <span className="text-xs text-gray-500 font-medium mt-0.5">{row.note}</span>}
-      </div>
-    )
-  }
-                  </td >
 
 export default function CardValueTable({
-    card,
-    isLoading = false,
-    error = null,
-    spendingCapAmount = 25000,
-    spendingCapPeriod = 'annually'
-  }: CardValueTableProps) {
+  card,
+  isLoading = false,
+  error = null,
+  spendingCapAmount = 25000,
+  spendingCapPeriod = 'annually'
+}: CardValueTableProps) {
   // Loading state
   if (isLoading) {
     return (
