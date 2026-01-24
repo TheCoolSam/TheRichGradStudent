@@ -86,6 +86,22 @@ export default function CardValueTable({
   const netAnnualFee = card.annualFee - card.annualCredits
   const rewardType = card.rewardType || 'points' // Default to points if not specified
 
+  // Get point values from program or defaults
+  const pp = typeof card.pointsProgram === 'object' ? card.pointsProgram : null
+  const baseCpp = pp?.baseValue || 2
+  const maxCpp = pp?.bestRedemption || 7
+
+  // Calculate value strings dynamically
+  const getValueAtBase = (multiplier: number) => {
+    if (rewardType === 'cashback') return 'N/A'
+    return formatAsPercentage(calculateDynamicValue(multiplier, baseCpp))
+  }
+
+  const getValueAtMax = (multiplier: number) => {
+    if (rewardType === 'cashback') return 'N/A'
+    return formatAsPercentage(calculateDynamicValue(multiplier, maxCpp))
+  }
+
   const rows: TableRow[] = [
     {
       category: 'Signup Bonus',
@@ -116,44 +132,44 @@ export default function CardValueTable({
     {
       category: 'Travel',
       cashBack: formatEarningRate(card.travelMultiplier, rewardType),
-      points2cpp: formatAsPercentage(calculateAt2cpp(card.travelMultiplier)),
-      points7cpp: formatAsPercentage(calculateAt7cpp(card.travelMultiplier)),
+      points2cpp: getValueAtBase(card.travelMultiplier),
+      points7cpp: getValueAtMax(card.travelMultiplier),
       rating: card.travelRating,
     },
     {
       category: 'Grocery',
       cashBack: formatEarningRate(card.groceryMultiplier, rewardType),
-      points2cpp: formatAsPercentage(calculateAt2cpp(card.groceryMultiplier)),
-      points7cpp: formatAsPercentage(calculateAt7cpp(card.groceryMultiplier)),
+      points2cpp: getValueAtBase(card.groceryMultiplier),
+      points7cpp: getValueAtMax(card.groceryMultiplier),
       rating: card.groceryRating,
     },
     {
       category: 'Gas',
       cashBack: formatEarningRate(card.gasMultiplier, rewardType),
-      points2cpp: formatAsPercentage(calculateAt2cpp(card.gasMultiplier)),
-      points7cpp: formatAsPercentage(calculateAt7cpp(card.gasMultiplier)),
+      points2cpp: getValueAtBase(card.gasMultiplier),
+      points7cpp: getValueAtMax(card.gasMultiplier),
       rating: card.gasRating,
       hasAsterisk: card.hasSpendingCap,
     },
     {
       category: 'Dining',
       cashBack: formatEarningRate(card.diningMultiplier, rewardType),
-      points2cpp: formatAsPercentage(calculateAt2cpp(card.diningMultiplier)),
-      points7cpp: formatAsPercentage(calculateAt7cpp(card.diningMultiplier)),
+      points2cpp: getValueAtBase(card.diningMultiplier),
+      points7cpp: getValueAtMax(card.diningMultiplier),
       rating: card.diningRating,
     },
     {
       category: 'Pharmacy',
       cashBack: formatEarningRate(card.pharmacyMultiplier, rewardType),
-      points2cpp: formatAsPercentage(calculateAt2cpp(card.pharmacyMultiplier)),
-      points7cpp: formatAsPercentage(calculateAt7cpp(card.pharmacyMultiplier)),
+      points2cpp: getValueAtBase(card.pharmacyMultiplier),
+      points7cpp: getValueAtMax(card.pharmacyMultiplier),
       rating: card.pharmacyRating,
     },
     {
       category: 'Other Purchases',
       cashBack: formatEarningRate(card.otherMultiplier, rewardType),
-      points2cpp: formatAsPercentage(calculateAt2cpp(card.otherMultiplier)),
-      points7cpp: formatAsPercentage(calculateAt7cpp(card.otherMultiplier)),
+      points2cpp: getValueAtBase(card.otherMultiplier),
+      points7cpp: getValueAtMax(card.otherMultiplier),
       rating: card.otherRating,
       hasAsterisk: card.hasSpendingCap,
     },
@@ -180,6 +196,8 @@ export default function CardValueTable({
     },
   ]
 
+  const showPointsColumns = rewardType === 'points'
+
   return (
     <div className="my-8">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4">RGS Value Table</h2>
@@ -189,10 +207,10 @@ export default function CardValueTable({
         <div className="inline-block min-w-full align-middle">
           <table className="w-full bg-white border border-gray-300 shadow-sm table-fixed">
             <colgroup>
-              <col style={{ width: '20%' }} />
-              <col style={{ width: '28%' }} />
-              <col style={{ width: '26%' }} />
-              <col style={{ width: '26%' }} />
+              <col style={{ width: showPointsColumns ? '20%' : '40%' }} />
+              <col style={{ width: showPointsColumns ? '28%' : '60%' }} />
+              {showPointsColumns && <col style={{ width: '26%' }} />}
+              {showPointsColumns && <col style={{ width: '26%' }} />}
             </colgroup>
             <thead className="bg-gray-100">
               <tr>
@@ -204,22 +222,26 @@ export default function CardValueTable({
                     Cash Back / Points
                   </span>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b align-top">
-                  <div className="flex flex-col gap-0.5">
-                    <span>Value (2cpp)</span>
-                    <span className="text-[10px] font-normal normal-case text-gray-500 leading-tight">
-                      Base travel value
-                    </span>
-                  </div>
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b align-top">
-                  <div className="flex flex-col gap-0.5">
-                    <span>Max Value (7cpp)</span>
-                    <span className="text-[10px] font-normal normal-case text-gray-500 leading-tight">
-                      Optimized redemption
-                    </span>
-                  </div>
-                </th>
+                {showPointsColumns && (
+                  <>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b align-top">
+                      <div className="flex flex-col gap-0.5">
+                        <span>Value ({baseCpp}cpp)</span>
+                        <span className="text-[10px] font-normal normal-case text-gray-500 leading-tight">
+                          Base travel value
+                        </span>
+                      </div>
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b align-top">
+                      <div className="flex flex-col gap-0.5">
+                        <span>Max Value ({maxCpp}cpp)</span>
+                        <span className="text-[10px] font-normal normal-case text-gray-500 leading-tight">
+                          Optimized redemption
+                        </span>
+                      </div>
+                    </th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -239,12 +261,16 @@ export default function CardValueTable({
                       row.cashBack
                     )}
                   </td>
-                  <td className={`px-4 py-3 text-sm ${getRatingColor(row.rating)}`}>
-                    {row.points2cpp}
-                  </td>
-                  <td className={`px-4 py-3 text-sm ${getRatingColor(row.rating)}`}>
-                    {row.points7cpp}
-                  </td>
+                  {showPointsColumns && (
+                    <>
+                      <td className={`px-4 py-3 text-sm ${getRatingColor(row.rating)}`}>
+                        {row.points2cpp}
+                      </td>
+                      <td className={`px-4 py-3 text-sm ${getRatingColor(row.rating)}`}>
+                        {row.points7cpp}
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -293,10 +319,10 @@ export default function CardValueTable({
                 </div>
 
                 {/* 2cpp Value */}
-                {row.points2cpp !== 'N/A' && (
+                {showPointsColumns && row.points2cpp !== 'N/A' && (
                   <div className="flex items-center justify-between py-1.5 px-2.5 bg-blue-50 rounded-lg">
                     <div className="flex flex-col">
-                      <span className="text-xs font-medium text-gray-700">Value (2cpp)</span>
+                      <span className="text-xs font-medium text-gray-700">Value ({baseCpp}cpp)</span>
                       <span className="text-[10px] text-gray-500">Base travel value</span>
                     </div>
                     <span className={`font-semibold text-sm ${getRatingColor(row.rating)} truncate ml-2`}>
@@ -306,10 +332,10 @@ export default function CardValueTable({
                 )}
 
                 {/* 7cpp Max Value */}
-                {row.points7cpp !== 'N/A' && (
+                {showPointsColumns && row.points7cpp !== 'N/A' && (
                   <div className="flex items-center justify-between py-1.5 px-2.5 bg-green-50 rounded-lg">
                     <div className="flex flex-col">
-                      <span className="text-xs font-medium text-gray-700">Max Value (7cpp)</span>
+                      <span className="text-xs font-medium text-gray-700">Max Value ({maxCpp}cpp)</span>
                       <span className="text-[10px] text-gray-500">Optimized redemption</span>
                     </div>
                     <span className={`font-semibold text-sm ${getRatingColor(row.rating)} truncate ml-2`}>
