@@ -256,14 +256,17 @@ export default function CardValueTable({
                     {row.hasAsterisk && <span className="text-blue-600">**</span>}
                   </td>
                   <td className={`px-4 py-3 text-sm`}>
-                    {row.rating ? (
+                    <div className="flex flex-col">
                       <div className="flex items-center gap-2">
                         {row.cashBack}
-                        <RatingBadge rating={row.rating} size="sm" />
+                        {row.rating && <RatingBadge rating={row.rating} size="sm" />}
                       </div>
-                    ) : (
-                      row.cashBack
-                    )}
+                      {row.note && (
+                        <span className="text-[10px] text-gray-500 font-medium mt-0.5 leading-tight">
+                          {row.note}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   {showPointsColumns && (
                     <>
