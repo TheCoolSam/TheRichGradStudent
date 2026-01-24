@@ -7,6 +7,8 @@ import { urlFor } from '@/lib/image'
 // For simplicity in this demo, we're skipping signature verification but you should add it!
 // const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
