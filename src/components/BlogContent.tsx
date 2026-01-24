@@ -44,7 +44,7 @@ export default function BlogContent({ post, children }: BlogContentProps) {
       >
 
 
-        {post.mainImage && (
+        {post.mainImage?.asset && (
           <motion.div
             className="rounded-xl overflow-hidden shadow-2xl mb-8 group"
             initial={{ opacity: 0, scale: 0.95 }}
