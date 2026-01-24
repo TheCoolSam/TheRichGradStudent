@@ -65,7 +65,7 @@ export default function BlogContent({ post, children }: BlogContentProps) {
 
       {/* Content */}
       <motion.div
-        className="prose prose-lg max-w-none mb-12"
+        className="prose prose-lg max-w-none mb-12 prose-headings:font-heading"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}

@@ -422,8 +422,8 @@ export default async function ContentPage({ params }: PageProps) {
             {/* Intro Content */}
             {(content as CreditCard).introContent && (
               <div className="mb-8">
-                <h2 className="text-3xl font-bold mb-4">Why we opened it!</h2>
-                <div className="prose prose-lg max-w-none">
+                <h2 className="text-3xl font-bold mb-4 font-heading text-rgs-black">Why we opened it!</h2>
+                <div className="prose prose-lg max-w-none prose-headings:font-heading">
                   <PortableText
                     value={(content as CreditCard).introContent}
                     components={portableTextComponents}
@@ -438,8 +438,8 @@ export default async function ContentPage({ params }: PageProps) {
             {/* Additional Information */}
             {(content as CreditCard).additionalInfo && (
               <div className="my-8 p-6 bg-gray-50 border border-gray-200 rounded-lg">
-                <h2 className="text-2xl font-bold mb-4">Additional Information</h2>
-                <div className="prose prose-lg max-w-none">
+                <h2 className="text-2xl font-bold mb-4 font-heading text-rgs-black">Additional Information</h2>
+                <div className="prose prose-lg max-w-none prose-headings:font-heading">
                   <PortableText
                     value={(content as CreditCard).additionalInfo}
                     components={portableTextComponents}
@@ -473,7 +473,7 @@ export default async function ContentPage({ params }: PageProps) {
 
             {/* Body Content */}
             {(content as Article).body && (
-              <div className="prose prose-lg max-w-none mb-12">
+              <div className="prose prose-lg max-w-none mb-12 prose-headings:font-heading">
                 <PortableText
                   value={(content as Article).body}
                   components={portableTextComponents}
