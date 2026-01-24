@@ -67,6 +67,13 @@ export default defineType({
       type: 'boolean',
       description: 'Enable to display this program in the homepage points carousel. Disable for cash back cards or programs without transferable points.',
       initialValue: true
+    }),
+    defineField({
+      name: 'bestRedemptionLink',
+      title: 'Best Redemption Link',
+      type: 'reference',
+      to: [{ type: 'article' }, { type: 'post' }, { type: 'creditCard' }],
+      description: 'Optional: Link to content explaining how to get this Best Redemption value'
     })
   ],
   preview: {
@@ -87,7 +94,7 @@ export default defineType({
       title: 'Display Order',
       name: 'orderAsc',
       by: [
-        {field: 'order', direction: 'asc'}
+        { field: 'order', direction: 'asc' }
       ]
     }
   ]

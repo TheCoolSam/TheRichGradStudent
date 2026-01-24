@@ -127,6 +127,7 @@ export interface CreditCard {
   manualRecommendations?: string[]
   rewardType?: 'points' | 'cashback'
   rating?: number
+  rgsWalletCategories?: string[]
 
   // Value table data
   signupBonusValue?: string

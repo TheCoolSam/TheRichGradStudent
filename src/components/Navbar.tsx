@@ -37,7 +37,7 @@ export default function Navbar() {
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center group">
-              <span className="text-2xl font-bold text-black group-hover:text-rgs-green transition-colors duration-300">The Rich Grad Student</span>
+              <span className="text-2xl font-bold text-white group-hover:text-rgs-light-green transition-colors duration-300">The Rich Grad Student</span>
             </Link>
 
             {/* Desktop Navigation */}

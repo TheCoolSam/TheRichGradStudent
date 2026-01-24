@@ -1,16 +1,51 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 interface HeroSectionClientProps {
   alreadyInSlug: string
 }
 
 export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientProps) {
+  const { scrollY } = useScroll()
+  const [count, setCount] = useState(0)
+  const targetPoints = 500000
+
+  // Parallax depth effects
+  const taglineY = useTransform(scrollY, [0, 400], [0, 60])
+  const taglineOpacity = useTransform(scrollY, [0, 300], [1, 0])
+  const bgY = useTransform(scrollY, [0, 500], [0, 150])
+
+  // Smooth spring for counter
+  const smoothCount = useSpring(0, { stiffness: 50, damping: 20 })
+
+  // Counter visibility based on scroll
+  const [showCounter, setShowCounter] = useState(false)
+
+  useEffect(() => {
+    const unsubscribe = scrollY.on('change', (latest) => {
+      const progress = Math.min(latest / 400, 1)
+      smoothCount.set(Math.floor(progress * targetPoints))
+      setShowCounter(latest > 50)
+    })
+
+    const unsubCount = smoothCount.on('change', (v) => setCount(Math.floor(v)))
+
+    return () => {
+      unsubscribe()
+      unsubCount()
+    }
+  }, [scrollY, smoothCount])
+
   return (
-    <section className="relative bg-gradient-to-br from-rgs-black via-rgs-off-black to-rgs-dark-green min-h-[600px] flex items-center">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+    <section className="relative bg-gradient-to-br from-rgs-black via-rgs-off-black to-rgs-dark-green min-h-[600px] flex items-center overflow-hidden">
+      {/* Parallax background */}
+      <motion.div
+        className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"
+        style={{ y: bgY }}
+      />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <motion.div
@@ -19,8 +54,10 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="text-center"
         >
+          {/* Parallax tagline */}
           <motion.h1
             className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-8"
+            style={{ y: taglineY, opacity: taglineOpacity }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
@@ -31,6 +68,7 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
 
           <motion.p
             className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 drop-shadow-lg leading-relaxed mb-8 sm:mb-12 max-w-4xl mx-auto px-4"
+            style={{ y: useTransform(scrollY, [0, 400], [0, 30]) }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -78,6 +116,29 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
           </div>
         </motion.div>
       </div>
+
+      {/* Scroll-linked Points Counter */}
+      <motion.div
+        className="fixed bottom-6 right-6 z-50"
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: showCounter ? 1 : 0, x: showCounter ? 0 : 100 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+      >
+        <div className="bg-rgs-green/90 backdrop-blur-md px-5 py-3 rounded-full shadow-2xl border border-white/20">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">✨</span>
+            <div className="flex flex-col">
+              <span className="text-white font-bold text-lg tabular-nums">
+                {count.toLocaleString()}
+              </span>
+              <span className="text-white/70 text-xs font-medium">
+                points saved by readers
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </section>
   )
 }
+

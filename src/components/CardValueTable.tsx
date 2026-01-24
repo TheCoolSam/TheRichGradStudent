@@ -300,7 +300,7 @@ export default function CardValueTable({
               {/* Header Row */}
               <div className="flex items-start justify-between mb-2.5 pb-2.5 border-b border-gray-100">
                 <div className="flex-1 min-w-0">
-                  <h3 className={`font-bold text-gray-900 truncate ${isKeyMetric ? 'text-base' : 'text-sm'}`}>
+                  <h3 className={`font-bold text-gray-900 break-words ${isKeyMetric ? 'text-base' : 'text-sm'}`}>
                     {row.category}
                     {row.hasAsterisk && <span className="text-blue-600 ml-1">**</span>}
                   </h3>
@@ -320,7 +320,7 @@ export default function CardValueTable({
                   <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                     {rewardType === 'cashback' ? 'Cash Back' : 'Points'}
                   </span>
-                  <div className={`flex flex-col ml-2 truncate`}>
+                  <div className="flex flex-col ml-2 break-words whitespace-normal">
                     <span className={`font-bold text-sm ${getRatingColor(row.rating)} ${isKeyMetric ? 'text-base' : ''} text-right`}>
                       {row.cashBack}
                     </span>
@@ -335,7 +335,7 @@ export default function CardValueTable({
                       <span className="text-xs font-medium text-gray-700">Value ({baseCpp}cpp)</span>
                       <span className="text-[10px] text-gray-500">Base travel value</span>
                     </div>
-                    <span className={`font-semibold text-sm ${getRatingColor(row.rating)} truncate ml-2`}>
+                    <span className={`font-semibold text-sm ${getRatingColor(row.rating)} break-words ml-2`}>
                       {row.points2cpp}
                     </span>
                   </div>
@@ -348,7 +348,7 @@ export default function CardValueTable({
                       <span className="text-xs font-medium text-gray-700">Max Value ({maxCpp}cpp)</span>
                       <span className="text-[10px] text-gray-500">Optimized redemption</span>
                     </div>
-                    <span className={`font-semibold text-sm ${getRatingColor(row.rating)} truncate ml-2`}>
+                    <span className={`font-semibold text-sm ${getRatingColor(row.rating)} break-words ml-2`}>
                       {row.points7cpp}
                     </span>
                   </div>

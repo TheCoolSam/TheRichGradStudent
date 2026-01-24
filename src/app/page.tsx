@@ -94,6 +94,10 @@ async function getPointsData() {
       baseValue: number
       bestRedemption: number
       order: number
+      bestRedemptionLink?: {
+        _type: string
+        slug: string
+      }
     }>>(
       `*[_type == "pointsProgram" && (showInCarousel != false)] | order(order asc){
         _id,
@@ -102,7 +106,11 @@ async function getPointsData() {
         logo,
         baseValue,
         bestRedemption,
-        order
+        order,
+        "bestRedemptionLink": bestRedemptionLink->{
+          _type,
+          "slug": slug.current
+        }
       }`
     )
 
@@ -112,7 +120,7 @@ async function getPointsData() {
 
     const cardsWithTopRated = await Promise.all(
       pointsPrograms.map(async (program) => {
-        const topCards = await client.fetch<Array<{ name: string; image: unknown }>>(
+        const topCards = await client.fetch<Array<{ name: string; image: unknown; slug?: string }>>(
           `*[_type == "creditCard" && references($programId)] | order(
             select(
               signupBonusRating == "great" => 4,
@@ -124,7 +132,8 @@ async function getPointsData() {
             publishedAt desc
           )[0..2]{
             name,
-            image
+            image,
+            "slug": slug.current
           }`,
           { programId: program._id }
         )
@@ -182,6 +191,33 @@ async function getMainArticles() {
 async function getLevelCards() {
   const mainArticles = await getMainArticles()
 
+  // Fetch top 3 rated cards for each category
+  const categories = ['new', 'everyday', 'travel', 'pro']
+  const topCardsByCategory: Record<string, Array<{ name: string; image: unknown; slug: string }>> = {}
+
+  await Promise.all(
+    categories.map(async (category) => {
+      const cards = await client.fetch<Array<{ name: string; image: unknown; slug: string }>>(
+        `*[_type == "creditCard" && category == $category] | order(
+          select(
+            signupBonusRating == "great" => 4,
+            signupBonusRating == "rgs-wallet" => 4,
+            signupBonusRating == "good" => 3,
+            signupBonusRating == "poor" => 2,
+            true => 1
+          ) desc,
+          publishedAt desc
+        )[0..2]{
+          name,
+          image,
+          "slug": slug.current
+        }`,
+        { category }
+      )
+      topCardsByCategory[category] = cards || []
+    })
+  )
+
   return [
     {
       title: "I'm New Here",
@@ -192,7 +228,8 @@ async function getLevelCards() {
       ],
       gradient: 'from-emerald-600 to-green-700',
       category: 'new',
-      slug: mainArticles['new']?.slug || 'im-new-here'
+      slug: mainArticles['new']?.slug || 'im-new-here',
+      topCards: topCardsByCategory['new'] || []
     },
     {
       title: 'Every Day Earning',
@@ -203,7 +240,8 @@ async function getLevelCards() {
       ],
       gradient: 'from-green-600 to-emerald-700',
       category: 'everyday',
-      slug: mainArticles['everyday']?.slug || 'everyday-earning'
+      slug: mainArticles['everyday']?.slug || 'everyday-earning',
+      topCards: topCardsByCategory['everyday'] || []
     },
     {
       title: 'Travel Cards',
@@ -214,7 +252,8 @@ async function getLevelCards() {
       ],
       gradient: 'from-teal-600 to-cyan-700',
       category: 'travel',
-      slug: mainArticles['travel']?.slug || 'travel-cards'
+      slug: mainArticles['travel']?.slug || 'travel-cards',
+      topCards: topCardsByCategory['travel'] || []
     },
     {
       title: 'Credit Card Pro',
@@ -225,7 +264,8 @@ async function getLevelCards() {
       ],
       gradient: 'from-cyan-600 to-blue-700',
       category: 'pro',
-      slug: mainArticles['pro']?.slug || 'credit-card-pro'
+      slug: mainArticles['pro']?.slug || 'credit-card-pro',
+      topCards: topCardsByCategory['pro'] || []
     }
   ]
 }

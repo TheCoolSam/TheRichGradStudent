@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CreditCard } from '@/types/sanity'
 import { urlFor } from '@/lib/image'
+import Disclaimer from './Disclaimer'
 
 interface SpendingInputs {
     travel: number
@@ -73,11 +74,13 @@ export default function SpendingCalculator({ cards }: SpendingCalculatorProps) {
         // Get point value from program or use default
         const pointsProgram = card.pointsProgram as { baseValue?: number } | undefined
         const cppValue = pointsProgram?.baseValue ?? DEFAULT_CPP
-        const pointValue = annualPoints * (cppValue / 100)
+
+        // Precision-safe currency conversion (Fix #12)
+        const pointValue = Math.round(annualPoints * cppValue) / 100
 
         const annualCredits = card.annualCredits || 0
         const annualFee = card.annualFee || 0
-        const netValue = pointValue + annualCredits - annualFee
+        const netValue = Math.round((pointValue + annualCredits - annualFee) * 100) / 100
 
         return {
             card,
@@ -182,10 +185,14 @@ export default function SpendingCalculator({ cards }: SpendingCalculatorProps) {
                             {rankedCards.map((result, index) => (
                                 <motion.div
                                     key={result.card._id}
+                                    layoutId={result.card._id}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ delay: index * 0.1 }}
+                                    transition={{
+                                        layout: { type: 'spring', stiffness: 300, damping: 30 },
+                                        delay: index * 0.1
+                                    }}
                                     layout
                                 >
                                     <Link href={`/${result.card.slug?.current}`}>
@@ -280,12 +287,10 @@ export default function SpendingCalculator({ cards }: SpendingCalculatorProps) {
             </div>
 
             {/* Disclaimer */}
-            <div className="text-center text-sm text-gray-500 max-w-2xl mx-auto">
-                <p>
-                    * Values are estimates based on a default point valuation of {DEFAULT_CPP} cents per point.
-                    Actual value may vary based on redemption method. Annual credits assume full utilization.
-                </p>
-            </div>
+            <Disclaimer variant="compact">
+                Values are estimates based on a default point valuation of {DEFAULT_CPP} cents per point.
+                Actual value may vary based on redemption method. Annual credits assume full utilization.
+            </Disclaimer>
         </div>
     )
 }

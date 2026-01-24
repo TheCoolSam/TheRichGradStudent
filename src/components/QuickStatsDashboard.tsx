@@ -18,6 +18,7 @@ interface CardStats {
   otherMultiplier?: number
   signupBonusValue?: string
   signupBonusRating?: Rating
+  rgsWalletCategories?: string[]
 }
 
 interface QuickStatsDashboardProps {
@@ -41,6 +42,7 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
 
   const bestEarnRate = earningRates.length > 0 ? Math.max(...earningRates) : 1
 
+  // Build cards array - conditionally include RGS Wallet if categories exist
   const cards = [
     {
       title: 'Signup Bonus',
@@ -65,8 +67,22 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
     },
   ]
 
+  // Add RGS Wallet bubble if categories are defined
+  if (card.rgsWalletCategories && card.rgsWalletCategories.length > 0) {
+    cards.push({
+      title: 'RGS Wallet',
+      value: card.rgsWalletCategories.slice(0, 3).join(', '),
+      subtitle: 'We use this card for',
+      gradient: 'from-amber-50 to-orange-50',
+      border: 'border border-amber-200',
+    })
+  }
+
+  // Dynamic grid based on number of cards
+  const gridCols = cards.length === 4 ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-2 lg:grid-cols-3'
+
   return (
-    <div className="my-10 grid grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className={`my-10 grid ${gridCols} gap-6`}>
       {cards.map((cardData, index) => (
         <motion.div
           key={cardData.title}
@@ -104,3 +120,4 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
     </div>
   )
 }
+

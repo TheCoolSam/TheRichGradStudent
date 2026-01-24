@@ -1,12 +1,19 @@
 ﻿'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { motion, PanInfo } from 'framer-motion'
 import { urlFor } from '@/lib/image'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useIsMobile } from '@/hooks/useMediaQuery'
 
 interface SanityImageAsset {
   asset?: { _ref?: string; url?: string }
+}
+
+interface BestRedemptionLink {
+  _type: 'article' | 'post' | 'creditCard'
+  slug: string
 }
 
 interface PointValueCard {
@@ -17,11 +24,13 @@ interface PointValueCard {
   bestRedemption: number
   order: number
   topCards?: CreditCardImage[]
+  bestRedemptionLink?: BestRedemptionLink
 }
 
 interface CreditCardImage {
   image?: SanityImageAsset
   name: string
+  slug?: string
 }
 
 interface PointValueData {
@@ -33,33 +42,16 @@ interface PointsValueSectionProps {
   data: PointValueData | null
 }
 
-// Configuration - responsive card widths
-const getCardWidth = () => {
-  if (typeof window === 'undefined') return 256
-  return window.innerWidth < 640 ? 200 : 256
-}
-const getCardGap = () => {
-  if (typeof window === 'undefined') return 32
-  return window.innerWidth < 640 ? 20 : 32
-}
-
 export default function PointsValueSection({ data }: PointsValueSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [dimensions, setDimensions] = useState({ width: 256, gap: 32 })
   const [isDragging, setIsDragging] = useState(false)
 
-  // Update dimensions on mount and resize
-  React.useEffect(() => {
-    const updateDimensions = () => {
-      setDimensions({
-        width: getCardWidth(),
-        gap: getCardGap()
-      })
-    }
-    updateDimensions()
-    window.addEventListener('resize', updateDimensions)
-    return () => window.removeEventListener('resize', updateDimensions)
-  }, [])
+  // Hydration-safe responsive dimensions
+  const isMobile = useIsMobile()
+  const dimensions = useMemo(() => ({
+    width: isMobile ? 200 : 256,
+    gap: isMobile ? 20 : 32
+  }), [isMobile])
 
   // Don't render if no data
   if (!data || !data.cards || data.cards.length === 0) {
@@ -67,6 +59,7 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
   }
 
   const sortedCards = [...data.cards].sort((a, b) => (a.order || 0) - (b.order || 0))
+  const effectiveIndex = ((activeIndex % sortedCards.length) + sortedCards.length) % sortedCards.length
 
   const handleNext = () => {
     setActiveIndex((prev) => prev + 1)
@@ -81,11 +74,20 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
     const swipeThreshold = 50
 
     if (info.offset.x < -swipeThreshold) {
-      // Swiped left, go to next
       handleNext()
     } else if (info.offset.x > swipeThreshold) {
-      // Swiped right, go to previous
       handlePrevious()
+    }
+  }
+
+  // Keyboard navigation handler
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      handlePrevious()
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      handleNext()
     }
   }
 
@@ -139,15 +141,25 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
             </svg>
           </motion.button>
 
-          {/* Cards Container */}
+          {/* Cards Container - WCAG 2.1 AA compliant with keyboard navigation */}
           <motion.div
-            className="relative h-[360px] sm:h-[400px] w-full overflow-hidden px-2 sm:px-0 cursor-grab active:cursor-grabbing"
+            className="relative h-[360px] sm:h-[400px] w-full overflow-hidden px-2 sm:px-0 cursor-grab active:cursor-grabbing focus:outline-none focus-visible:ring-2 focus-visible:ring-rgs-light-green focus-visible:ring-offset-2"
+            tabIndex={0}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label={data.title}
+            onKeyDown={handleKeyDown}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.2}
             onDragStart={() => setIsDragging(true)}
             onDragEnd={handleDragEnd}
           >
+            {/* Screen reader announcement */}
+            <div aria-live="polite" className="sr-only">
+              Showing {sortedCards[effectiveIndex]?.name}
+            </div>
+
             {sortedCards.map((card, i) => (
               <Card
                 key={card.name}
@@ -225,6 +237,7 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
               src={urlFor(card.logo).width(100).height(50).url()}
               alt={card.name}
               fill
+              sizes="100px"
               className="object-contain"
             />
           </div>
@@ -236,7 +249,16 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
           </p>
           <p className="text-gray-600">
             Our Best Redemption:{' '}
-            <span className="font-bold text-rgs-green">{card.bestRedemption}¢</span>
+            {card.bestRedemptionLink?.slug ? (
+              <Link
+                href={card.bestRedemptionLink._type === 'article' ? `/articles/${card.bestRedemptionLink.slug}` : `/${card.bestRedemptionLink.slug}`}
+                className="font-bold text-rgs-green hover:underline"
+              >
+                {card.bestRedemption}¢
+              </Link>
+            ) : (
+              <span className="font-bold text-rgs-green">{card.bestRedemption}¢</span>
+            )}
           </p>
         </div>
 
@@ -247,28 +269,52 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
             <div className="flex flex-col items-center gap-1">
               {/* Top card */}
               {card.topCards[0]?.image && (
-                <div className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
-                  <Image
-                    src={urlFor(card.topCards[0].image).width(128).height(80).url()}
-                    alt={card.topCards[0].name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+                card.topCards[0].slug ? (
+                  <Link href={`/${card.topCards[0].slug}`} className="relative w-16 h-10 rounded shadow-sm overflow-hidden hover:ring-2 hover:ring-rgs-green transition-all">
+                    <Image
+                      src={urlFor(card.topCards[0].image).width(128).height(80).url()}
+                      alt={card.topCards[0].name}
+                      fill
+                      sizes="64px"
+                      className="object-cover"
+                    />
+                  </Link>
+                ) : (
+                  <div className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
+                    <Image
+                      src={urlFor(card.topCards[0].image).width(128).height(80).url()}
+                      alt={card.topCards[0].name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )
               )}
               {/* Bottom two cards */}
               {card.topCards.length > 1 && (
                 <div className="flex gap-1">
                   {card.topCards.slice(1, 3).map((creditCard, idx) =>
                     creditCard.image ? (
-                      <div key={idx} className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
-                        <Image
-                          src={urlFor(creditCard.image).width(128).height(80).url()}
-                          alt={creditCard.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
+                      creditCard.slug ? (
+                        <Link key={idx} href={`/${creditCard.slug}`} className="relative w-16 h-10 rounded shadow-sm overflow-hidden hover:ring-2 hover:ring-rgs-green transition-all">
+                          <Image
+                            src={urlFor(creditCard.image).width(128).height(80).url()}
+                            alt={creditCard.name}
+                            fill
+                            sizes="64px"
+                            className="object-cover"
+                          />
+                        </Link>
+                      ) : (
+                        <div key={idx} className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
+                          <Image
+                            src={urlFor(creditCard.image).width(128).height(80).url()}
+                            alt={creditCard.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      )
                     ) : null
                   )}
                 </div>
