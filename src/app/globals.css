@@ -69,10 +69,10 @@
 :root {
   --foreground-rgb: 17, 24, 39;
   /* Dark Gray Text */
-  --background-start-rgb: 240, 245, 243;
-  /* Very pale sage (top) */
-  --background-end-rgb: 139, 163, 154;
-  /* Muted sage green (bottom) */
+  --background-start-rgb: 255, 255, 255;
+  /* Flat White */
+  --background-end-rgb: 255, 255, 255;
+  /* Flat White */
 }
 
 body {
