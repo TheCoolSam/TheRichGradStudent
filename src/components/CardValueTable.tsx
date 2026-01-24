@@ -2,7 +2,6 @@ import React from 'react'
 import { CreditCard } from '@/types/sanity'
 import { calculateAt2cpp, calculateAt7cpp, formatAsPercentage, formatEarningRate, getRatingColor } from '@/utils/cardMath'
 import RatingBadge from './RatingBadge'
-import Tooltip from './Tooltip'
 
 interface CardValueTableProps {
   card: CreditCard | null | undefined
@@ -197,33 +196,29 @@ export default function CardValueTable({
             </colgroup>
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b align-top">
                   Category
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b align-top">
                   <span className="inline-flex items-center gap-1">
                     Cash Back / Points
                   </span>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                  <span className="inline-flex items-center gap-1">
-                    Value (2cpp)
-                    <Tooltip content="Value when redeemed at 2 cents per point" placement="bottom">
-                      <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                      </svg>
-                    </Tooltip>
-                  </span>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b align-top">
+                  <div className="flex flex-col gap-0.5">
+                    <span>Value (2cpp)</span>
+                    <span className="text-[10px] font-normal normal-case text-gray-500 leading-tight">
+                      Base travel value
+                    </span>
+                  </div>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                  <span className="inline-flex items-center gap-1">
-                    Max Value (7cpp)
-                    <Tooltip content="Maximum value when redeemed optimally at 7 cents per point" placement="bottom-end">
-                      <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                      </svg>
-                    </Tooltip>
-                  </span>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b align-top">
+                  <div className="flex flex-col gap-0.5">
+                    <span>Max Value (7cpp)</span>
+                    <span className="text-[10px] font-normal normal-case text-gray-500 leading-tight">
+                      Optimized redemption
+                    </span>
+                  </div>
                 </th>
               </tr>
             </thead>
