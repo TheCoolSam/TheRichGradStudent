@@ -56,10 +56,10 @@ const portableTextComponents: PortableTextComponents = {
     },
   },
   block: {
-    h1: ({ children }: any) => <h1 className="text-4xl font-bold mt-12 mb-6 font-heading text-rgs-black">{children}</h1>,
-    h2: ({ children }: any) => <h2 className="text-3xl font-bold mt-10 mb-5 font-heading text-rgs-black">{children}</h2>,
-    h3: ({ children }: any) => <h3 className="text-2xl font-bold mt-8 mb-4 font-heading text-rgs-black">{children}</h3>,
-    h4: ({ children }: any) => <h4 className="text-xl font-bold mt-6 mb-3 font-heading text-rgs-black">{children}</h4>,
+    h1: ({ children }: any) => <h1 className="text-4xl font-bold mt-12 mb-6 text-rgs-black" style={{ fontFamily: 'var(--font-playfair), serif' }}>{children}</h1>,
+    h2: ({ children }: any) => <h2 className="text-3xl font-bold mt-10 mb-5 text-rgs-black" style={{ fontFamily: 'var(--font-playfair), serif' }}>{children}</h2>,
+    h3: ({ children }: any) => <h3 className="text-2xl font-bold mt-8 mb-4 text-rgs-black" style={{ fontFamily: 'var(--font-playfair), serif' }}>{children}</h3>,
+    h4: ({ children }: any) => <h4 className="text-xl font-bold mt-6 mb-3 text-rgs-black" style={{ fontFamily: 'var(--font-playfair), serif' }}>{children}</h4>,
     blockquote: ({ children }: any) => (
       <blockquote className="border-l-4 border-rgs-green pl-6 py-2 my-8 italic text-lg text-gray-700 bg-gray-50 rounded-r-lg">
         {children}
