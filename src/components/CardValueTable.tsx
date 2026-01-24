@@ -295,14 +295,10 @@ export default function CardValueTable({
                 {/* 2cpp Value */}
                 {row.points2cpp !== 'N/A' && (
                   <div className="flex items-center justify-between py-1.5 px-2.5 bg-blue-50 rounded-lg">
-                    <span className="text-xs font-medium text-gray-700 flex items-center gap-1 flex-shrink-0">
-                      @ 2cpp
-                      <Tooltip content="Value when redeemed at 2 cents per point">
-                        <svg className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                        </svg>
-                      </Tooltip>
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-medium text-gray-700">Value (2cpp)</span>
+                      <span className="text-[10px] text-gray-500">Base travel value</span>
+                    </div>
                     <span className={`font-semibold text-sm ${getRatingColor(row.rating)} truncate ml-2`}>
                       {row.points2cpp}
                     </span>
@@ -312,14 +308,10 @@ export default function CardValueTable({
                 {/* 7cpp Max Value */}
                 {row.points7cpp !== 'N/A' && (
                   <div className="flex items-center justify-between py-1.5 px-2.5 bg-green-50 rounded-lg">
-                    <span className="text-xs font-medium text-gray-700 flex items-center gap-1 flex-shrink-0">
-                      @ 7cpp
-                      <Tooltip content="Maximum value when redeemed optimally at 7cpp">
-                        <svg className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                        </svg>
-                      </Tooltip>
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-medium text-gray-700">Max Value (7cpp)</span>
+                      <span className="text-[10px] text-gray-500">Optimized redemption</span>
+                    </div>
                     <span className={`font-semibold text-sm ${getRatingColor(row.rating)} truncate ml-2`}>
                       {row.points7cpp}
                     </span>
