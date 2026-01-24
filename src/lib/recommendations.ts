@@ -106,8 +106,8 @@ interface AutoRecommendationsParams {
 }
 
 async function getAutoRecommendations({
-  currentDocId,
-  currentType,
+  currentDocId: _currentDocId,
+  currentType: _currentType,
   currentTags,
   currentCategories,
   currentPointsProgram,
@@ -116,7 +116,7 @@ async function getAutoRecommendations({
 }: AutoRecommendationsParams): Promise<RecommendedContent[]> {
   const { client } = await import('./sanity')
   const tagIds = currentTags.map((t) => t._id)
-  
+
   // Fetch all potential recommendations (articles, posts, cards)
   const allContent = await client.fetch<RecommendedContent[]>(
     `*[_type in ["article", "post", "creditCard"] && !(_id in $excludeIds)]{
@@ -192,7 +192,7 @@ async function getAutoRecommendations({
   if (recommendations.length < limit) {
     const remainingCount = limit - recommendations.length
     const usedIds = [...excludeIds, ...recommendations.map((r) => r._id)]
-    
+
     const randomContent = await client.fetch<RecommendedContent[]>(
       `*[_type in ["article", "post", "creditCard"] && !(_id in $usedIds)] | order(_createdAt desc) [0...$count]{
         _id,

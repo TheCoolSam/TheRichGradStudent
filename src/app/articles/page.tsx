@@ -1,8 +1,5 @@
 import { client } from '@/lib/sanity'
 import { Article } from '@/types/sanity'
-import Link from 'next/link'
-import Image from 'next/image'
-import { urlFor } from '@/lib/image'
 import ArticlesGrid from '@/components/ArticlesGrid'
 
 export const revalidate = 60

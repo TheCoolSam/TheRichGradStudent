@@ -57,7 +57,7 @@ function CardNode({ data }: any) {
   // Get category colors
   const getCategoryColors = (category: string, subCategory?: string) => {
     const effectiveCategory = category === 'pro' && subCategory ? `pro-${subCategory}` : category
-    
+
     switch (effectiveCategory) {
       case 'new':
         return {
@@ -110,14 +110,14 @@ function CardNode({ data }: any) {
     <>
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <div className="block group" onClick={handleClick} onTouchEnd={handleClick}>
-        <div 
+        <div
           className={`bg-gradient-to-br ${colors.gradient} rounded-2xl shadow-2xl ${colors.shadow} overflow-hidden border-4 ${colors.border} hover:border-white hover:scale-110 transition-all duration-300 cursor-pointer backdrop-blur-sm relative`}
           style={{ width: cardWidth, height: cardHeight }}
         >
           {/* Animated glow effect */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
-               style={{ boxShadow: `inset 0 0 30px ${colors.glow}` }} />
-          
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            style={{ boxShadow: `inset 0 0 30px ${colors.glow}` }} />
+
           <div className="w-full h-full relative" style={{ aspectRatio: '16/10' }}>
             <img
               src={urlFor(data.image).width(560).height(350).quality(90).fit('fill').url()}
@@ -150,7 +150,7 @@ function getSlugString(slug: { current: string } | string): string {
 // Helper function to get arrow color based on target category
 function getArrowColor(targetCategory: string, targetSubCategory?: string): string {
   const effectiveCategory = targetCategory === 'pro' && targetSubCategory ? `pro-${targetSubCategory}` : targetCategory
-  
+
   switch (effectiveCategory) {
     case 'new':
       return '#3b82f6' // blue-500
@@ -242,7 +242,7 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
 
     // Generate edges based on relationships
     const generatedEdges: Edge[] = []
-    
+
     // Debug logging (development only)
     if (process.env.NODE_ENV === 'development') {
       console.log('=== CREDIT CARD GRAPH DEBUG ===')
@@ -257,35 +257,35 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
       })
       console.log('\n=== CHECKING RELATIONSHIPS ===')
     }
-    
+
     cards.forEach(card => {
       if (card.relatedCardsSlugs && Array.isArray(card.relatedCardsSlugs) && card.relatedCardsSlugs.length > 0) {
         card.relatedCardsSlugs.forEach(relatedSlug => {
           if (!relatedSlug) return // Skip if slug is null/undefined
-          
+
           if (process.env.NODE_ENV === 'development') {
             console.log(`\nChecking: ${card.name} -> ${relatedSlug}`)
           }
-          
+
           const relatedCard = cards.find(c => getSlugString(c.slug) === relatedSlug)
-          
+
           if (process.env.NODE_ENV === 'development') {
             console.log(`  Found card: ${relatedCard?.name || 'NOT FOUND'}`)
           }
-          
+
           if (relatedCard) {
             // Only create edge if cards are in adjacent levels
-            const sourceLevel = card.category === 'pro' && card.subCategory 
-              ? `pro-${card.subCategory}` 
+            const sourceLevel = card.category === 'pro' && card.subCategory
+              ? `pro-${card.subCategory}`
               : card.category
-            const targetLevel = relatedCard.category === 'pro' && relatedCard.subCategory 
-              ? `pro-${relatedCard.subCategory}` 
+            const targetLevel = relatedCard.category === 'pro' && relatedCard.subCategory
+              ? `pro-${relatedCard.subCategory}`
               : relatedCard.category
 
             const levelOrder = ['new', 'everyday', 'travel', 'pro-business', 'pro-luxury']
             const sourceIdx = levelOrder.indexOf(sourceLevel)
             const targetIdx = levelOrder.indexOf(targetLevel)
-            
+
             if (process.env.NODE_ENV === 'development') {
               const levelDiff = Math.abs(sourceIdx - targetIdx)
               console.log(`  Source Level: ${sourceLevel} (index ${sourceIdx})`)
@@ -322,19 +322,19 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
       const levelOrder = ['new', 'everyday', 'travel', 'pro-business', 'pro-luxury']
       const currentIdx = levelOrder.indexOf(level)
       const nextLevel = levelOrder[currentIdx + 1]
-      
+
       if (nextLevel && cardsByLevel[nextLevel]) {
         levelCards.forEach(sourceCard => {
           cardsByLevel[nextLevel].forEach(targetCard => {
             // Connect if same issuer or same points program
-            if ((sourceCard.issuer && targetCard.issuer && sourceCard.issuer === targetCard.issuer) || 
-                (sourceCard.pointsProgramName && targetCard.pointsProgramName && sourceCard.pointsProgramName === targetCard.pointsProgramName)) {
-              
+            if ((sourceCard.issuer && targetCard.issuer && sourceCard.issuer === targetCard.issuer) ||
+              (sourceCard.pointsProgramName && targetCard.pointsProgramName && sourceCard.pointsProgramName === targetCard.pointsProgramName)) {
+
               // Check if edge doesn't already exist
               const edgeExists = generatedEdges.some(
                 e => e.source === sourceCard._id && e.target === targetCard._id
               )
-              
+
               if (!edgeExists) {
                 const arrowColor = getArrowColor(targetCard.category, targetCard.subCategory)
                 generatedEdges.push({
@@ -390,13 +390,13 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
       >
         <Background color="#00ff88" gap={16} size={1} />
         <Controls className="bg-rgs-black/80 border border-rgs-green/50" />
-        
+
         <Panel position="top-left" className="bg-rgs-black/90 backdrop-blur-sm p-4 rounded-lg border border-rgs-green/50 m-4">
           <div className="space-y-2 text-xs sm:text-sm">
             <div className="text-white font-bold mb-2 text-sm sm:text-base">Experience Levels</div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-blue-400 rounded"></div>
-              <span className="text-white/90">I'm New Here</span>
+              <span className="text-white/90">I&apos;m New Here</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-400 rounded"></div>

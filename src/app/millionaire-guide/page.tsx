@@ -1,6 +1,5 @@
 import { client } from '@/lib/sanity'
 import CreditCardGraph from '@/components/CreditCardGraph'
-import type { CreditCard } from '@/types/sanity'
 
 export const revalidate = 30
 
@@ -20,17 +19,17 @@ async function getCreditCards() {
 
   const cards = await client.fetch(query)
   console.log(`[Millionaire Guide] Fetched ${cards.length} cards`)
-  
+
   // Filter out cards without required fields
-  const filtered = cards.filter((card: any) => 
-    card._id && 
-    card.name && 
-    card.slug && 
-    card.category && 
-    card.issuer && 
+  const filtered = cards.filter((card: any) =>
+    card._id &&
+    card.name &&
+    card.slug &&
+    card.category &&
+    card.issuer &&
     card.image
   )
-  
+
   console.log(`[Millionaire Guide] After filtering: ${filtered.length} cards`)
   return filtered
 }
@@ -46,7 +45,7 @@ export default async function MillionaireGuidePage() {
             Ultimate Millionaire Guide
           </h1>
           <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto">
-            Your personalized pathway to mastering credit cards and travel rewards. 
+            Your personalized pathway to mastering credit cards and travel rewards.
             Follow the arrows to see which cards to apply for next based on your experience level.
           </p>
         </div>

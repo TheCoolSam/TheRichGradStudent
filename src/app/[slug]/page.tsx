@@ -23,16 +23,16 @@ const portableTextComponents: PortableTextComponents = {
       if (!value?.asset?._ref) {
         return null
       }
-      
+
       // Determine image width based on size setting
       const sizeClasses = {
         small: 'max-w-md mx-auto',    // 50%
         medium: 'max-w-2xl mx-auto',   // 75%
         large: 'max-w-full',           // 100%
       }
-      
+
       const sizeClass = sizeClasses[value.size as keyof typeof sizeClasses] || sizeClasses.large
-      
+
       return (
         <div className={`my-8 ${sizeClass}`}>
           <div className="rounded-lg overflow-hidden shadow-lg">
@@ -109,7 +109,7 @@ interface PageProps {
 
 async function getTopCardsByCategory(categories: string[]) {
   if (!categories || categories.length === 0) return []
-  
+
   try {
     const topCards = await client.fetch<CreditCard[]>(
       `*[_type == "creditCard" && category in $categories] | order(
@@ -200,7 +200,7 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
 
 export default async function ContentPage({ params }: PageProps) {
   const content = await getContent(params.slug)
-  
+
   // Fetch top cards if this is an article with categories
   const topCards = content && 'categories' in content && content.categories
     ? await getTopCardsByCategory(content.categories)
@@ -226,7 +226,7 @@ export default async function ContentPage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl font-bold mb-6">Content Not Found</h1>
           <p className="text-xl text-gray-600 mb-8">
-            This content doesn't exist yet, or Sanity CMS isn't connected.
+            This content doesn&apos;t exist yet, or Sanity CMS isn&apos;t connected.
           </p>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 text-left max-w-2xl mx-auto">
             <h2 className="font-bold text-lg mb-4">🚀 Getting Started:</h2>
@@ -234,17 +234,17 @@ export default async function ContentPage({ params }: PageProps) {
               <li>Set up your Sanity.io project</li>
               <li>Add environment variables to <code className="bg-gray-200 px-2 py-1 rounded">.env.local</code>:
                 <pre className="mt-2 bg-gray-100 p-3 rounded text-xs overflow-x-auto">
-NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
-NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
+                  NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+                  NEXT_PUBLIC_SANITY_DATASET=production
+                  NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
               </li>
               <li>Create content in Sanity Studio</li>
               <li>Refresh this page - content will appear automatically! ✨</li>
             </ol>
           </div>
           <div className="mt-8">
-            <a 
-              href="/" 
+            <a
+              href="/"
               className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
             >
               ← Back to Homepage
@@ -394,7 +394,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
               <div className="mb-8">
                 <h2 className="text-3xl font-bold mb-4">Why we opened it!</h2>
                 <div className="prose prose-lg max-w-none">
-                  <PortableText 
+                  <PortableText
                     value={(content as CreditCard).introContent}
                     components={portableTextComponents}
                   />
@@ -410,7 +410,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
               <div className="my-8 p-6 bg-gray-50 border border-gray-200 rounded-lg">
                 <h2 className="text-2xl font-bold mb-4">Additional Information</h2>
                 <div className="prose prose-lg max-w-none">
-                  <PortableText 
+                  <PortableText
                     value={(content as CreditCard).additionalInfo}
                     components={portableTextComponents}
                   />
@@ -444,7 +444,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
             {/* Body Content */}
             {(content as Article).body && (
               <div className="prose prose-lg max-w-none mb-12">
-                <PortableText 
+                <PortableText
                   value={(content as Article).body}
                   components={portableTextComponents}
                 />
@@ -490,7 +490,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-18</pre>
         {isPost && (
           <>
             <BlogContent post={content as Post}>
-              <PortableText 
+              <PortableText
                 value={(content as Post).body}
                 components={portableTextComponents}
               />

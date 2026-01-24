@@ -1,14 +1,18 @@
 ﻿'use client'
 
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, PanInfo } from 'framer-motion'
 import { urlFor } from '@/lib/image'
 import Image from 'next/image'
+
+interface SanityImageAsset {
+  asset?: { _ref?: string; url?: string }
+}
 
 interface PointValueCard {
   _id: string
   name: string
-  logo?: any
+  logo?: SanityImageAsset
   baseValue: number
   bestRedemption: number
   order: number
@@ -16,7 +20,7 @@ interface PointValueCard {
 }
 
 interface CreditCardImage {
-  image: any
+  image?: SanityImageAsset
   name: string
 }
 
@@ -72,10 +76,10 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
     setActiveIndex((prev) => prev - 1)
   }
 
-  const handleDragEnd = (event: any, info: any) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     setIsDragging(false)
     const swipeThreshold = 50
-    
+
     if (info.offset.x < -swipeThreshold) {
       // Swiped left, go to next
       handleNext()
@@ -136,7 +140,7 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
           </motion.button>
 
           {/* Cards Container */}
-          <motion.div 
+          <motion.div
             className="relative h-[360px] sm:h-[400px] w-full overflow-hidden px-2 sm:px-0 cursor-grab active:cursor-grabbing"
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
@@ -174,10 +178,10 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spacing, isDragging }) => {
   // Calculate effective index with proper modulo for negative numbers
   const effectiveIndex = ((activeIndex % totalCards) + totalCards) % totalCards
-  
+
   // Calculate offset from center
   let offset = index - effectiveIndex
-  
+
   // Wrap around logic for shortest path
   if (offset > totalCards / 2) {
     offset -= totalCards
@@ -188,12 +192,12 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
   // Visual properties based on offset
   const isCenter = offset === 0
   const isVisible = Math.abs(offset) <= 1
-  
+
   const x = offset * spacing
   const scale = isCenter ? 1.1 : 0.95
   const opacity = isCenter ? 1 : isVisible ? 0.7 : 0
   const zIndex = isCenter ? 10 : 1
-  
+
   // Responsive card width
   const cardWidth = typeof window !== 'undefined' && window.innerWidth < 640 ? 'w-[200px]' : 'w-64'
 
@@ -242,7 +246,7 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
             <p className="text-xs text-gray-500 mb-2 text-center">Top Rated Cards</p>
             <div className="flex flex-col items-center gap-1">
               {/* Top card */}
-              {card.topCards[0] && (
+              {card.topCards[0]?.image && (
                 <div className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
                   <Image
                     src={urlFor(card.topCards[0].image).width(128).height(80).url()}
@@ -255,16 +259,18 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
               {/* Bottom two cards */}
               {card.topCards.length > 1 && (
                 <div className="flex gap-1">
-                  {card.topCards.slice(1, 3).map((creditCard, idx) => (
-                    <div key={idx} className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
-                      <Image
-                        src={urlFor(creditCard.image).width(128).height(80).url()}
-                        alt={creditCard.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
+                  {card.topCards.slice(1, 3).map((creditCard, idx) =>
+                    creditCard.image ? (
+                      <div key={idx} className="relative w-16 h-10 rounded shadow-sm overflow-hidden">
+                        <Image
+                          src={urlFor(creditCard.image).width(128).height(80).url()}
+                          alt={creditCard.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : null
+                  )}
                 </div>
               )}
             </div>

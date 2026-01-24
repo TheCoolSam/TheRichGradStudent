@@ -11,7 +11,7 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
   return (
     <section className="relative bg-gradient-to-br from-rgs-black via-rgs-off-black to-rgs-dark-green min-h-[600px] flex items-center">
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-      
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -19,7 +19,7 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="text-center"
         >
-          <motion.h1 
+          <motion.h1
             className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -29,14 +29,14 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
             <span className="block bg-gradient-to-r from-rgs-light-green via-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-[0_5px_20px_rgba(0,255,136,0.5)]">GRAD STUDENT BUDGET</span>
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 drop-shadow-lg leading-relaxed mb-8 sm:mb-12 max-w-4xl mx-auto px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            We believe graduate students have the most to gain from mastering the points 
-            travel game. As a community, we often operate on limited budgets, making every 
+            We believe graduate students have the most to gain from mastering the points
+            travel game. As a community, we often operate on limited budgets, making every
             point and discount incredibly valuable.
           </motion.p>
 
@@ -47,25 +47,25 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.06, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                transition={{ 
+                transition={{
                   type: "spring",
                   stiffness: 400,
                   damping: 25
                 }}
                 className="px-4 sm:px-6 py-3 sm:py-4 bg-white/10 backdrop-blur-md border-2 border-rgs-light-green rounded-full shadow-lg hover:shadow-[0_10px_30px_rgba(0,255,136,0.3)] text-center w-full sm:w-auto cursor-pointer transition-shadow duration-300"
               >
-                <span className="text-white font-bold text-sm sm:text-base md:text-lg">YOU'RE ALREADY IN THE CREDIT CARD GAME.</span>
-                <span className="text-white font-bold text-sm sm:text-base md:text-lg sm:ml-2 block sm:inline">DON'T LET IT PLAY YOU.</span>
+                <span className="text-white font-bold text-sm sm:text-base md:text-lg">YOU&apos;RE ALREADY IN THE CREDIT CARD GAME.</span>
+                <span className="text-white font-bold text-sm sm:text-base md:text-lg sm:ml-2 block sm:inline">DON&apos;T LET IT PLAY YOU.</span>
               </motion.div>
             </Link>
-            
+
             <Link href="/millionaire-guide">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.06, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                transition={{ 
+                transition={{
                   type: "spring",
                   stiffness: 400,
                   damping: 25

@@ -61,25 +61,25 @@ export default function AboutPage() {
           >
             Our Story
           </motion.h2>
-          
+
           <motion.div variants={itemVariants} className="space-y-6 text-lg text-gray-700 leading-relaxed">
             <p>
-              We started The Rich Grad Student because we realized something crucial: graduate students 
-              are in a unique position to master the points and miles game. We are problem solvers, 
-              we&apos;re constantly traveling for conferences and research, and we&apos;re living on tight budgets 
+              We started The Rich Grad Student because we realized something crucial: graduate students
+              are in a unique position to master the points and miles game. We are problem solvers,
+              we&apos;re constantly traveling for conferences and research, and we&apos;re living on tight budgets
               where every dollar counts.
             </p>
-            
+
             <p>
-              As grad students ourselves, we've experienced the frustration of wanting to visit family, 
-              attend conferences, or take a well-deserved vacation, only to be held back by finances. 
-              That's when we discovered the world of credit card points and travel hacking.
+              As grad students ourselves, we&apos;ve experienced the frustration of wanting to visit family,
+              attend conferences, or take a well-deserved vacation, only to be held back by finances.
+              That&apos;s when we discovered the world of credit card points and travel hacking.
             </p>
-            
+
             <p>
-              What started as a way to afford our own travels quickly turned into a passion for helping 
-              others. We've flown business class to Europe for the price of a Starbucks coffee, stayed 
-              in luxury hotels for free, and turned our grad student stipends into millionaire-level 
+              What started as a way to afford our own travels quickly turned into a passion for helping
+              others. We&apos;ve flown business class to Europe for the price of a Starbucks coffee, stayed
+              in luxury hotels for free, and turned our grad student stipends into millionaire-level
               travel experiences.
             </p>
           </motion.div>
@@ -101,23 +101,23 @@ export default function AboutPage() {
           >
             Our Mission
           </motion.h2>
-          
+
           <motion.div variants={itemVariants} className="space-y-6 text-lg text-gray-700 leading-relaxed">
             <p>
-              Our mission is simple: democratize luxury travel for graduate students. We believe that 
-              just because you're living on a grad student budget doesn't mean you should miss out on 
+              Our mission is simple: democratize luxury travel for graduate students. We believe that
+              just because you&apos;re living on a grad student budget doesn&apos;t mean you should miss out on
               incredible travel experiences.
             </p>
-            
+
             <p>
-              Through The Rich Grad Student, we share everything we've learned about maximizing credit 
-              card points, finding the best redemptions, and traveling smart. We cut through the jargon 
+              Through The Rich Grad Student, we share everything we&apos;ve learned about maximizing credit
+              card points, finding the best redemptions, and traveling smart. We cut through the jargon
               and complexity to give you straightforward, actionable advice.
             </p>
-            
+
             <p>
-              We're committed to keeping this site ad-free and unbiased. We'll never push you toward 
-              cards that don't make sense for your situation just to earn a commission. Your success 
+              We&apos;re committed to keeping this site ad-free and unbiased. We&apos;ll never push you toward
+              cards that don&apos;t make sense for your situation just to earn a commission. Your success
               is our success.
             </p>
           </motion.div>
