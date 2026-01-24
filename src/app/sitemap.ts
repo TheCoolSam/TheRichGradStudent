@@ -89,7 +89,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     )
 
     const cardPages: MetadataRoute.Sitemap = cards.map((card) => ({
-      url: `${baseUrl}/credit-cards/${card.slug.current}`,
+      url: `${baseUrl}/${card.slug.current}`,
       lastModified: new Date(card.publishedAt),
       changeFrequency: 'weekly',
       priority: 0.8,
