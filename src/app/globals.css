@@ -76,11 +76,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 243, 244, 246;
-    /* Gray-100 */
-    --background-start-rgb: 10, 10, 10;
-    /* Near Black */
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 236, 253, 245;
+    /* Emerald-50 - Crisp text */
+    --background-start-rgb: 2, 44, 34;
+    /* Emerald-950 - Rich Deep Green */
+    --background-end-rgb: 6, 78, 59;
+    /* Emerald-900 */
   }
 }
 
