@@ -1,6 +1,5 @@
 import { client } from '@/lib/sanity'
 import CreditCardGraph from '@/components/CreditCardGraph'
-import SpendingCalculator from '@/components/SpendingCalculator'
 
 export const revalidate = 30
 
@@ -57,18 +56,7 @@ export default async function MillionaireGuidePage() {
           </p>
         </div>
 
-        <div className="mb-20">
-          <div className="bg-rgs-off-black/50 backdrop-blur-sm border border-rgs-green/20 rounded-3xl p-6 sm:p-10">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-white mb-4">Find Your Starting Point 📍</h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
-                Not sure where to begin? Enter your monthly spending below, and we&apos;ll calculate
-                exactly which card will give you the highest return to start your journey.
-              </p>
-            </div>
-            <SpendingCalculator cards={cards} />
-          </div>
-        </div>
+
 
         <CreditCardGraph cards={cards} />
       </div>
