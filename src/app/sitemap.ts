@@ -5,7 +5,7 @@ export const revalidate = 3600 // Revalidate every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://therichgradstudent.com'
-  
+
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -46,6 +46,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/editorial-policy`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.3,
