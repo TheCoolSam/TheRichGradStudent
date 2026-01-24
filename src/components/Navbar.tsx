@@ -32,7 +32,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-rgs-off-black/95 backdrop-blur-lg border-b border-rgs-green/50 shadow-2xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#022c22]/90 backdrop-blur-lg border-b border-white/10 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}

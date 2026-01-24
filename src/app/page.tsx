@@ -136,14 +136,17 @@ async function getPointsData() {
       })
     )
 
-    return {
-      title: 'Maximize Your Points Value',
-      cards: cardsWithTopRated
-    }
-  } catch {
-    console.error('Error fetching point values')
-    return null
+  })
+    )
+
+  return {
+    title: 'Maximize Your Points Value',
+    cards: cardsWithTopRated as any // Cast to satisfy strict type checking
   }
+} catch {
+  console.error('Error fetching point values')
+  return null
+}
 }
 
 async function getMainArticles() {
@@ -244,7 +247,7 @@ export default async function HomePage() {
 
       {/* Featured Content Section */}
       {featuredContent.length > 0 && (
-        <div className="bg-rgs-black/5 dark:bg-white/5 backdrop-blur-lg border-y border-black/5 dark:border-white/10">
+        <div className="bg-white/5 backdrop-blur-lg border-y border-white/10">
           <FeaturedContentSection items={featuredContent} />
         </div>
       )}
@@ -252,10 +255,10 @@ export default async function HomePage() {
       {/* Level Selector Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 font-heading text-rgs-black dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 font-heading text-white">
             Choose Your Level
           </h2>
-          <p className="text-center text-gray-600 dark:text-gray-300 mb-16 text-lg max-w-2xl mx-auto font-light">
+          <p className="text-center text-gray-200 mb-16 text-lg max-w-2xl mx-auto font-light leading-relaxed text-balance">
             Start where you are, grow to where you want to be. <br className="hidden sm:block" />
             We&apos;ve curated the perfect strategy for every stage of your journey.
           </p>

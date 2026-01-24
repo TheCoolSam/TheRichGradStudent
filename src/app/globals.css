@@ -67,22 +67,12 @@
 }
 
 :root {
-  --foreground-rgb: 17, 24, 39;
-  /* Gray-900 - Softer than pure black */
-  --background-start-rgb: 250, 250, 250;
-  /* Neutral-50 - Premium off-white */
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 236, 253, 245;
-    /* Emerald-50 - Crisp text */
-    --background-start-rgb: 2, 44, 34;
-    /* Emerald-950 - Rich Deep Green */
-    --background-end-rgb: 6, 78, 59;
-    /* Emerald-900 */
-  }
+  --foreground-rgb: 255, 255, 255;
+  /* White text always */
+  --background-start-rgb: 5, 46, 36;
+  /* Deep Rich Green */
+  --background-end-rgb: 15, 60, 48;
+  /* Slightly lighter Green gradient */
 }
 
 body {
