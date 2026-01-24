@@ -1,6 +1,6 @@
 import React from 'react'
 import { CreditCard } from '@/types/sanity'
-import { calculateAt2cpp, calculateAt7cpp, formatAsPercentage, formatEarningRate, getRatingColor } from '@/utils/cardMath'
+import { calculateAt2cpp, calculateAt7cpp, calculateDynamicValue, formatAsPercentage, formatEarningRate, getRatingColor } from '@/utils/cardMath'
 import RatingBadge from './RatingBadge'
 
 interface CardValueTableProps {

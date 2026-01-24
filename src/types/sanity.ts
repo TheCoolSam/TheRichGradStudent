@@ -115,7 +115,12 @@ export interface CreditCard {
   spendRequirement?: string
   aprOffer?: string
   hasSpendingCap: boolean
-  pointsProgram?: string | { _id: string; name: string }
+  pointsProgram?: string | {
+    _id: string;
+    name: string;
+    baseValue?: number;
+    bestRedemption?: number;
+  }
   category?: 'new' | 'everyday' | 'travel' | 'pro'
   categories?: string[]
   tags?: Array<{ _id: string }>

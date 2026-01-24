@@ -17,6 +17,19 @@ export function calculateAt2cpp(multiplier: number | null | undefined): number {
 }
 
 /**
+ * Calculate points value dynamically based on a custom cents-per-point rate
+ * @param multiplier - The cash back multiplier (e.g., 3 for 3%)
+ * @param cpp - The cents per point value (e.g., 2.2 for 2.2cpp)
+ * @returns The value as a percentage
+ */
+export function calculateDynamicValue(multiplier: number | null | undefined, cpp: number): number {
+  if (typeof multiplier !== 'number' || isNaN(multiplier) || multiplier < 0) {
+    return 0
+  }
+  return Number((multiplier * cpp).toFixed(2))
+}
+
+/**
  * Calculate points value at 7 cents per point with proper error handling
  * @param multiplier - The cash back multiplier (e.g., 3 for 3%)
  * @returns The value at 7cpp as a percentage, or 0 if invalid
@@ -62,16 +75,16 @@ export function formatEarningRate(value: number | null | undefined, rewardType: 
  */
 export function getRatingColor(rating?: string): string {
   if (!rating) return 'text-gray-700'
-  
+
   const lowerRating = rating.toLowerCase()
-  
+
   if (lowerRating === 'great' || lowerRating === 'rgs-wallet') {
     return 'text-green-600 font-semibold'
   }
-  
+
   if (lowerRating === 'poor') {
     return 'text-red-500'
   }
-  
+
   return 'text-gray-700'
 }
