@@ -105,11 +105,11 @@ async function getPointsData() {
         order
       }`
     )
-    
+
     if (!pointsPrograms || pointsPrograms.length === 0) {
       return null
     }
-    
+
     const cardsWithTopRated = await Promise.all(
       pointsPrograms.map(async (program) => {
         const topCards = await client.fetch<Array<{ name: string; image: unknown }>>(
@@ -128,14 +128,14 @@ async function getPointsData() {
           }`,
           { programId: program._id }
         )
-        
+
         return {
           ...program,
           topCards
         }
       })
     )
-    
+
     return {
       title: 'Maximize Your Points Value',
       cards: cardsWithTopRated
@@ -163,7 +163,7 @@ async function getMainArticles() {
         excerpt
       }`
     )
-    
+
     // Create a map of article type to article
     const articleMap: Record<string, { _id: string; title: string; slug: string; mainArticleType: string; excerpt?: string }> = {}
     articles.forEach(article => {
@@ -171,7 +171,7 @@ async function getMainArticles() {
         articleMap[article.mainArticleType] = article
       }
     })
-    
+
     return articleMap
   } catch (error) {
     console.error('Error fetching main articles:', error)
@@ -181,7 +181,7 @@ async function getMainArticles() {
 
 async function getLevelCards() {
   const mainArticles = await getMainArticles()
-  
+
   return [
     {
       title: "I'm New Here",
@@ -236,27 +236,28 @@ export default async function HomePage() {
   const mainArticles = await getMainArticles()
   const alreadyInSlug = mainArticles['already-in']?.slug || 'youre-already-in'
   const featuredContent = await getFeaturedContent()
-  
+
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen">
       {/* Hero Section */}
       <HeroSectionClient alreadyInSlug={alreadyInSlug} />
 
       {/* Featured Content Section */}
       {featuredContent.length > 0 && (
-        <div className="bg-gray-50">
+        <div className="bg-rgs-black/5 dark:bg-white/5 backdrop-blur-lg border-y border-black/5 dark:border-white/10">
           <FeaturedContentSection items={featuredContent} />
         </div>
       )}
 
       {/* Level Selector Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-rgs-black">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 font-heading text-rgs-black dark:text-white">
             Choose Your Level
           </h2>
-          <p className="text-center text-gray-600 mb-12 text-lg">
-            Start where you are, grow to where you want to be
+          <p className="text-center text-gray-600 dark:text-gray-300 mb-16 text-lg max-w-2xl mx-auto font-light">
+            Start where you are, grow to where you want to be. <br className="hidden sm:block" />
+            We&apos;ve curated the perfect strategy for every stage of your journey.
           </p>
 
           <LevelCardsClient cards={levelCards} />

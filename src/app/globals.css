@@ -3,13 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+
   /* Optimize font rendering */
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
-  
+
   /* Prevent layout shift */
   img {
     max-width: 100%;
@@ -18,44 +19,47 @@
 }
 
 @layer utilities {
+
   /* Animation utilities */
   .animate-fadeIn {
     animation: fadeIn 0.6s ease-in-out;
   }
-  
+
   @keyframes fadeIn {
     from {
       opacity: 0;
       transform: translateY(10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  
+
   .animate-slideUp {
     animation: slideUp 0.5s ease-out;
   }
-  
+
   @keyframes slideUp {
     from {
       opacity: 0;
       transform: translateY(30px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  
+
   /* Glass effect */
   .glass-effect {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   /* Performance optimization: Use will-change for animated elements */
   .will-animate {
     will-change: transform, opacity;
@@ -63,30 +67,39 @@
 }
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
+  --foreground-rgb: 17, 24, 39;
+  /* Gray-900 - Softer than pure black */
+  --background-start-rgb: 250, 250, 250;
+  /* Neutral-50 - Premium off-white */
   --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 243, 244, 246;
+    /* Gray-100 */
+    --background-start-rgb: 10, 10, 10;
+    /* Near Black */
+    --background-end-rgb: 0, 0, 0;
+  }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;

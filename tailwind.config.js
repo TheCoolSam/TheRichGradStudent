@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'rgs-gold': '#FFD700',
+        'rgs-gold': '#D4AF37', // More premium gold
         'rgs-navy': '#0F172A',
         'rgs-green': '#065f46',
         'rgs-dark-green': '#064e3b',
@@ -18,6 +18,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-playfair)', 'serif'],
       },
     },
   },
