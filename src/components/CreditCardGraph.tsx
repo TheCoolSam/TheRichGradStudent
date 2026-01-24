@@ -217,38 +217,66 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
 
     // Calculate positions
     const generatedNodes: Node[] = []
-    const familyWidth = isMobile ? 200 : 350 // Width reserved for each family column
-    const familySpacing = isMobile ? 20 : 50 // Gap between families
+
+    // Widen spacing significantly for clarity
+    const familyWidth = isMobile ? 250 : 450
+    const familySpacing = isMobile ? 50 : 150
     const startX = 0
 
     families.forEach((fam, famIndex) => {
-      // X-range for this family
       const familyStartX = startX + (famIndex * (familyWidth + familySpacing))
+
+      // Add a Label Node for the Column
+      if (fam) {
+        generatedNodes.push({
+          id: `label-${fam}`,
+          type: 'default', // Standard text node
+          position: {
+            x: familyStartX + familyWidth / 2 - 100, // Center roughly
+            y: -100, // Above the first level
+          },
+          data: { label: fam },
+          style: {
+            background: 'transparent',
+            color: '#fff',
+            border: 'none',
+            fontWeight: 'bold',
+            fontSize: '24px',
+            width: 200,
+            textAlign: 'center',
+            fontFamily: 'var(--font-heading)'
+          },
+          draggable: false,
+        })
+      }
 
       Object.keys(levels).forEach(lvl => {
         const levelCards = cardsByLevelAndFamily[lvl][fam]
         if (levelCards.length === 0) return
 
-        // Center cards within the family swimlane
-        // If multiple cards in same family & level, stack them or spread them slightly?
-        // Let's spread them vertically slightly if needed, or horizontally tight
-        // Actually, usually users have 1 card per level per family. 
-        // If they have 2 (e.g. Freedom Flex + Freedom Unlimited), we spread them.
-
-        const cardSpacing = isMobile ? 120 : 180
+        const cardSpacing = isMobile ? 160 : 300 // Much wider spacing between sibling cards
         const totalLevelWidth = (levelCards.length - 1) * cardSpacing
-        const levelStartX = familyStartX + (familyWidth - totalLevelWidth) / 2 - (isMobile ? 80 : 140) // simplistic centering
+
+        // Center the group within the family width
+        // familyStartX + (familyWidth/2) is the center line.
+        // We shift left by totalLevelWidth/2
 
         levelCards.forEach((card, index) => {
-          // Shift X slightly for multiples to avoid collision
-          const xPos = familyStartX + (familyWidth / 2) + ((index - (levelCards.length - 1) / 2) * cardSpacing) - (isMobile ? 80 : 140)
+          // Center Logic:
+          // Center Point = familyStartX + familyWidth/2
+          // Offset = (index - (count-1)/2) * spacing
+
+          const centerPoint = familyStartX + (familyWidth / 2) - (isMobile ? 80 : 140) // Adjust for card width center
+          const offset = (index - (levelCards.length - 1) / 2) * cardSpacing
+
+          const xPos = centerPoint + offset
 
           generatedNodes.push({
             id: card._id,
             type: 'cardNode',
             position: {
               x: xPos,
-              y: levels[lvl] + (index % 2 === 1 ? 50 : 0), // Slight stagger if multiple
+              y: levels[lvl] + (index % 2 === 1 ? 80 : 0), // Increased vertical stagger for clarity
             },
             data: {
               name: card.name,
