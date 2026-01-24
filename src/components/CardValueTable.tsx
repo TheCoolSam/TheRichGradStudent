@@ -18,15 +18,48 @@ interface TableRow {
   points7cpp: string
   rating?: string
   hasAsterisk?: boolean
+  note?: string
 }
 
+// ... inside component ...
+
+const rows: TableRow[] = [
+  // ...
+  {
+    category: 'Annual Credits',
+    cashBack: `$${card.annualCredits}`,
+    points2cpp: 'N/A',
+    points7cpp: 'N/A',
+    note: card.annualCreditsNotes,
+  },
+  // ...
+]
+
+  // ... inside render (Desktop) ...
+
+  < td className = {`px-4 py-3 text-sm`}>
+  {
+    row.rating ? (
+      <div className="flex items-center gap-2">
+        {row.cashBack}
+        <RatingBadge rating={row.rating} size="sm" />
+      </div>
+    ) : (
+      <div className="flex flex-col">
+        <span>{row.cashBack}</span>
+        {row.note && <span className="text-xs text-gray-500 font-medium mt-0.5">{row.note}</span>}
+      </div>
+    )
+  }
+                  </td >
+
 export default function CardValueTable({
-  card,
-  isLoading = false,
-  error = null,
-  spendingCapAmount = 25000,
-  spendingCapPeriod = 'annually'
-}: CardValueTableProps) {
+    card,
+    isLoading = false,
+    error = null,
+    spendingCapAmount = 25000,
+    spendingCapPeriod = 'annually'
+  }: CardValueTableProps) {
   // Loading state
   if (isLoading) {
     return (
@@ -121,6 +154,7 @@ export default function CardValueTable({
       cashBack: `$${card.annualCredits}`,
       points2cpp: 'N/A',
       points7cpp: 'N/A',
+      note: card.annualCreditsNotes,
     },
     {
       category: 'Net Annual Fee',
@@ -313,9 +347,12 @@ export default function CardValueTable({
                   <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                     {rewardType === 'cashback' ? 'Cash Back' : 'Points'}
                   </span>
-                  <span className={`font-bold text-sm ${getRatingColor(row.rating)} ${isKeyMetric ? 'text-base' : ''} truncate ml-2`}>
-                    {row.cashBack}
-                  </span>
+                  <div className={`flex flex-col ml-2 truncate`}>
+                    <span className={`font-bold text-sm ${getRatingColor(row.rating)} ${isKeyMetric ? 'text-base' : ''} text-right`}>
+                      {row.cashBack}
+                    </span>
+                    {row.note && <span className="text-[10px] text-gray-500 font-medium text-right mt-0.5">{row.note}</span>}
+                  </div>
                 </div>
 
                 {/* 2cpp Value */}

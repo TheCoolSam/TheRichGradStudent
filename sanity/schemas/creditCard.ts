@@ -88,10 +88,10 @@ export default defineType({
           description: 'Choose how large this image should display',
           options: {
             list: [
-              {title: 'Small (25%)', value: 'small'},
-              {title: 'Medium (50%)', value: 'medium'},
-              {title: 'Large (75%)', value: 'large'},
-              {title: 'Full Width (100%)', value: 'full'},
+              { title: 'Small (25%)', value: 'small' },
+              { title: 'Medium (50%)', value: 'medium' },
+              { title: 'Large (75%)', value: 'large' },
+              { title: 'Full Width (100%)', value: 'full' },
             ],
             layout: 'radio',
           },
@@ -109,7 +109,7 @@ export default defineType({
       name: 'pointsProgram',
       title: 'Points Program',
       type: 'reference',
-      to: [{type: 'pointsProgram'}],
+      to: [{ type: 'pointsProgram' }],
       description: 'Which points program does this card earn? (skip for pure cash-back cards)',
       validation: (Rule) =>
         Rule.custom((value, context) => {
@@ -194,7 +194,7 @@ export default defineType({
       initialValue: false,
       fieldset: 'intro',
     }),
-    
+
     // VALUE TABLE DATA FIELDS
     defineField({
       name: 'signupBonusValue',
@@ -230,7 +230,14 @@ export default defineType({
       initialValue: 0,
       fieldset: 'bonusFees',
     }),
-    
+    defineField({
+      name: 'annualCreditsNotes',
+      title: 'Annual Credits Notes',
+      type: 'string',
+      description: 'Optional note to appear below the Annual Credits value (e.g. "Includes Free Night Award")',
+      fieldset: 'bonusFees',
+    }),
+
     // TRAVEL
     defineField({
       name: 'travelMultiplier',
@@ -248,7 +255,7 @@ export default defineType({
       options: { list: ratingOptions },
       fieldset: 'earning',
     }),
-    
+
     // GROCERY
     defineField({
       name: 'groceryMultiplier',
@@ -265,7 +272,7 @@ export default defineType({
       options: { list: ratingOptions },
       fieldset: 'earning',
     }),
-    
+
     // GAS
     defineField({
       name: 'gasMultiplier',
@@ -282,7 +289,7 @@ export default defineType({
       options: { list: ratingOptions },
       fieldset: 'earning',
     }),
-    
+
     // DINING
     defineField({
       name: 'diningMultiplier',
@@ -299,7 +306,7 @@ export default defineType({
       options: { list: ratingOptions },
       fieldset: 'earning',
     }),
-    
+
     // PHARMACY
     defineField({
       name: 'pharmacyMultiplier',
@@ -316,7 +323,7 @@ export default defineType({
       options: { list: ratingOptions },
       fieldset: 'earning',
     }),
-    
+
     // OTHER
     defineField({
       name: 'otherMultiplier',
@@ -333,7 +340,7 @@ export default defineType({
       options: { list: ratingOptions },
       fieldset: 'earning',
     }),
-    
+
     // BENEFITS
     defineField({
       name: 'loungeBenefits',
@@ -380,7 +387,7 @@ export default defineType({
       options: { list: ratingOptions },
       fieldset: 'benefits',
     }),
-    
+
     // ADDITIONAL INFORMATION
     defineField({
       name: 'additionalInfo',
@@ -390,18 +397,18 @@ export default defineType({
       description: 'Extra details, tips, or important notes about this card',
       fieldset: 'additional',
     }),
-    
+
     defineField({
       name: 'categories',
       title: 'Categories',
       type: 'array',
-      of: [{type: 'string'}],
+      of: [{ type: 'string' }],
       options: {
         list: [
-          {title: 'New Here', value: 'new'},
-          {title: 'Every Day Earning', value: 'everyday'},
-          {title: 'Travel Cards', value: 'travel'},
-          {title: 'Credit Card Pro', value: 'pro'},
+          { title: 'New Here', value: 'new' },
+          { title: 'Every Day Earning', value: 'everyday' },
+          { title: 'Travel Cards', value: 'travel' },
+          { title: 'Credit Card Pro', value: 'pro' },
         ],
       },
       validation: (Rule) => Rule.required().min(1),
@@ -411,7 +418,7 @@ export default defineType({
       name: 'tags',
       title: 'Tags',
       type: 'array',
-      of: [{type: 'reference', to: {type: 'tag'}}],
+      of: [{ type: 'reference', to: { type: 'tag' } }],
       description: 'Add relevant tags for better organization',
       fieldset: 'metadata',
     }),
@@ -475,7 +482,7 @@ export default defineType({
       title: 'Recommended Content',
       type: 'array',
       of: [
-        {type: 'reference', to: [{type: 'article'}, {type: 'post'}, {type: 'creditCard'}]}
+        { type: 'reference', to: [{ type: 'article' }, { type: 'post' }, { type: 'creditCard' }] }
       ],
       description: '📌 Manually select 1-3 related articles or cards. If empty, automatically shows content with shared tags and points program. Note: "Related Cards" field is separate and shows card progression paths.',
       validation: (Rule) => Rule.max(3),

@@ -425,7 +425,7 @@ export default async function ContentPage({ params }: PageProps) {
                 <h2 className="text-3xl font-bold mb-4 font-heading text-rgs-black">Why we opened it!</h2>
                 <div className="prose prose-lg max-w-none prose-headings:font-heading">
                   <PortableText
-                    value={(content as CreditCard).introContent}
+                    value={(content as CreditCard).introContent!}
                     components={portableTextComponents}
                   />
                 </div>
@@ -441,7 +441,7 @@ export default async function ContentPage({ params }: PageProps) {
                 <h2 className="text-2xl font-bold mb-4 font-heading text-rgs-black">Additional Information</h2>
                 <div className="prose prose-lg max-w-none prose-headings:font-heading">
                   <PortableText
-                    value={(content as CreditCard).additionalInfo}
+                    value={(content as CreditCard).additionalInfo!}
                     components={portableTextComponents}
                   />
                 </div>

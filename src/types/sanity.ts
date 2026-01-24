@@ -1,4 +1,4 @@
-// TypeScript interfaces for Sanity data
+import { PortableTextBlock } from 'next-sanity'
 
 export interface Author {
   _id: string
@@ -37,7 +37,7 @@ export interface Post {
   }
   author: Author
   publishedAt: string
-  body: Array<Record<string, unknown>>
+  body: PortableTextBlock[]
   category?: 'new' | 'everyday' | 'travel' | 'pro'
   categories?: string[]
   tags?: Array<{ _id: string }>
@@ -63,7 +63,7 @@ export interface Article {
   }
   author?: Author
   publishedAt: string
-  body: Array<Record<string, unknown>>
+  body: PortableTextBlock[]
   categories?: string[]
   tags?: Array<{ _id: string }>
   manualRecommendations?: string[]
@@ -111,7 +111,7 @@ export interface CreditCard {
   }
   issuer?: string
   affiliateLink: string
-  introContent?: Array<Record<string, unknown>>
+  introContent?: PortableTextBlock[]
   spendRequirement?: string
   aprOffer?: string
   hasSpendingCap: boolean
@@ -133,7 +133,7 @@ export interface CreditCard {
   signupBonusRating?: Rating
   annualFee: number
   annualCredits: number
-
+  annualCreditsNotes?: string
   travelMultiplier: number
   travelRating?: Rating
 
@@ -161,7 +161,7 @@ export interface CreditCard {
   miscBenefits?: string
   miscRating?: Rating
 
-  additionalInfo?: Array<Record<string, unknown>>
+  additionalInfo?: PortableTextBlock[]
 
   author?: Author
   publishedAt: string
