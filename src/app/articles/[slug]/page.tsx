@@ -178,6 +178,47 @@ export default async function ArticlePage({ params }: PageProps) {
             { label: article.title },
           ]}
         />
+        {/* Header */}
+        <header className="mb-14 text-center max-w-3xl mx-auto">
+          <div className="mb-6 flex justify-center items-center gap-3 text-sm font-medium tracking-wider text-rgs-green uppercase">
+            ARTICLE
+            <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+            <time className="text-gray-500">
+              {new Date(article.publishedAt || new Date().toISOString()).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+          </div>
+
+          <h1 className="text-4xl md:text-6xl font-bold mb-8 font-heading leading-tight text-gray-900">
+            {article.title}
+          </h1>
+
+          {article.author && (
+            <div className="flex items-center justify-center gap-4 mb-8">
+              {article.author.image && (
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-rgs-gold/50 shadow-sm">
+                  <Image
+                    src={urlFor(article.author.image).width(96).height(96).url()}
+                    alt={article.author.name}
+                    width={96}
+                    height={96}
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              <div className="text-left">
+                <p className="font-semibold text-gray-900 text-sm">{article.author.name}</p>
+                <p className="text-xs text-gray-500 font-medium tracking-wide uppercase">{article.author.role}</p>
+              </div>
+            </div>
+          )}
+
+          <div className="w-24 h-1 bg-gradient-to-r from-rgs-gold to-rgs-green mx-auto rounded-full opacity-80"></div>
+        </header>
+
         <ArticleContent article={article}>
           <PortableText value={article.body as any} components={portableTextComponents} />
         </ArticleContent>
