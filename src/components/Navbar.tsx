@@ -75,13 +75,13 @@ export default function Navbar() {
               {/* Mobile Search Button */}
               <motion.button
                 onClick={() => setIsSearchOpen(true)}
-                className="text-white hover:text-rgs-light-green transition-colors p-2"
+                className="flex items-center justify-center w-10 h-10 text-gray-400 hover:text-white bg-rgs-black/50 hover:bg-rgs-green/20 border border-gray-600 hover:border-rgs-green/50 rounded-lg transition-all duration-200"
                 aria-label="Open search"
                 type="button"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </motion.button>

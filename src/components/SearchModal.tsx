@@ -126,9 +126,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -20 }}
                         transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="fixed top-[15%] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[101] px-4"
+                        className="fixed inset-0 sm:inset-auto sm:top-[15%] left-0 sm:left-1/2 sm:-translate-x-1/2 w-full sm:max-w-2xl z-[101] px-0 sm:px-4"
                     >
-                        <div className="bg-rgs-off-black/95 backdrop-blur-xl border border-rgs-green/30 rounded-2xl shadow-2xl overflow-hidden">
+                        <div className="h-full sm:h-auto bg-rgs-off-black/95 backdrop-blur-xl border-x-0 sm:border border-rgs-green/30 sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col">
                             {/* Search Input */}
                             <div className="flex items-center gap-3 p-4 border-b border-rgs-green/20">
                                 <svg
@@ -161,7 +161,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             </div>
 
                             {/* Results */}
-                            <div className="max-h-[60vh] overflow-y-auto">
+                            <div className="flex-1 overflow-y-auto sm:max-h-[60vh]">
                                 {query && !isLoading && !hasResults && (
                                     <div className="p-8 text-center text-gray-400">
                                         <p>No results found for &quot;{query}&quot;</p>
