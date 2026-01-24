@@ -191,6 +191,9 @@ export default async function ArticlePage({ params }: PageProps) {
               })}
             </time>
           </div>
+          <Link href="/editorial-policy" className="block mb-6 text-xs text-gray-400 hover:text-gray-600 underline decoration-dotted transition-colors">
+            Advertiser Disclosure & Editorial Policy
+          </Link>
 
           <h1 className="text-4xl md:text-6xl font-bold mb-8 font-heading leading-tight text-gray-900">
             {article.title}

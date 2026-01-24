@@ -98,6 +98,12 @@ export default async function RootLayout({
                 >
                   Privacy Policy
                 </Link>
+                <Link
+                  href="/editorial-policy"
+                  className="text-white/80 hover:text-white transition-colors"
+                >
+                  Editorial Policy
+                </Link>
               </div>
             </div>
 
