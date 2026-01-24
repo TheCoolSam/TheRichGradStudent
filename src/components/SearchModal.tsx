@@ -87,9 +87,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         if (result._type === 'article') {
             path = `/articles/${result.slug.current}`
         } else if (result._type === 'post') {
-            path = `/blog/${result.slug.current}`
+            path = `/${result.slug.current}`
         } else if (result._type === 'creditCard') {
-            path = `/credit-cards/${result.slug.current}`
+            path = `/${result.slug.current}`
         }
 
         router.push(path)
