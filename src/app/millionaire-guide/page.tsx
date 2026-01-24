@@ -1,5 +1,6 @@
 import { client } from '@/lib/sanity'
 import CreditCardGraph from '@/components/CreditCardGraph'
+import SpendingCalculator from '@/components/SpendingCalculator'
 
 export const revalidate = 30
 
@@ -12,9 +13,18 @@ async function getCreditCards() {
     subCategory,
     issuer,
     image,
-    "pointsProgramName": pointsProgram->name,
+    "pointsProgram": pointsProgram->{name, baseValue},
     "relatedCardsSlugs": relatedCards[]->slug.current,
-    rating
+    rating,
+    annualFee,
+    annualCredits,
+    travelMultiplier,
+    groceryMultiplier,
+    gasMultiplier,
+    diningMultiplier,
+    pharmacyMultiplier,
+    otherMultiplier,
+    pointsProgram->{baseValue}
   }`
 
   const cards = await client.fetch(query)
@@ -24,10 +34,7 @@ async function getCreditCards() {
   const filtered = cards.filter((card: any) =>
     card._id &&
     card.name &&
-    card.slug &&
-    card.category &&
-    card.issuer &&
-    card.image
+    card.slug
   )
 
   console.log(`[Millionaire Guide] After filtering: ${filtered.length} cards`)
@@ -48,6 +55,19 @@ export default async function MillionaireGuidePage() {
             Your personalized pathway to mastering credit cards and travel rewards.
             Follow the arrows to see which cards to apply for next based on your experience level.
           </p>
+        </div>
+
+        <div className="mb-20">
+          <div className="bg-rgs-off-black/50 backdrop-blur-sm border border-rgs-green/20 rounded-3xl p-6 sm:p-10">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-white mb-4">Find Your Starting Point 📍</h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Not sure where to begin? Enter your monthly spending below, and we&apos;ll calculate
+                exactly which card will give you the highest return to start your journey.
+              </p>
+            </div>
+            <SpendingCalculator cards={cards} />
+          </div>
         </div>
 
         <CreditCardGraph cards={cards} />
