@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { urlFor } from '@/lib/image'
 import { ReactNode } from 'react'
+import Timestamp from './Timestamp'
+import ReadingProgress from './ReadingProgress'
 
 interface BlogMetadata {
   title: string
