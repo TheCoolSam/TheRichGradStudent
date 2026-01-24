@@ -4,6 +4,7 @@ import './globals.css'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { draftMode } from 'next/headers'
+import { Analytics } from '@vercel/analytics/react'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -112,6 +113,7 @@ export default async function RootLayout({
             </div>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   )
