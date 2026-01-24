@@ -4,7 +4,7 @@ import './globals.css'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { draftMode } from 'next/headers'
-import { Analytics } from '@vercel/analytics/react'
+import Script from 'next/script'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -113,7 +113,28 @@ export default async function RootLayout({
             </div>
           </div>
         </footer>
-        <Analytics />
+
+        {/* Google Analytics */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+            />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+                `,
+              }}
+            />
+          </>
+        )}
       </body>
     </html>
   )
