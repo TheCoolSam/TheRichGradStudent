@@ -1,6 +1,8 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialize Resend only if key exists, or use a dummy to prevent build crash
+// The actual sendEmail function checks for the key before sending
+const resend = new Resend(process.env.RESEND_API_KEY || 're_123_build_placeholder')
 
 interface SendEmailParams {
     to: string[]
