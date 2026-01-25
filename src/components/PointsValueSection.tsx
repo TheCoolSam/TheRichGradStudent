@@ -116,7 +116,7 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
           {/* Left Arrow */}
           <motion.button
             onClick={handlePrevious}
-            className="absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
+            className="absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-[60] bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
             aria-label="Previous cards"
             whileHover={{ scale: 1.15, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)' }}
             whileTap={{ scale: 0.95 }}
@@ -130,7 +130,7 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
           {/* Right Arrow */}
           <motion.button
             onClick={handleNext}
-            className="absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
+            className="absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-[60] bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
             aria-label="Next cards"
             whileHover={{ scale: 1.15, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)' }}
             whileTap={{ scale: 0.95 }}
