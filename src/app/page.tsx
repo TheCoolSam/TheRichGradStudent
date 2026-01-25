@@ -7,6 +7,7 @@ import LevelCardsClient from '@/components/LevelCardsClient'
 import HeroSectionClient from '@/components/HeroSectionClient'
 import { FeaturedContentSection } from '@/components/FeaturedContentSection'
 import FeaturedBlogsSection from '@/components/FeaturedBlogsSection'
+import JsonLd from '@/components/JsonLd'
 
 // Dynamic imports for below-the-fold components
 
@@ -329,8 +330,40 @@ export default async function HomePage() {
   const featuredContent = await getFeaturedContent()
   const featuredBlogs = await getFeaturedBlogs()
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Can graduate students really travel for free using credit card points?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes! By strategically using credit cards and understanding point valuations, graduate students can earn significant rewards on their existing spending to fund luxury travel.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'What is the best credit card for a grad student starting with travel points?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'We recommend starting with Level 1 cards like the Chase Freedom Rise or Discover it Student to build credit, then moving to Level 2 and 3 cards once a solid score is established.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'What is RGS Wallet?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'RGS Wallet is our curated selection of top-rated credit cards that provide the best value-to-fee ratio specifically for graduate students and academic professionals.'
+        }
+      }
+    ]
+  }
+
   return (
     <main className="min-h-screen">
+      <JsonLd data={faqSchema} />
       {/* Hero Section */}
       <HeroSectionClient alreadyInSlug={alreadyInSlug} />
 

@@ -1,4 +1,4 @@
-import {defineType, defineArrayMember} from 'sanity'
+import { defineType, defineArrayMember } from 'sanity'
 
 export default defineType({
   title: 'Block Content',
@@ -9,18 +9,18 @@ export default defineType({
       title: 'Block',
       type: 'block',
       styles: [
-        {title: 'Normal', value: 'normal'},
-        {title: 'H1', value: 'h1'},
-        {title: 'H2', value: 'h2'},
-        {title: 'H3', value: 'h3'},
-        {title: 'H4', value: 'h4'},
-        {title: 'Quote', value: 'blockquote'},
+        { title: 'Normal', value: 'normal' },
+        { title: 'H1', value: 'h1' },
+        { title: 'H2', value: 'h2' },
+        { title: 'H3', value: 'h3' },
+        { title: 'H4', value: 'h4' },
+        { title: 'Quote', value: 'blockquote' },
       ],
-      lists: [{title: 'Bullet', value: 'bullet'}],
+      lists: [{ title: 'Bullet', value: 'bullet' }],
       marks: {
         decorators: [
-          {title: 'Strong', value: 'strong'},
-          {title: 'Emphasis', value: 'em'},
+          { title: 'Strong', value: 'strong' },
+          { title: 'Emphasis', value: 'em' },
         ],
         annotations: [
           {
@@ -45,7 +45,7 @@ export default defineType({
                 title: 'Credit Card',
                 name: 'creditCard',
                 type: 'reference',
-                to: [{type: 'creditCard'}],
+                to: [{ type: 'creditCard' }],
                 description: 'Select a credit card review to link to',
               },
             ],
@@ -60,7 +60,7 @@ export default defineType({
                 title: 'Article',
                 name: 'article',
                 type: 'reference',
-                to: [{type: 'article'}],
+                to: [{ type: 'article' }],
                 description: 'Select an article to link to',
               },
             ],
@@ -75,7 +75,7 @@ export default defineType({
                 title: 'Blog Post',
                 name: 'post',
                 type: 'reference',
-                to: [{type: 'post'}],
+                to: [{ type: 'post' }],
                 description: 'Select a blog post to link to',
               },
             ],
@@ -85,7 +85,7 @@ export default defineType({
     }),
     defineArrayMember({
       type: 'image',
-      options: {hotspot: true},
+      options: { hotspot: true },
       fields: [
         {
           name: 'size',
@@ -94,10 +94,10 @@ export default defineType({
           description: 'Choose how large this image should display',
           options: {
             list: [
-              {title: 'Small (25%)', value: 'small'},
-              {title: 'Medium (50%)', value: 'medium'},
-              {title: 'Large (75%)', value: 'large'},
-              {title: 'Full Width (100%)', value: 'full'},
+              { title: 'Small (25%)', value: 'small' },
+              { title: 'Medium (50%)', value: 'medium' },
+              { title: 'Large (75%)', value: 'large' },
+              { title: 'Full Width (100%)', value: 'full' },
             ],
             layout: 'radio',
           },
@@ -127,7 +127,7 @@ export default defineType({
           name: 'creditCard',
           title: 'Credit Card',
           type: 'reference',
-          to: [{type: 'creditCard'}],
+          to: [{ type: 'creditCard' }],
           description: 'Select a credit card to display',
         },
         {
@@ -144,14 +144,14 @@ export default defineType({
           description: 'Choose how large the card image should display',
           options: {
             list: [
-              {title: 'Small (200px)', value: 'small'},
-              {title: 'Medium (300px)', value: 'medium'},
-              {title: 'Large (400px)', value: 'large'},
+              { title: 'Small (200px)', value: 'small' },
+              { title: 'Medium (300px)', value: 'medium' },
+              { title: 'Large (400px)', value: 'large' },
             ],
             layout: 'radio',
           },
           initialValue: 'medium',
-          hidden: ({parent}) => !parent?.showImage,
+          hidden: ({ parent }) => !parent?.showImage,
         },
         {
           name: 'showDetails',
@@ -167,7 +167,7 @@ export default defineType({
           media: 'creditCard.image',
           showImage: 'showImage',
         },
-        prepare({title, media, showImage}) {
+        prepare({ title, media, showImage }) {
           return {
             title: title || 'Credit Card Display',
             subtitle: showImage ? 'With image' : 'No image',
@@ -175,6 +175,49 @@ export default defineType({
           }
         },
       },
+    }),
+    defineArrayMember({
+      name: 'simpleTable',
+      title: 'Simple Table',
+      type: 'object',
+      icon: () => '📊',
+      fields: [
+        {
+          name: 'rows',
+          title: 'Table Rows',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {
+                  name: 'cells',
+                  title: 'Cells',
+                  type: 'array',
+                  of: [{ type: 'string' }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'caption',
+          title: 'Table Caption (Optional)',
+          type: 'string',
+        }
+      ],
+      preview: {
+        select: {
+          rows: 'rows',
+          caption: 'caption'
+        },
+        prepare({ rows, caption }) {
+          return {
+            title: caption || 'Simple Table',
+            subtitle: `${rows?.length || 0} rows`,
+          }
+        }
+      }
     }),
   ],
 })

@@ -41,10 +41,10 @@ export default defineType({
           description: 'Choose how large this image should display',
           options: {
             list: [
-              {title: 'Small (25%)', value: 'small'},
-              {title: 'Medium (50%)', value: 'medium'},
-              {title: 'Large (75%)', value: 'large'},
-              {title: 'Full Width (100%)', value: 'full'},
+              { title: 'Small (25%)', value: 'small' },
+              { title: 'Medium (50%)', value: 'medium' },
+              { title: 'Large (75%)', value: 'large' },
+              { title: 'Full Width (100%)', value: 'full' },
             ],
             layout: 'radio',
           },
@@ -64,6 +64,20 @@ export default defineType({
       type: 'text',
       rows: 4,
       description: 'Short biography or introduction',
+    }),
+    defineField({
+      name: 'expertise',
+      title: 'Expertise',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'List areas of expertise (e.g., "Chase Ultimate Rewards", "Luxury Travel")',
+    }),
+    defineField({
+      name: 'credentials',
+      title: 'Credentials/Certifications',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'List professional credentials or academic degrees)',
     }),
     defineField({
       name: 'email',

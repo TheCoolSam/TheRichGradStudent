@@ -14,6 +14,7 @@ import BlogContent from '@/components/BlogContent'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Timestamp from '@/components/Timestamp'
 import { getRecommendedContent } from '@/lib/recommendations'
+import JsonLd from '@/components/JsonLd'
 
 // Revalidate every 60 seconds
 export const revalidate = 60
@@ -91,6 +92,31 @@ const portableTextComponents: PortableTextComponents = {
                 </p>
               )}
             </div>
+          )}
+        </div>
+      )
+    },
+    simpleTable: ({ value }: any) => {
+      const rows = value?.rows || []
+      if (rows.length === 0) return null
+
+      return (
+        <div className="my-8 overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 border border-gray-100 rounded-lg overflow-hidden">
+            <tbody className="bg-white divide-y divide-gray-100">
+              {rows.map((row: any, i: number) => (
+                <tr key={i} className={i === 0 ? 'bg-gray-50 font-bold' : ''}>
+                  {row.cells?.map((cell: string, j: number) => (
+                    <td key={j} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {value.caption && (
+            <p className="text-xs text-gray-500 mt-2 italic text-center">{value.caption}</p>
           )}
         </div>
       )
@@ -388,8 +414,15 @@ export default async function ContentPage({ params }: PageProps) {
             {isCreditCard ? (content as CreditCard).name : (content as Post).title}
           </h1>
 
+          {/* GEO: Answer-First Summary (40-60 words) */}
+          {content.excerpt && (
+            <div className="mb-10 text-xl text-gray-700 leading-relaxed font-medium bg-rgs-green/5 p-6 rounded-2xl border-l-4 border-rgs-green text-balance mx-auto max-w-2xl text-left">
+              <p>{content.excerpt}</p>
+            </div>
+          )}
+
           {content.author && (
-            <div className="flex items-center justify-center gap-4 mb-8">
+            <address className="not-italic flex items-center justify-center gap-4 mb-8">
               {content.author.image && (
                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-rgs-gold/50 shadow-sm">
                   <Image
@@ -402,14 +435,63 @@ export default async function ContentPage({ params }: PageProps) {
                 </div>
               )}
               <div className="text-left">
-                <p className="font-semibold text-gray-900 text-sm">{content.author.name}</p>
+                <p className="font-semibold text-gray-900 text-sm" itemProp="author">{content.author.name}</p>
                 <p className="text-xs text-gray-500 font-medium tracking-wide uppercase">{content.author.role}</p>
               </div>
-            </div>
+            </address>
           )}
 
           <div className="w-24 h-1 bg-gradient-to-r from-rgs-gold to-rgs-green mx-auto rounded-full opacity-80"></div>
         </header>
+
+        {/* GEO: Type-Specific Schema */}
+        {isCreditCard && (
+          <JsonLd data={{
+            '@context': 'https://schema.org',
+            '@type': 'Review',
+            itemReviewed: {
+              '@type': 'Product',
+              name: (content as CreditCard).name,
+              brand: {
+                '@type': 'Brand',
+                name: (content as CreditCard).issuer
+              }
+            },
+            reviewRating: {
+              '@type': 'Rating',
+              ratingValue: (content as CreditCard).overallRating || 4.5, // Fallback
+              bestRating: 5
+            },
+            author: {
+              '@type': 'Person',
+              name: content.author?.name
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'The Rich Grad Student'
+            }
+          }} />
+        )}
+
+        {isPost && (
+          <JsonLd data={{
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            headline: (content as Post).title,
+            description: content.metaDescription || content.excerpt,
+            image: content.mainImage ? urlFor(content.mainImage).url() : undefined,
+            datePublished: content.publishedAt,
+            dateModified: content._updatedAt,
+            author: {
+              '@type': 'Person',
+              name: content.author?.name
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'The Rich Grad Student'
+            }
+          }} />
+        )}
 
         {/* Credit Card Specific Content */}
         {isCreditCard && (

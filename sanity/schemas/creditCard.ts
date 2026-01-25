@@ -465,6 +465,22 @@ export default defineType({
       fieldset: 'metadata',
     }),
     defineField({
+      name: 'excerpt',
+      title: 'Excerpt / Answer-First Summary',
+      type: 'text',
+      rows: 4,
+      description: '⭐ GEO: Provide a 40-60 word concise summary that answers the most likely user query (e.g. "Is this card worth it?"). This appears at the top of the review.',
+      fieldset: 'metadata',
+    }),
+    defineField({
+      name: 'overallRating',
+      title: 'Overall Rating (1-5)',
+      type: 'number',
+      description: 'Decimal rating for schema.org purposes (e.g. 4.5)',
+      validation: (Rule) => Rule.min(1).max(5),
+      fieldset: 'metadata',
+    }),
+    defineField({
       name: 'metaDescription',
       title: 'SEO Description',
       type: 'text',

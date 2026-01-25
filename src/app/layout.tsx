@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { draftMode } from 'next/headers'
 import Script from 'next/script'
+import JsonLd from '@/components/JsonLd'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,11 +51,37 @@ export default async function RootLayout({
 }) {
   const { isEnabled } = await draftMode()
 
+  const orgSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'The Rich Grad Student',
+    url: 'https://therichgradstudent.com',
+    logo: 'https://therichgradstudent.com/favicon.svg',
+    sameAs: [
+      'https://instagram.com/TheRichGradStudent',
+      'https://twitter.com/TheRichGradStudent',
+      'https://tiktok.com/@TheRichGradStudent',
+      'https://youtube.com/@TheRichGradStudent'
+    ],
+    description: 'Mastering the points travel game on a graduate student budget.',
+    founder: [
+      {
+        '@type': 'Person',
+        name: 'Giorgio Sarro'
+      },
+      {
+        '@type': 'Person',
+        name: 'Karan'
+      }
+    ]
+  }
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+        <JsonLd data={orgSchema} />
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased text-gray-900 bg-[#FAFAFA]`}>
         {isEnabled && (
@@ -74,10 +101,12 @@ export default async function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-6 md:mb-0">
-                <h3 className="text-xl font-bold mb-2">The Rich Grad Student</h3>
-                <p className="text-white/80 text-sm">
-                  Millionaire Style Travel, GRAD STUDENT BUDGET
-                </p>
+                <address className="not-italic text-left">
+                  <h3 className="text-xl font-bold mb-2">The Rich Grad Student</h3>
+                  <p className="text-white/80 text-sm">
+                    Millionaire Style Travel, GRAD STUDENT BUDGET
+                  </p>
+                </address>
               </div>
 
               <div className="flex gap-8">
@@ -104,6 +133,12 @@ export default async function RootLayout({
                   className="text-white/80 hover:text-white transition-colors"
                 >
                   Editorial Policy
+                </Link>
+                <Link
+                  href="/llms.txt"
+                  className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
+                >
+                  AI Knowledge
                 </Link>
               </div>
             </div>

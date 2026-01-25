@@ -12,6 +12,8 @@ export interface Author {
     }
   }
   bio?: string
+  expertise?: string[]
+  credentials?: string[]
   email?: string
   socialLinks?: {
     twitter?: string
@@ -174,4 +176,6 @@ export interface CreditCard {
   publishedAt: string
   featured?: boolean
   metaDescription?: string
+  excerpt?: string
+  overallRating?: number
 }

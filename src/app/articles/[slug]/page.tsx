@@ -10,6 +10,7 @@ import RecommendedPosts from '@/components/RecommendedPosts'
 import ArticleContent from '@/components/ArticleContent'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { getRecommendedContent } from '@/lib/recommendations'
+import JsonLd from '@/components/JsonLd'
 
 export const revalidate = 60
 
@@ -85,6 +86,31 @@ const portableTextComponents: PortableTextComponents = {
                 </p>
               )}
             </div>
+          )}
+        </div>
+      )
+    },
+    simpleTable: ({ value }: any) => {
+      const rows = value?.rows || []
+      if (rows.length === 0) return null
+
+      return (
+        <div className="my-8 overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 border border-gray-100 rounded-lg overflow-hidden">
+            <tbody className="bg-white divide-y divide-gray-100">
+              {rows.map((row: any, i: number) => (
+                <tr key={i} className={i === 0 ? 'bg-gray-50 font-bold' : ''}>
+                  {row.cells?.map((cell: string, j: number) => (
+                    <td key={j} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {value.caption && (
+            <p className="text-xs text-gray-500 mt-2 italic text-center">{value.caption}</p>
           )}
         </div>
       )
@@ -249,8 +275,15 @@ export default async function ArticlePage({ params }: PageProps) {
             {article.title}
           </h1>
 
+          {/* GEO: Answer-First Summary (40-60 words) */}
+          {article.excerpt && (
+            <div className="mb-10 text-xl text-gray-700 leading-relaxed font-medium bg-rgs-green/5 p-6 rounded-2xl border-l-4 border-rgs-green text-balance mx-auto max-w-2xl text-left">
+              <p>{article.excerpt}</p>
+            </div>
+          )}
+
           {article.author && (
-            <div className="flex items-center justify-center gap-4 mb-8">
+            <address className="not-italic flex items-center justify-center gap-4 mb-8">
               {article.author.image && (
                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-rgs-gold/50 shadow-sm">
                   <Image
@@ -263,14 +296,38 @@ export default async function ArticlePage({ params }: PageProps) {
                 </div>
               )}
               <div className="text-left">
-                <p className="font-semibold text-gray-900 text-sm">{article.author.name}</p>
+                <p className="font-semibold text-gray-900 text-sm" itemProp="author">{article.author.name}</p>
                 <p className="text-xs text-gray-500 font-medium tracking-wide uppercase">{article.author.role}</p>
               </div>
-            </div>
+            </address>
           )}
 
           <div className="w-24 h-1 bg-gradient-to-r from-rgs-gold to-rgs-green mx-auto rounded-full opacity-80"></div>
         </header>
+
+        {/* GEO: Article Schema */}
+        <JsonLd data={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: article.title,
+          description: article.metaDescription || article.excerpt,
+          image: article.mainImage ? urlFor(article.mainImage).url() : undefined,
+          datePublished: article.publishedAt,
+          dateModified: article._updatedAt,
+          author: {
+            '@type': 'Person',
+            name: article.author?.name,
+            jobTitle: article.author?.role,
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'The Rich Grad Student',
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://therichgradstudent.com/favicon.svg'
+            }
+          }
+        }} />
 
         <ArticleContent article={article}>
           <PortableText value={article.body as any} components={portableTextComponents} />
