@@ -10,7 +10,7 @@ async function getCreditCards() {
     slug,
     category,
     subCategory,
-    issuer,
+    "issuer": issuer->name,
     image,
     "pointsProgram": pointsProgram->{name, baseValue},
     "relatedCardsSlugs": relatedCards[]->slug.current,
