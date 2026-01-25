@@ -48,6 +48,47 @@ const portableTextComponents: PortableTextComponents = {
         </div>
       )
     },
+    creditCardBlock: ({ value }: any) => {
+      const card = value?.creditCard
+      if (!card) return null
+
+      const sizeWidths = {
+        small: 200,
+        medium: 300,
+        large: 400,
+      }
+      const width = sizeWidths[value.imageSize as keyof typeof sizeWidths] || 300
+
+      return (
+        <div className="my-8 flex flex-col items-center">
+          {value.showImage && card.image?.asset && (
+            <Link href={`/${card.slug?.current}`} className="block hover:scale-105 transition-transform">
+              <div className="rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-100 to-gray-200 p-4">
+                <Image
+                  src={urlFor(card.image).width(width * 2).url()}
+                  alt={card.name || 'Credit Card'}
+                  width={width}
+                  height={Math.round(width * 0.63)}
+                  className="object-contain"
+                />
+              </div>
+            </Link>
+          )}
+          {value.showDetails && (
+            <div className="mt-4 text-center">
+              <Link href={`/${card.slug?.current}`} className="text-lg font-semibold text-rgs-green hover:text-rgs-green/80">
+                {card.name}
+              </Link>
+              {card.signupBonusValue && (
+                <p className="text-sm text-gray-600 mt-1">
+                  Signup Bonus: {card.signupBonusValue}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      )
+    },
   },
   block: {
     h1: ({ children }: any) => <h1 className="text-4xl font-bold mt-12 mb-6 text-rgs-black" style={{ fontFamily: 'var(--font-playfair), serif' }}>{children}</h1>,
@@ -118,6 +159,15 @@ async function getArticle(slug: string): Promise<Article | null> {
         _updatedAt,
         body[]{
           ...,
+          _type == "creditCardBlock" => {
+            ...,
+            "creditCard": creditCard->{
+              name,
+              slug,
+              image,
+              signupBonusValue
+            }
+          },
           markDefs[]{
             ...,
             _type == "creditCardLink" => {
