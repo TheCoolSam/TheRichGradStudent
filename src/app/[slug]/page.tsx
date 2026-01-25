@@ -104,6 +104,14 @@ const portableTextComponents: PortableTextComponents = {
       )
     },
   },
+  list: {
+    bullet: ({ children }: any) => <ul className="list-disc list-inside mb-6 space-y-2 text-gray-800 text-lg">{children}</ul>,
+    number: ({ children }: any) => <ol className="list-decimal list-inside mb-6 space-y-2 text-gray-800 text-lg">{children}</ol>,
+  },
+  listItem: {
+    bullet: ({ children }: any) => <li className="ml-4">{children}</li>,
+    number: ({ children }: any) => <li className="ml-4">{children}</li>,
+  },
 }
 
 interface PageProps {
@@ -150,6 +158,24 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
       `*[_type == "post" && slug.current == $slug][0]{
         ...,
         _updatedAt,
+        body[]{
+          ...,
+          markDefs[]{
+            ...,
+            _type == "creditCardLink" => {
+              ...,
+              "creditCard": creditCard->slug.current
+            },
+            _type == "articleLink" => {
+              ...,
+              "article": article->slug.current
+            },
+            _type == "postLink" => {
+              ...,
+              "post": post->slug.current
+            }
+          }
+        },
         author->{
           name,
           role,
