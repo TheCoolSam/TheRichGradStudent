@@ -162,7 +162,7 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
 
             {sortedCards.map((card, i) => (
               <Card
-                key={card.name}
+                key={card._id || card.name}
                 card={card}
                 index={i}
                 activeIndex={activeIndex}
@@ -203,12 +203,14 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
 
   // Visual properties based on offset
   const isCenter = offset === 0
-  const isVisible = Math.abs(offset) <= 1
+  const isVisible = Math.abs(offset) <= 2 // Increase visibility range for smoother exit
 
   const x = offset * spacing
   const scale = isCenter ? 1.1 : 0.95
-  const opacity = isCenter ? 1 : isVisible ? 0.7 : 0
-  const zIndex = isCenter ? 10 : 1
+  const opacity = isCenter ? 1 : Math.abs(offset) <= 1 ? 0.7 : 0
+  // Improved Z-index logic to prevent flickering during crossover
+  const zIndex = 50 - Math.abs(offset)
+
 
   // Responsive card width
   const cardWidth = typeof window !== 'undefined' && window.innerWidth < 640 ? 'w-[200px]' : 'w-64'
