@@ -109,7 +109,7 @@ export default async function RootLayout({
                 </address>
               </div>
 
-              <div className="flex gap-8">
+              <div className="flex flex-wrap justify-center gap-x-6 gap-y-4 md:gap-8">
                 <Link
                   href="/"
                   className="text-white/80 hover:text-white transition-colors"
