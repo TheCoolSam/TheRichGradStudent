@@ -18,36 +18,41 @@ export const revalidate = 60
 const portableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }: any) => {
-      if (!value?.asset?._ref) {
+      try {
+        if (!value?.asset?._ref) {
+          return null
+        }
+
+        const sizeClasses = {
+          small: 'max-w-md mx-auto',
+          medium: 'max-w-2xl mx-auto',
+          large: 'max-w-full',
+        }
+
+        const sizeClass = sizeClasses[value.size as keyof typeof sizeClasses] || sizeClasses.large
+
+        return (
+          <div className={`my-8 ${sizeClass}`}>
+            <div className="rounded-lg overflow-hidden shadow-lg">
+              <Image
+                src={urlFor(value).width(1200).url()}
+                alt={value.alt || 'Article image'}
+                width={1200}
+                height={675}
+                className="w-full h-auto"
+              />
+            </div>
+            {value.caption && (
+              <p className="text-sm text-gray-600 text-center mt-3 italic">
+                {value.caption}
+              </p>
+            )}
+          </div>
+        )
+      } catch (e) {
+        console.warn('Error rendering image block:', e)
         return null
       }
-
-      const sizeClasses = {
-        small: 'max-w-md mx-auto',
-        medium: 'max-w-2xl mx-auto',
-        large: 'max-w-full',
-      }
-
-      const sizeClass = sizeClasses[value.size as keyof typeof sizeClasses] || sizeClasses.large
-
-      return (
-        <div className={`my-8 ${sizeClass}`}>
-          <div className="rounded-lg overflow-hidden shadow-lg">
-            <Image
-              src={urlFor(value).width(1200).url()}
-              alt={value.alt || 'Article image'}
-              width={1200}
-              height={675}
-              className="w-full h-auto"
-            />
-          </div>
-          {value.caption && (
-            <p className="text-sm text-gray-600 text-center mt-3 italic">
-              {value.caption}
-            </p>
-          )}
-        </div>
-      )
     },
     creditCardBlock: ({ value }: any) => {
       const card = value?.creditCard
@@ -60,9 +65,12 @@ const portableTextComponents: PortableTextComponents = {
       }
       const width = sizeWidths[value.imageSize as keyof typeof sizeWidths] || 300
 
+      // Safe image check
+      const hasImage = value.showImage && card.image?.asset?._ref
+
       return (
         <div className="my-8 flex flex-col items-center">
-          {value.showImage && card.image?.asset && (
+          {hasImage && (
             <Link href={`/${card.slug?.current}`} className="block hover:scale-105 transition-transform">
               <div className="rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-100 to-gray-200 p-4">
                 <Image
@@ -285,7 +293,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
           {article.author && (
             <address className="not-italic flex items-center justify-center gap-4 mb-8">
-              {article.author.image && (
+              {article.author.image?.asset?._ref && (
                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-rgs-gold/50 shadow-sm">
                   <Image
                     src={urlFor(article.author.image).width(96).height(96).url()}
@@ -312,7 +320,7 @@ export default async function ArticlePage({ params }: PageProps) {
           '@type': 'Article',
           headline: article.title,
           description: article.metaDescription || article.excerpt,
-          image: article.mainImage ? urlFor(article.mainImage).url() : undefined,
+          image: article.mainImage?.asset?._ref ? urlFor(article.mainImage).url() : undefined,
           datePublished: article.publishedAt,
           dateModified: article._updatedAt,
           author: {
