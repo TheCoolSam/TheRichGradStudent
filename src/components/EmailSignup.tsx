@@ -46,7 +46,7 @@ export default function EmailSignup() {
         } catch (error) {
             setStatus('error')
             if (error instanceof z.ZodError) {
-                setMessage((error as z.ZodError<any>).errors[0].message)
+                setMessage((error as z.ZodError<any>).issues[0].message)
             } else if (error instanceof Error) {
                 setMessage(error.message)
             } else {
@@ -59,7 +59,7 @@ export default function EmailSignup() {
         <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rgs-dark-green to-rgs-black shadow-2xl border border-rgs-green/30">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-rgs-green/20 rounded-full blur-3xl opacity-50 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-rgs-gold/10 rounded-full blur-3xl opacity-50 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-rgs-green/10 rounded-full blur-3xl opacity-50 pointer-events-none" />
 
             <div className="relative px-6 py-12 md:px-12 md:py-16 text-center">
                 <motion.div
@@ -69,7 +69,7 @@ export default function EmailSignup() {
                     transition={{ duration: 0.6 }}
                 >
                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-heading">
-                        Never Miss a <span className="text-rgs-gold">Great Deal</span>
+                        Never Miss a <span className="text-rgs-light-green">Great Deal</span>
                     </h2>
 
                     <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -100,7 +100,7 @@ export default function EmailSignup() {
                                     }}
                                     placeholder="enter@email.com"
                                     disabled={status === 'loading' || status === 'success'}
-                                    className="w-full px-5 py-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rgs-gold/50 focus:border-rgs-gold transition-all backdrop-blur-sm"
+                                    className="w-full px-5 py-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rgs-light-green/50 focus:border-rgs-light-green transition-all backdrop-blur-sm"
                                     aria-label="Email address"
                                 />
                                 <AnimatePresence>
@@ -125,7 +125,7 @@ export default function EmailSignup() {
                                 className={`px-8 py-4 rounded-lg font-bold text-lg shadow-lg flex items-center justify-center min-w-[140px] transition-all
                   ${status === 'success'
                                         ? 'bg-green-500 text-white cursor-default'
-                                        : 'bg-gradient-to-r from-rgs-gold to-yellow-500 text-rgs-off-black hover:shadow-rgs-gold/20'
+                                        : 'bg-[#022c22] text-white border border-rgs-light-green hover:bg-rgs-dark-green hover:shadow-rgs-green/20'
                                     }
                   disabled:opacity-70 disabled:cursor-not-allowed
                 `}

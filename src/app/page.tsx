@@ -245,11 +245,11 @@ async function getLevelCards() {
 
   // Fetch top 3 rated cards for each category
   const categories = ['new', 'everyday', 'travel', 'pro']
-  const topCardsByCategory: Record<string, Array<{ name: string; image: unknown; slug: string }>> = {}
+  const topCardsByCategory: Record<string, Array<{ name: string; image: { asset?: { _ref?: string; url?: string } }; slug: string }>> = {}
 
   await Promise.all(
     categories.map(async (category) => {
-      const cards = await client.fetch<Array<{ name: string; image: unknown; slug: string }>>(
+      const cards = await client.fetch<Array<{ name: string; image: { asset?: { _ref?: string; url?: string } }; slug: string }>>(
         `*[_type == "creditCard" && category == $category] | order(
           select(
             signupBonusRating == "great" => 4,

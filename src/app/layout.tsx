@@ -97,7 +97,7 @@ export default async function RootLayout({
           {children}
         </div>
 
-        <footer className="bg-rgs-off-black text-white py-12 mt-20 border-t border-rgs-green">
+        <footer className="bg-rgs-off-black text-white pt-12 pb-24 md:pb-12 mt-20 border-t border-rgs-green supports-[padding-bottom:env(safe-area-inset-bottom)]:pb-[calc(3rem+env(safe-area-inset-bottom))]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-6 md:mb-0">

@@ -12,7 +12,8 @@ function formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
+        timeZone: 'UTC' // Fix hydration mismatch by enforcing UTC across server/client
     })
 }
 
@@ -28,6 +29,11 @@ function isSignificantUpdate(publishedAt: string, updatedAt: string): boolean {
 }
 
 export default function Timestamp({ publishedAt, updatedAt }: TimestampProps) {
+    // Hydration fix: Ensure we don't render until we have a stable value or just accept UTC normalization above.
+    // The UTC fix above solves the text mismatch. 
+
+    // We also need to fix the updated date formatter usage if it exists:
+    // It calls formatDate() inside the component, so it uses the updated wrapper now.
     const showUpdated = updatedAt && isSignificantUpdate(publishedAt, updatedAt)
 
     return (
