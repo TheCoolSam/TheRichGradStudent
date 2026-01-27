@@ -26,6 +26,7 @@ export interface Author {
 export interface Post {
   _id: string
   _type: 'post'
+  _createdAt: string
   _updatedAt?: string
   title: string
   slug: {
@@ -52,6 +53,7 @@ export interface Post {
 export interface Article {
   _id: string
   _type: 'article'
+  _createdAt: string
   _updatedAt?: string
   title: string
   slug: {
@@ -100,6 +102,7 @@ export interface PointsProgram {
 export interface CreditCard {
   _id: string
   _type: 'creditCard'
+  _createdAt: string
   _updatedAt?: string
   name: string
   slug: {

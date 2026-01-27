@@ -260,10 +260,11 @@ export default async function ArticlePage({ params }: PageProps) {
             ARTICLE
             <span className="w-1 h-1 rounded-full bg-gray-300"></span>
             <time className="text-gray-500">
-              {new Date(article.publishedAt || new Date().toISOString()).toLocaleDateString('en-US', {
+              {new Date(article.publishedAt || article._createdAt).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric'
+                day: 'numeric',
+                timeZone: 'UTC'
               })}
             </time>
           </div>
