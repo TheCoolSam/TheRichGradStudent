@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         }
 
         // 2. Create new subscriber in Sanity
-        await writeClient.create({
+        const newSubscriber = await writeClient.create({
             _type: 'subscriber',
             email,
             status: 'active',
@@ -48,6 +48,8 @@ export async function POST(request: NextRequest) {
 
         // 3. Send Welcome Email
         try {
+            const unsubscribeUrl = `https://therichgradstudent.com/unsubscribe?id=${newSubscriber._id}`
+
             await sendEmail({
                 to: [email],
                 subject: 'Welcome to The Rich Grad Student',
@@ -63,6 +65,9 @@ export async function POST(request: NextRequest) {
                         <div style="margin-top: 30px;">
                             <a href="https://therichgradstudent.com" style="background-color: #022c22; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Visit Website</a>
                         </div>
+                         <p style="margin-top: 40px; font-size: 12px; color: #888;">
+                            <a href="${unsubscribeUrl}" style="color: #666; text-decoration: underline;">Unsubscribe</a>
+                        </p>
                     </div>
                 `
             })

@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
         // "Create" OR "Update" where "publishedAt" goes from null => defined.
 
         // 2. Fetch all active subscribers
-        const subscribers = await client.fetch<Array<{ email: string }>>(
-            `*[_type == "subscriber" && status == "active"]{email}`
+        const subscribers = await client.fetch<Array<{ _id: string, email: string }>>(
+            `*[_type == "subscriber" && status == "active"]{_id, email}`
         )
 
         if (subscribers.length === 0) {
@@ -54,32 +54,36 @@ export async function POST(request: NextRequest) {
       </div>
     `
 
-        // 4. Send Emails (Batching handled by loop for safety with Resend free tier limits/rate)
-        // NOTE: Resend allows 'BCC' for up to 50 recipients, or individual calls.
-        // For privacy, we BCC groups of 50 or send individually.
-        // Here we send individually to be safe and personal, but for scale use Batch API.
+        // 4. Send Emails Individually
+        // We send one by one to:
+        // A) Ensure privacy (no 'reply-all' disasters or leaking emails)
+        // B) Include a UNIQUE unsubscribe link for each person (using their _id)
 
-        // Rate limit safety: Resend allows ~2 requests per second on free tier? 
-        // Actually Resend scales well. Let's start with a simple loop.
+        let sentCount = 0
+        const errors = []
 
-        const emailList = subscribers.map(s => s.email)
+        for (const subscriber of subscribers) {
+            try {
+                const unsubscribeUrl = `https://therichgradstudent.com/unsubscribe?id=${subscriber._id}`
+                const personalizedHtml = emailHtml.replace(
+                    '<a href="#" style="color: #666;">Unsubscribe</a>',
+                    `<a href="${unsubscribeUrl}" style="color: #666; text-decoration: underline;">Unsubscribe</a>`
+                )
 
-        // Using BCC to send 1 email to multiple people (efficient for small lists)
-        // IMPORTANT: 'to' field should be a "noreply" or the sender, and 'bcc' is the audience
-        // BUT Resend recommends batching or creating contacts.
-
-        // Simple implementation: Send to the list
-        // Warning: On free tier, you can only send to verified email yourself unless you verify domain.
-        // Once domain is verified, you can send to anyone.
-
-        await sendEmail({
-            to: emailList, // Resend handles multiple recipients (if > 50, need to batch)
-            subject: `New Post: ${title}`,
-            html: emailHtml
-        })
+                await sendEmail({
+                    to: [subscriber.email],
+                    subject: `New Post: ${title}`,
+                    html: personalizedHtml
+                })
+                sentCount++
+            } catch (err) {
+                console.error(`Failed to notify ${subscriber.email}:`, err)
+                errors.push(subscriber.email)
+            }
+        }
 
         return NextResponse.json({
-            message: `Notified ${subscribers.length} subscribers`
+            message: `Notified ${sentCount} subscribers. Errors: ${errors.length}`
         }, { status: 200 })
 
     } catch (error) {
