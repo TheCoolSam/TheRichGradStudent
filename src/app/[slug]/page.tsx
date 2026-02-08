@@ -330,6 +330,8 @@ async function getContent(slug: string): Promise<Post | CreditCard | Article | n
           canConvertToPoints,
           hasSpendingCap,
           category,
+          categories,
+          "tags": tags[]->{ _id },
           overallRating,
           "pointsProgram": pointsProgram->{_id, name, baseValue, bestRedemption},
           

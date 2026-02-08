@@ -25,6 +25,9 @@ interface CardStats {
   diningRating?: string
   pharmacyRating?: string
   otherRating?: string
+  loungeRating?: string
+  partnerRating?: string
+  miscRating?: string
 }
 
 interface QuickStatsDashboardProps {
@@ -38,7 +41,10 @@ const categoryLabels: Record<string, string> = {
   gas: 'Gas',
   dining: 'Dining',
   pharmacy: 'Pharmacy',
-  other: 'Other',
+  other: 'Other Purchases',
+  lounge: 'Lounge Benefits',
+  partner: 'Partner Benefits',
+  misc: 'Misc Benefits',
 }
 
 export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) {
@@ -66,40 +72,52 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
   if (card.diningRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.dining)
   if (card.pharmacyRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.pharmacy)
   if (card.otherRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.other)
+  if (card.loungeRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.lounge)
+  if (card.partnerRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.partner)
+  if (card.miscRating === 'rgs-wallet') rgsWalletCategories.push(categoryLabels.misc)
 
   // Build cards array - conditionally include RGS Wallet if categories exist
-  const cards = [
-    {
-      title: 'Signup Bonus',
-      value: card.signupBonusValue || 'N/A',
-      gradient: 'from-green-50 to-emerald-50',
-      border: 'border-2 border-green-300',
-      badge: card.signupBonusRating,
-    },
-    {
-      title: 'Best Earn Rate',
-      value: formatEarningRate(bestEarnRate, rewardType),
-      subtitle: rewardType === 'points' ? 'Points' : 'Cash Back',
-      gradient: 'from-blue-50 to-cyan-50',
-      border: 'border border-blue-200',
-    },
-    {
-      title: 'Net Annual Fee',
-      value: `$${netAnnualFee}`,
-      subtitle: netAnnualFee < 0 ? 'Net Credit!' : netAnnualFee === 0 ? 'Free!' : 'After Credits',
-      gradient: 'from-purple-50 to-pink-50',
-      border: 'border border-purple-200',
-    },
-  ]
+  const cards: Array<{
+    title: string
+    value: string
+    subtitle?: string
+    gradient: string
+    border: string
+    badge?: Rating
+    isRgsWallet?: boolean
+  }> = [
+      {
+        title: 'Signup Bonus',
+        value: card.signupBonusValue || 'N/A',
+        gradient: 'from-green-50 to-emerald-50',
+        border: 'border-2 border-green-300',
+        badge: card.signupBonusRating,
+      },
+      {
+        title: 'Best Earn Rate',
+        value: formatEarningRate(bestEarnRate, rewardType),
+        subtitle: rewardType === 'points' ? 'Points' : 'Cash Back',
+        gradient: 'from-blue-50 to-cyan-50',
+        border: 'border border-blue-200',
+      },
+      {
+        title: 'Net Annual Fee',
+        value: `$${netAnnualFee}`,
+        subtitle: netAnnualFee < 0 ? 'Net Credit!' : netAnnualFee === 0 ? 'Free!' : 'After Credits',
+        gradient: 'from-purple-50 to-pink-50',
+        border: 'border border-purple-200',
+      },
+    ]
 
   // Add RGS Wallet bubble if any categories have rgs-wallet rating
   if (rgsWalletCategories.length > 0) {
     cards.push({
       title: 'RGS Wallet',
-      value: rgsWalletCategories.slice(0, 3).join(', '),
+      value: rgsWalletCategories.join(', '),
       subtitle: 'We use this card for',
-      gradient: 'from-amber-50 to-orange-50',
-      border: 'border border-amber-200',
+      gradient: 'from-rgs-green/10 to-emerald-50',
+      border: 'border-2 border-rgs-green/50',
+      isRgsWallet: true,
     })
   }
 
