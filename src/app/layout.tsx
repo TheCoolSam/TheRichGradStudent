@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
+    apple: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
   },
   openGraph: {
     title: 'The Rich Grad Student | Millionaire Style Travel, GRAD STUDENT BUDGET',
