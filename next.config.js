@@ -11,6 +11,7 @@ const nextConfig = {
 
   // Image optimization
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -52,6 +53,25 @@ const nextConfig = {
           {
             key: 'X-Frame-Options',
             value: 'ALLOW-FROM https://*.sanity.studio',
+          },
+        ],
+      },
+      {
+        // Force HTML pages to revalidate on every request
+        // This fixes Safari/Chrome caching inconsistencies
+        source: '/((?!_next|static|api|favicon|images).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
           },
         ],
       },
@@ -99,6 +119,9 @@ const nextConfig = {
       },
     ]
   },
+
+  // Required for Hostinger Node.js deployment
+  output: 'standalone',
 }
 
 module.exports = nextConfig

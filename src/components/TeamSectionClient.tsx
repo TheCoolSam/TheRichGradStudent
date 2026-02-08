@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -25,16 +26,20 @@ const itemVariants = {
 
 const teamMembers = [
   {
-    name: 'Karan',
+    name: 'Karan Jakhar',
     role: 'Business and Personal Credit Card Expert',
     school: 'PhD Student at Rice University',
-    initial: 'K'
+    initial: 'K',
+    image: '/images/karan.jpg',
+    imagePosition: 'object-[center_70%]' // His face is lower in the photo
   },
   {
-    name: 'Giorgio',
+    name: 'Giorgio Sarro',
     role: 'Personal Credit Card Expert, Hotel/Airfare Redemption Expert',
     school: 'PhD Student at UChicago',
-    initial: 'G'
+    initial: 'G',
+    image: '/images/giorgio.jpg',
+    imagePosition: 'object-center' // Face is centered
   }
 ]
 
@@ -73,7 +78,21 @@ export default function TeamSectionClient() {
                 transition={{ type: 'spring', stiffness: 300 }}
                 aria-hidden="true"
               >
-                <span className="text-6xl text-white font-bold">
+                {member.image ? (
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    sizes="160px"
+                    className={`object-cover ${member.imagePosition}`}
+                    onError={(e) => {
+                      // Fall back to initial if image fails to load
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                ) : null}
+                {/* Fallback initial - shown if no image or image fails */}
+                <span className={`text-6xl text-white font-bold ${member.image ? 'hidden' : ''}`}>
                   {member.initial}
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -88,3 +107,4 @@ export default function TeamSectionClient() {
     </section>
   )
 }
+

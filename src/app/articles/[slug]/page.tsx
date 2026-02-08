@@ -167,7 +167,7 @@ const portableTextComponents: PortableTextComponents = {
       const slug = value?.post
       if (!slug) return <>{children}</>
       return (
-        <Link href={`/blog/${slug}`} className="text-purple-600 hover:text-purple-800 underline font-semibold">
+        <Link href={`/${slug}`} className="text-purple-600 hover:text-purple-800 underline font-semibold">
           {children}
         </Link>
       )
@@ -224,7 +224,7 @@ async function getArticle(slug: string): Promise<Article | null> {
           image
         },
         "tags": tags[]->_id,
-        "manualRecommendations": recommendedPosts[]->slug.current
+        "manualRecommendations": recommendedPosts[]->_id
       }`,
       { slug }
     )

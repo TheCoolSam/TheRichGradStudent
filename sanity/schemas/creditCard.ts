@@ -246,6 +246,13 @@ export default defineType({
       fieldset: 'earning',
     }),
     defineField({
+      name: 'travelMultiplierDisplay',
+      title: 'Travel Display Text (Optional)',
+      type: 'string',
+      description: 'Override numeric display (e.g. "Up to 5x"). Numeric field still used for math.',
+      fieldset: 'earning',
+    }),
+    defineField({
       name: 'travelRating',
       title: 'Travel Rating',
       type: 'string',
@@ -260,6 +267,12 @@ export default defineType({
       type: 'number',
       validation: (Rule) => Rule.required().min(0).max(100),
       initialValue: 0,
+      fieldset: 'earning',
+    }),
+    defineField({
+      name: 'groceryMultiplierDisplay',
+      title: 'Grocery Display Text (Optional)',
+      type: 'string',
       fieldset: 'earning',
     }),
     defineField({
@@ -280,6 +293,12 @@ export default defineType({
       fieldset: 'earning',
     }),
     defineField({
+      name: 'gasMultiplierDisplay',
+      title: 'Gas Display Text (Optional)',
+      type: 'string',
+      fieldset: 'earning',
+    }),
+    defineField({
       name: 'gasRating',
       title: 'Gas Rating',
       type: 'string',
@@ -294,6 +313,12 @@ export default defineType({
       type: 'number',
       validation: (Rule) => Rule.required().min(0).max(100),
       initialValue: 0,
+      fieldset: 'earning',
+    }),
+    defineField({
+      name: 'diningMultiplierDisplay',
+      title: 'Dining Display Text (Optional)',
+      type: 'string',
       fieldset: 'earning',
     }),
     defineField({
@@ -314,6 +339,12 @@ export default defineType({
       fieldset: 'earning',
     }),
     defineField({
+      name: 'pharmacyMultiplierDisplay',
+      title: 'Pharmacy Display Text (Optional)',
+      type: 'string',
+      fieldset: 'earning',
+    }),
+    defineField({
       name: 'pharmacyRating',
       title: 'Pharmacy Rating',
       type: 'string',
@@ -328,6 +359,12 @@ export default defineType({
       type: 'number',
       validation: (Rule) => Rule.required().min(0).max(100),
       initialValue: 0,
+      fieldset: 'earning',
+    }),
+    defineField({
+      name: 'otherMultiplierDisplay',
+      title: 'Other Display Text (Optional)',
+      type: 'string',
       fieldset: 'earning',
     }),
     defineField({

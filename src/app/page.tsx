@@ -2,22 +2,36 @@ import React from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { client } from '@/lib/sanity'
-import PointsValueSection from '@/components/PointsValueSection'
-import LevelCardsClient from '@/components/LevelCardsClient'
+
 import HeroSectionClient from '@/components/HeroSectionClient'
-import { FeaturedContentSection } from '@/components/FeaturedContentSection'
-import FeaturedBlogsSection from '@/components/FeaturedBlogsSection'
 import JsonLd from '@/components/JsonLd'
 
-// Dynamic imports for below-the-fold components
-
+// Dynamic imports for below-the-fold components to reduce initial bundle size
+// PERFORMANCE: Added ssr: false for client-only components to avoid hydration overhead
+const LevelCardsClient = dynamic(() => import('@/components/LevelCardsClient'), {
+  ssr: false,  // Client-only (uses animations)
+  loading: () => <div className="h-96 w-full animate-pulse bg-gray-50 rounded-2xl" />,
+})
+const PointsValueSection = dynamic(() => import('@/components/PointsValueSection'), {
+  ssr: false,  // Client-only (uses framer-motion carousel)
+  loading: () => <div className="h-96 w-full animate-pulse bg-gray-50" />,
+})
+const FeaturedContentSection = dynamic(() => import('@/components/FeaturedContentSection').then(mod => mod.FeaturedContentSection), {
+  loading: () => <div className="py-20" />,
+})
+const FeaturedBlogsSection = dynamic(() => import('@/components/FeaturedBlogsSection'), {
+  loading: () => <div className="py-24 bg-gray-50" />,
+})
 const TeamSectionClient = dynamic(() => import('@/components/TeamSectionClient'), {
+  ssr: false,  // Client-only (uses animations)
   loading: () => <div className="py-20 bg-gray-50" />,
 })
 const CTASectionClient = dynamic(() => import('@/components/CTASectionClient'), {
+  ssr: false,  // Client-only (uses animations)
   loading: () => <div className="py-20" />,
 })
 const SupportSectionClient = dynamic(() => import('@/components/SupportSectionClient'), {
+  ssr: false,  // Client-only (uses animations)
   loading: () => <div className="py-20" />,
 })
 
@@ -170,32 +184,48 @@ async function getPointsData() {
       return null
     }
 
-    const cardsWithTopRated = await Promise.all(
-      pointsPrograms.map(async (program) => {
-        const topCards = await client.fetch<Array<{ name: string; image: unknown; slug?: string }>>(
-          `*[_type == "creditCard" && references($programId)] | order(
-            select(
-              signupBonusRating == "great" => 4,
-              signupBonusRating == "rgs-wallet" => 4,
-              signupBonusRating == "good" => 3,
-              signupBonusRating == "poor" => 2,
-              true => 1
-            ) desc,
-            publishedAt desc
-          )[0..2]{
-            name,
-            image,
-            "slug": slug.current
-          }`,
-          { programId: program._id }
-        )
-
-        return {
-          ...program,
-          topCards
-        }
-      })
+    // Performance Optimization: Fetch ALL relevant cards in one query instead of N+1 queries
+    // This significantly reduces database roundtrips and connection overhead
+    const programIds = pointsPrograms.map(p => p._id)
+    const allCards = await client.fetch<Array<{
+      name: string
+      image: { asset?: any }
+      slug: string
+      signupBonusRating?: string
+      publishedAt: string
+      pointsProgram?: { _ref: string }
+    }>>(
+      `*[_type == "creditCard" && references($programIds)] | order(
+        select(
+          signupBonusRating == "great" => 4,
+          signupBonusRating == "rgs-wallet" => 4,
+          signupBonusRating == "good" => 3,
+          signupBonusRating == "poor" => 2,
+          true => 1
+        ) desc,
+        publishedAt desc
+      ){
+        name,
+        image { asset },
+        "slug": slug.current,
+        signupBonusRating,
+        publishedAt,
+        pointsProgram
+      }`,
+      { programIds }
     )
+
+    // Map cards to their programs in memory
+    const cardsWithTopRated = pointsPrograms.map(program => {
+      const programCards = allCards
+        .filter(card => card.pointsProgram?._ref === program._id)
+        .slice(0, 3) // Take top 3
+
+      return {
+        ...program,
+        topCards: programCards
+      }
+    })
 
     return {
       title: 'Maximize Your Points Value',
@@ -244,31 +274,62 @@ async function getLevelCards() {
   const mainArticles = await getMainArticles()
 
   // Fetch top 3 rated cards for each category
+  // Fetch top 3 rated cards for each category
   const categories = ['new', 'everyday', 'travel', 'pro']
-  const topCardsByCategory: Record<string, Array<{ name: string; image: { asset?: { _ref?: string; url?: string } }; slug: string }>> = {}
 
-  await Promise.all(
-    categories.map(async (category) => {
-      const cards = await client.fetch<Array<{ name: string; image: { asset?: { _ref?: string; url?: string } }; slug: string }>>(
-        `*[_type == "creditCard" && category == $category] | order(
-          select(
-            signupBonusRating == "great" => 4,
-            signupBonusRating == "rgs-wallet" => 4,
-            signupBonusRating == "good" => 3,
-            signupBonusRating == "poor" => 2,
-            true => 1
-          ) desc,
-          publishedAt desc
-        )[0..2]{
-          name,
-          image,
-          "slug": slug.current
-        }`,
-        { category }
-      )
-      topCardsByCategory[category] = cards || []
-    })
+  // Optimize: Fetch all top cards for all categories in ONE query
+  // Fixed GROQ syntax: using select() for proper ordering
+  const allCategoryCards = await client.fetch<{
+    new: Array<{ name: string; image: { asset?: { _ref?: string; url?: string } }; slug: string }>;
+    everyday: Array<{ name: string; image: { asset?: { _ref?: string; url?: string } }; slug: string }>;
+    travel: Array<{ name: string; image: { asset?: { _ref?: string; url?: string } }; slug: string }>;
+    pro: Array<{ name: string; image: { asset?: { _ref?: string; url?: string } }; slug: string }>;
+  }>(
+    `{
+      "new": *[_type == "creditCard" && category == "new"] | order(
+        select(
+          signupBonusRating == "great" => 4,
+          signupBonusRating == "rgs-wallet" => 4,
+          signupBonusRating == "good" => 3,
+          signupBonusRating == "poor" => 2,
+          true => 1
+        ) desc, publishedAt desc)[0..2]{
+        name, image { asset }, "slug": slug.current
+      },
+      "everyday": *[_type == "creditCard" && category == "everyday"] | order(
+        select(
+          signupBonusRating == "great" => 4,
+          signupBonusRating == "rgs-wallet" => 4,
+          signupBonusRating == "good" => 3,
+          signupBonusRating == "poor" => 2,
+          true => 1
+        ) desc, publishedAt desc)[0..2]{
+        name, image { asset }, "slug": slug.current
+      },
+      "travel": *[_type == "creditCard" && category == "travel"] | order(
+        select(
+          signupBonusRating == "great" => 4,
+          signupBonusRating == "rgs-wallet" => 4,
+          signupBonusRating == "good" => 3,
+          signupBonusRating == "poor" => 2,
+          true => 1
+        ) desc, publishedAt desc)[0..2]{
+        name, image { asset }, "slug": slug.current
+      },
+      "pro": *[_type == "creditCard" && category == "pro"] | order(
+        select(
+          signupBonusRating == "great" => 4,
+          signupBonusRating == "rgs-wallet" => 4,
+          signupBonusRating == "good" => 3,
+          signupBonusRating == "poor" => 2,
+          true => 1
+        ) desc, publishedAt desc)[0..2]{
+        name, image { asset }, "slug": slug.current
+      }
+    }`
   )
+
+  const topCardsByCategory = allCategoryCards || { new: [], everyday: [], travel: [], pro: [] }
 
   return [
     {
@@ -323,12 +384,21 @@ async function getLevelCards() {
 }
 
 export default async function HomePage() {
-  const pointsData = await getPointsData()
-  const levelCards = await getLevelCards()
-  const mainArticles = await getMainArticles()
+  const [
+    pointsData,
+    levelCards,
+    mainArticles,
+    featuredContent,
+    featuredBlogs
+  ] = await Promise.all([
+    getPointsData(),
+    getLevelCards(),
+    getMainArticles(),
+    getFeaturedContent(),
+    getFeaturedBlogs()
+  ])
+
   const alreadyInSlug = mainArticles['already-in']?.slug || 'youre-already-in'
-  const featuredContent = await getFeaturedContent()
-  const featuredBlogs = await getFeaturedBlogs()
 
   const faqSchema = {
     '@context': 'https://schema.org',

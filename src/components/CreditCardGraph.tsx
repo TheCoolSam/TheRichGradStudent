@@ -39,6 +39,7 @@ interface CreditCardGraphProps {
 function CardNode({ data }: any) {
   const router = useRouter()
   const [isMobile, setIsMobile] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 640)
@@ -47,11 +48,12 @@ function CardNode({ data }: any) {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  const cardWidth = isMobile ? 160 : 280
-  const cardHeight = isMobile ? 100 : 175
+  const cardWidth = isMobile ? 120 : 220 // Smaller default size to make the "magnify" effect more dramatic
+  const cardHeight = isMobile ? 75 : 138
 
   const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation()
+    // Prevent navigation if we were just dragging (checking distance moved would be ideal, but simple click handler usually suffices in React Flow if standard drag behavior is active)
     router.push(`/${data.slug}`)
   }
 
@@ -107,12 +109,35 @@ function CardNode({ data }: any) {
 
   const colors = getCategoryColors(data.category, data.subCategory)
 
+  // Zoom effect classes
+  // We use group-hover on the container to trigger the scale
+  // But we want it to be "magnifying glass" style, so we scale up significantly
+  // Z-index needs to pop to top on hover
+
   return (
     <>
       <Handle type="target" position={Position.Top} className="opacity-0" />
-      <div className="block group" onClick={handleClick} onTouchEnd={handleClick}>
+      <div
+        className="block group relative"
+        onClick={handleClick}
+        onTouchEnd={handleClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          zIndex: isHovered ? 1000 : 1, // Pop to top on hover
+          transition: 'z-index 0s linear 0s' // Immediate Z update
+        }}
+      >
         <div
-          className={`bg-gradient-to-br ${colors.gradient} rounded-2xl shadow-2xl ${colors.shadow} overflow-hidden border-4 ${colors.border} hover:border-white hover:scale-110 transition-all duration-300 cursor-pointer backdrop-blur-sm relative`}
+          className={`
+            bg-gradient-to-br ${colors.gradient} 
+            rounded-2xl shadow-2xl ${colors.shadow} 
+            overflow-hidden border-4 ${colors.border} 
+            transition-all duration-300 ease-out 
+            cursor-pointer backdrop-blur-sm relative
+            transform-gpu
+            ${isHovered ? 'scale-150 border-white shadow-[0_0_50px_rgba(255,255,255,0.3)]' : ''}
+          `}
           style={{ width: cardWidth, height: cardHeight }}
         >
           {/* Animated glow effect */}
@@ -123,16 +148,34 @@ function CardNode({ data }: any) {
             <img
               src={urlFor(data.image).width(560).height(350).quality(90).fit('fill').url()}
               alt={data.name}
-              className="w-full h-full object-contain mix-blend-lighten p-3 group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-contain mix-blend-lighten p-3"
               style={{ filter: `drop-shadow(0 0 15px ${colors.glow})` }}
             />
           </div>
+
+          {/* Label appears on Hover inside the card if needed, or we keep outside */}
         </div>
-        <div className="text-center mt-2 px-2">
+
+        {/* Text Label - Fades out on hover if blocking, or stays? 
+            Let's keep it but move it down when zoomed so it doesn't get covered
+        */}
+        <div className={`text-center mt-2 px-2 transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
           <p className="text-white font-semibold text-xs sm:text-sm line-clamp-2">
             {data.name}
           </p>
         </div>
+
+        {/* Magnified Label (Only valid on hover) */}
+        <div className={`
+            absolute -bottom-8 left-1/2 -translate-x-1/2 w-[200px] text-center
+            transition-all duration-300 pointer-events-none
+            ${isHovered ? 'opacity-100 translate-y-4 scale-110' : 'opacity-0 translate-y-0 scale-90'}
+         `}>
+          <span className="bg-black/80 text-white px-3 py-1 rounded-full text-sm font-bold border border-white/20 whitespace-nowrap shadow-xl">
+            {data.name}
+          </span>
+        </div>
+
       </div>
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </>
@@ -201,8 +244,34 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
       'pro-luxury': 1600,
     }
 
-    // define families (Swimlanes)
-    const families = Array.from(new Set(cards.map(c => getCardFamily(c)))).sort()
+    // Define families (Swimlanes) with dynamic ordering based on starter tier card count
+    const rawFamilies = Array.from(new Set(cards.map(c => getCardFamily(c))))
+
+    // Count how many cards each family has in the "new" (starter) tier
+    const starterCardCounts: Record<string, number> = {}
+    rawFamilies.forEach(fam => {
+      starterCardCounts[fam] = cards.filter(
+        c => getCardFamily(c) === fam && c.category === 'new'
+      ).length
+    })
+
+    // Sort families by starter tier count (descending), then alphabetically for ties
+    const sortedByStarterCount = [...rawFamilies].sort((a, b) => {
+      const countDiff = starterCardCounts[b] - starterCardCounts[a]
+      if (countDiff !== 0) return countDiff
+      return a.localeCompare(b)
+    })
+
+    // Find families with the highest starter count to center
+    const maxStarterCount = Math.max(...Object.values(starterCardCounts))
+    const priorityFamilies = sortedByStarterCount.filter(f => starterCardCounts[f] === maxStarterCount && maxStarterCount > 0)
+    const otherFamilies = sortedByStarterCount.filter(f => !priorityFamilies.includes(f))
+
+    // Interleave: put priority families (most starter cards) in center
+    // Layout: [left half of others] + [priority] + [right half of others]
+    const leftOthers = otherFamilies.slice(0, Math.ceil(otherFamilies.length / 2))
+    const rightOthers = otherFamilies.slice(Math.ceil(otherFamilies.length / 2))
+    const families = [...leftOthers, ...priorityFamilies, ...rightOthers]
 
     // Group cards by Level AND Family
     const cardsByLevelAndFamily: Record<string, Record<string, CreditCardNode[]>> = {}
@@ -222,6 +291,13 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
       if (cardsByLevelAndFamily[lvl] && cardsByLevelAndFamily[lvl][fam]) {
         cardsByLevelAndFamily[lvl][fam].push(card)
       }
+    })
+
+    // Sort cards within each level by rating (higher rated = earlier in progression = higher on screen)
+    Object.keys(levels).forEach(lvl => {
+      families.forEach(fam => {
+        cardsByLevelAndFamily[lvl][fam].sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      })
     })
 
     // Calculate positions
@@ -280,12 +356,16 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
 
           const xPos = centerPoint + offset
 
+          // Progressive Y offset: higher rated cards (lower index after sort) appear higher
+          // Each card gets 40px lower than the previous one in the same level
+          const progressionOffset = index * 40
+
           generatedNodes.push({
             id: card._id,
             type: 'cardNode',
             position: {
               x: xPos,
-              y: levels[lvl] + (index % 2 === 1 ? 80 : 0), // Increased vertical stagger for clarity
+              y: levels[lvl] + progressionOffset,
             },
             data: {
               name: card.name,
@@ -356,24 +436,22 @@ export default function CreditCardGraph({ cards }: CreditCardGraphProps) {
               console.log(`  Is Adjacent? ${levelDiff === 1 ? '✓ YES - Arrow will be created' : '✗ NO - Arrow will NOT be created (not adjacent)'}`)
             }
 
-            // Only connect adjacent levels
-            if (Math.abs(sourceIdx - targetIdx) === 1) {
-              const arrowColor = getArrowColor(relatedCard.category, relatedCard.subCategory)
-              generatedEdges.push({
-                id: `${card._id}-${relatedCard._id}`,
-                source: card._id,
-                target: relatedCard._id,
-                type: 'smoothstep',
-                animated: true,
-                style: { stroke: arrowColor, strokeWidth: 4 },
-                markerEnd: {
-                  type: MarkerType.ArrowClosed,
-                  color: arrowColor,
-                  width: 30,
-                  height: 30,
-                },
-              })
-            }
+            // Allow explicit connections across any level distance
+            const arrowColor = getArrowColor(relatedCard.category, relatedCard.subCategory)
+            generatedEdges.push({
+              id: `${card._id}-${relatedCard._id}`,
+              source: card._id,
+              target: relatedCard._id,
+              type: 'smoothstep',
+              animated: true,
+              style: { stroke: arrowColor, strokeWidth: 4, strokeDasharray: '5,5' }, // Dashed for explicit long jumps
+              markerEnd: {
+                type: MarkerType.ArrowClosed,
+                color: arrowColor,
+                width: 30,
+                height: 30,
+              },
+            })
           }
         })
       }

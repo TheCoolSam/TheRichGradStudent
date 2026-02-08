@@ -221,7 +221,7 @@ export default function SpendingCalculator({ cards }: SpendingCalculatorProps) {
                                                         src={urlFor(result.card.image).width(400).height(200).url()}
                                                         alt={result.card.name}
                                                         fill
-                                                        className="object-contain p-4"
+                                                        className="object-contain p-2"
                                                     />
                                                 </div>
                                             )}

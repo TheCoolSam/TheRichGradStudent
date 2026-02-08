@@ -4,6 +4,8 @@ export const metadata = {
     description: 'Our commitment to transparency, methodology for rating cards, and advertiser relationships.',
 }
 
+export const revalidate = 60;
+
 export default function EditorialPolicyPage() {
     return (
         <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-white">
@@ -55,17 +57,27 @@ export default function EditorialPolicyPage() {
                     <ul className="list-disc pl-6 space-y-2">
                         <li><strong>No Inducements:</strong> We do not offer tangible items (t-shirts, pizza, etc.) to induce applications.</li>
                         <li><strong>Age Requirement:</strong> Our content is intended for graduate students who are typically over 21.
-                            The richgradstudent.com does not knowingly market to undergraduate students under 21.
-                            Applicants under 21 usually require a co-signer or proof of independent income.</li>
+                            The richgradstudent.com does not knowingly market to undergraduate students under 21.</li>
+                        <li><strong>Under-21 Notice:</strong> If you are under 21 years old, federal rules limit credit card approvals.
+                            You may need to demonstrate independent income or apply with a co-signer to be approved.</li>
+                        <li><strong>&quot;Student&quot; Card Reviews:</strong> Some cards we review are branded as &quot;Student&quot; cards (e.g., Discover It Student).
+                            Our reviews of these products are intended for graduate students age 21+. These cards may have different
+                            approval requirements for applicants under 21.</li>
                         <li><strong>Transparency:</strong> We strive to display terms, APRs, and fees clearly. However, terms change frequently.
-                            Always verify the official terms on the issuer's secure application page before applying.</li>
+                            Always verify the official terms on the issuer&apos;s secure application page before applying.</li>
+                        <li><strong>APR Disclosures:</strong> When we mention introductory APR offers (e.g., &quot;0% APR for 15 months&quot;),
+                            this applies to the specific offer type (purchases or balance transfers) as specified. After the intro period,
+                            a variable APR will apply based on your creditworthiness. See issuer for current rates and fees.</li>
                     </ul>
                 </section>
 
                 <section>
                     <h2 className="text-2xl font-bold mb-4 font-heading">4. Contact Us</h2>
                     <p>
-                        If you have questions about our methodology or partnerships, please contact us at [Insert Contact Email].
+                        If you have questions about our methodology or partnerships, please contact us at{' '}
+                        <a href="mailto:contact@therichgradstudent.com" className="text-rgs-green hover:underline">
+                            contact@therichgradstudent.com
+                        </a>.
                     </p>
                 </section>
             </div>

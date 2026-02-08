@@ -13,18 +13,46 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
 
-        // 1. Basic Validation: Check if it's a post and "create" or "update" operation
-        // We only want to notify on NEW posts that are PUBLISHED
-        const { _type, _id, title, slug, mainImage, excerpt } = body
+        // 1. Basic Validation: Check if it's a post and "create" operation
+        // Sanity webhooks include a 'transition' field: 'appear' (create) or 'update'
+        const { _type, _id, title, slug, mainImage, excerpt, publishedAt, transition } = body
+
+        console.log(`Webhook received: type=${_type}, transition=${transition}, title="${title}"`)
 
         if (_type !== 'post') {
             return NextResponse.json({ message: 'Not a post' }, { status: 200 })
         }
 
-        // Ideally check if it's a *newly* published post. 
-        // Sanity webhooks can send 'publishedAt' changes.
-        // For now, we assume the webhook is configured in Sanity to ONLY trigger on:
-        // "Create" OR "Update" where "publishedAt" goes from null => defined.
+        // ONLY notify on new posts ('appear'), NOT updates
+        if (transition === 'update') {
+            console.log(`Skipping notification: Post "${title}" was updated, not created`)
+            return NextResponse.json({ message: 'Skipped: Post was updated, not created' }, { status: 200 })
+        }
+
+        // Logic: Prevent spamming subscribers when editing old posts
+        // We assume that a "New Post" notification should only happen if the post 
+        // claims to be published "recently" (e.g. within the last 2 hours).
+        // If 'publishedAt' is missing, or is old, we skip.
+
+        if (!publishedAt) {
+            return NextResponse.json({ message: 'Skipped: No publishedAt date' }, { status: 200 })
+        }
+
+        const publishedTime = new Date(publishedAt).getTime()
+        const now = Date.now()
+        // 2 hours window (2 * 60 * 60 * 1000)
+        const THRESHOLD = 2 * 60 * 60 * 1000
+
+        // If the post is older than 2 hours, assume it's an edit or cleanup
+        if (now - publishedTime > THRESHOLD) {
+            console.log(`Skipping notification for old post: "${title}" (Published: ${publishedAt})`)
+            return NextResponse.json({ message: 'Skipped: Post is older than 2 hours' }, { status: 200 })
+        }
+
+        // Also skip future posts (scheduled) until they are actually live? 
+        // Sanity usually manages this by not putting them in the GROQ query, 
+        // but the webhook might trigger on the *schedule* change. 
+        // For simplicity, we just rely on the 'recent' check.
 
         // 2. Fetch all active subscribers
         const subscribers = await client.fetch<Array<{ _id: string, email: string }>>(
@@ -47,10 +75,12 @@ export async function POST(request: NextRequest) {
         <div style="margin-top: 30px;">
           <a href="${postUrl}" style="background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Read Full Post</a>
         </div>
-        <p style="margin-top: 40px; font-size: 12px; color: #888;">
-          You are receiving this because you subscribed to updates from The Rich Grad Student. 
-          <a href="#" style="color: #666;">Unsubscribe</a>
-        </p>
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+          <p style="font-size: 12px; color: #888; margin: 0;">
+            You are receiving this because you subscribed to updates from The Rich Grad Student. 
+            <a href="#" style="color: #666;">Unsubscribe</a>
+          </p>
+        </div>
       </div>
     `
 

@@ -1,8 +1,9 @@
 import { Resend } from 'resend'
 
-// Initialize Resend only if key exists, or use a dummy to prevent build crash
-// The actual sendEmail function checks for the key before sending
-const resend = new Resend(process.env.RESEND_API_KEY || 're_123_build_placeholder')
+// TEMPORARY: Hardcoded API key since Hostinger doesn't pass env vars at runtime
+// TODO: Remove after catch-up emails are sent and switch to Vercel or fix Hostinger env vars
+const RESEND_KEY = process.env.RESEND_API_KEY || 're_N8qrnN5u_GqgBX7KzZmoXpgLiZYVN1BJj'
+const resend = new Resend(RESEND_KEY)
 
 interface SendEmailParams {
     to: string[]
@@ -11,16 +12,11 @@ interface SendEmailParams {
 }
 
 export async function sendEmail({ to, subject, html }: SendEmailParams) {
-    if (!process.env.RESEND_API_KEY) {
-        console.warn('RESEND_API_KEY is missing. Email not sent.')
-        return { success: false, error: 'Missing API Key' }
-    }
+    // Always have the key now due to hardcoded fallback
 
     try {
-        // NOTE: Until you verify 'therichgradstudent.com' on Resend, 
-        // you must use 'onboarding@resend.dev' and can ONLY send to yourself ('sbotshtein1@gmail.com')
-        const fromEmail = 'onboarding@resend.dev'
-        // Once verified, change to: 'The Rich Grad Student <updates@therichgradstudent.com>'
+        // Domain verified! Using therichgradstudent.com
+        const fromEmail = 'The Rich Grad Student <updates@therichgradstudent.com>'
 
         const data = await resend.emails.send({
             from: fromEmail,

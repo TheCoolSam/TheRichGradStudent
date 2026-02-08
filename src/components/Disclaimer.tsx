@@ -49,22 +49,22 @@ const defaultMessages = {
         compensation from our partners, which may influence how or where these products 
         appear. We only recommend products we genuinely believe benefit graduate students 
         and decline offers that do not align with that goal.`,
-  compact: `We earn commission from approved applications. Always read terms before applying. 21+ only.`,
+  compact: `We may earn a commission if approved. Always read terms before applying. 21+ years old only.`,
   warning: `Important: Credit card recommendations require careful consideration. Apply only if you can pay your balance in full each month.`,
   info: `This content contains affiliate links. We may earn commission from approved applications at no cost to you.`
 }
 
-export default function Disclaimer({ 
-  variant = 'standard', 
-  className = '', 
-  children 
+export default function Disclaimer({
+  variant = 'standard',
+  className = '',
+  children
 }: DisclaimerProps) {
   const styles = variantStyles[variant]
   const padding = variant === 'compact' ? 'p-4' : 'p-6'
   const textSize = variant === 'compact' ? 'text-xs' : 'text-sm'
-  
+
   return (
-    <div 
+    <div
       className={`mt-16 mb-8 ${padding} ${styles.container} border rounded-lg ${className}`}
       role={variant === 'warning' ? 'alert' : 'note'}
       aria-label="Disclaimer"

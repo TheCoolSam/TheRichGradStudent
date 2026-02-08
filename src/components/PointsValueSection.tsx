@@ -109,14 +109,30 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
           transition={{ delay: 0.1 }}
           className="text-center text-white/90 mb-12 text-lg"
         >
-          Updated point valuations for maximum redemption value
+          updated point valuations for maximum redemption value
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="flex justify-center mb-10"
+        >
+          <Link href="/articles/rakuten-hack" className="group">
+            <div className="bg-[#8E33F8] text-white px-6 py-3 rounded-full font-bold shadow-lg flex items-center gap-3 border border-white/20 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(142,51,248,0.5)]">
+              <span className="bg-white text-[#8E33F8] text-xs font-black px-2 py-0.5 rounded uppercase tracking-wider">Pro Tip</span>
+              <span>Maximize your earnings with Rakuten</span>
+              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </div>
+          </Link>
+        </motion.div>
 
         <div className="relative max-w-5xl mx-auto">
           {/* Left Arrow */}
           <motion.button
             onClick={handlePrevious}
-            className="absolute left-0 sm:left-2 top-1/2 z-[60] bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
+            className="absolute left-0 sm:left-2 top-1/2 z-[35] bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
             aria-label="Previous cards"
             initial={{ y: '-50%' }}
             whileHover={{ scale: 1.15, y: '-50%', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)' }}
@@ -131,7 +147,7 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
           {/* Right Arrow */}
           <motion.button
             onClick={handleNext}
-            className="absolute right-0 sm:right-2 top-1/2 z-[60] bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
+            className="absolute right-0 sm:right-2 top-1/2 z-[35] bg-white/90 hover:bg-white text-rgs-green p-2 sm:p-3 rounded-full shadow-lg"
             aria-label="Next cards"
             initial={{ y: '-50%' }}
             whileHover={{ scale: 1.15, y: '-50%', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)' }}
@@ -175,6 +191,16 @@ export default function PointsValueSection({ data }: PointsValueSectionProps) {
             ))}
           </motion.div>
         </div>
+
+        {/* Disclaimer */}
+        <div className="mt-8 max-w-xl mx-auto text-center space-y-2 text-white/80 text-xs sm:text-sm">
+          <p>
+            <strong className="text-white">Points Value:</strong> Average value of points when transferred to a partner hotel or airline for travel.
+          </p>
+          <p>
+            <strong className="text-white">Max Points Value:</strong> Our best redemption of points!
+          </p>
+        </div>
       </div>
     </section>
   )
@@ -210,8 +236,8 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
   const x = offset * spacing
   const scale = isCenter ? 1.1 : 0.95
   const opacity = isCenter ? 1 : Math.abs(offset) <= 1 ? 0.7 : 0
-  // Improved Z-index logic to prevent flickering during crossover
-  const zIndex = 50 - Math.abs(offset)
+  // Z-index lower than navbar (z-50) to prevent overlap on mobile
+  const zIndex = 30 - Math.abs(offset)
 
 
   // Responsive card width
@@ -238,7 +264,7 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
         {card.logo && (
           <div className="relative h-10 sm:h-12 mb-3 sm:mb-4">
             <Image
-              src={urlFor(card.logo).width(100).height(50).url()}
+              src={urlFor(card.logo).width(100).url()}
               alt={card.name}
               fill
               sizes="100px"
@@ -252,13 +278,17 @@ const Card: React.FC<CardProps> = ({ card, index, activeIndex, totalCards, spaci
             Value: <span className="font-bold text-rgs-green">{card.baseValue}¢</span>
           </p>
           <p className="text-gray-600">
-            Our Best Redemption:{' '}
+            Best Redemption:{' '}
             {card.bestRedemptionLink?.slug ? (
               <Link
                 href={card.bestRedemptionLink._type === 'article' ? `/articles/${card.bestRedemptionLink.slug}` : `/${card.bestRedemptionLink.slug}`}
-                className="font-bold text-rgs-green hover:underline"
+                className="inline-flex items-center gap-1 font-bold text-white bg-rgs-green hover:bg-rgs-dark-green px-2 py-0.5 rounded-full text-xs transition-all duration-200 hover:scale-105 shadow-sm"
+                title="Click for redemption guide"
               >
                 {card.bestRedemption}¢
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
               </Link>
             ) : (
               <span className="font-bold text-rgs-green">{card.bestRedemption}¢</span>

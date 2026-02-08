@@ -65,9 +65,11 @@ export async function POST(request: NextRequest) {
                         <div style="margin-top: 30px;">
                             <a href="https://therichgradstudent.com" style="background-color: #022c22; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Visit Website</a>
                         </div>
-                         <p style="margin-top: 40px; font-size: 12px; color: #888;">
-                            <a href="${unsubscribeUrl}" style="color: #666; text-decoration: underline;">Unsubscribe</a>
-                        </p>
+                        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <p style="font-size: 12px; color: #888; margin: 0;">
+                                <a href="${unsubscribeUrl}" style="color: #666; text-decoration: underline;">Unsubscribe</a>
+                            </p>
+                        </div>
                     </div>
                 `
             })

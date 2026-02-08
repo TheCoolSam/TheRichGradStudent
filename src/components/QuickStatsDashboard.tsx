@@ -129,7 +129,7 @@ export default function QuickStatsDashboard({ card }: QuickStatsDashboardProps) 
           <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-2">
             {cardData.title}
           </div>
-          <div className="text-2xl font-bold text-gray-900 mb-2">
+          <div className="text-lg sm:text-2xl font-bold text-gray-900 mb-2 break-words leading-tight">
             {cardData.value}
           </div>
           {cardData.badge && (

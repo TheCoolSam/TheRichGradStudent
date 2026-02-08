@@ -9,7 +9,7 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: false, // GEO: Force fresh data usage on every ISR regeneration to avoid stale content
 })
 
 // Client with preview/draft mode support

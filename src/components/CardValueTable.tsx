@@ -96,12 +96,12 @@ export default function CardValueTable({
 
   // Calculate value strings dynamically
   const getValueAtBase = (multiplier: number) => {
-    if (rewardType === 'cashback') return 'N/A'
+    if (rewardType === 'cashback' && !card.canConvertToPoints) return 'N/A'
     return formatAsPercentage(calculateDynamicValue(multiplier, baseCpp))
   }
 
   const getValueAtMax = (multiplier: number) => {
-    if (rewardType === 'cashback') return 'N/A'
+    if (rewardType === 'cashback' && !card.canConvertToPoints) return 'N/A'
     return formatAsPercentage(calculateDynamicValue(multiplier, maxCpp))
   }
 
@@ -135,47 +135,45 @@ export default function CardValueTable({
     },
     {
       category: 'Travel',
-      cashBack: formatEarningRate(card.travelMultiplier, rewardType),
+      cashBack: formatEarningRate(card.travelMultiplier, rewardType) + ((card as any).travelMultiplierDisplay ? ` (${(card as any).travelMultiplierDisplay})` : ''),
       points2cpp: getValueAtBase(card.travelMultiplier),
       points7cpp: getValueAtMax(card.travelMultiplier),
       rating: card.travelRating,
     },
     {
       category: 'Grocery',
-      cashBack: formatEarningRate(card.groceryMultiplier, rewardType),
+      cashBack: formatEarningRate(card.groceryMultiplier, rewardType) + ((card as any).groceryMultiplierDisplay ? ` (${(card as any).groceryMultiplierDisplay})` : ''),
       points2cpp: getValueAtBase(card.groceryMultiplier),
       points7cpp: getValueAtMax(card.groceryMultiplier),
       rating: card.groceryRating,
     },
     {
       category: 'Gas',
-      cashBack: formatEarningRate(card.gasMultiplier, rewardType),
+      cashBack: formatEarningRate(card.gasMultiplier, rewardType) + ((card as any).gasMultiplierDisplay ? ` (${(card as any).gasMultiplierDisplay})` : ''),
       points2cpp: getValueAtBase(card.gasMultiplier),
       points7cpp: getValueAtMax(card.gasMultiplier),
       rating: card.gasRating,
-      hasAsterisk: card.hasSpendingCap,
     },
     {
       category: 'Dining',
-      cashBack: formatEarningRate(card.diningMultiplier, rewardType),
+      cashBack: formatEarningRate(card.diningMultiplier, rewardType) + ((card as any).diningMultiplierDisplay ? ` (${(card as any).diningMultiplierDisplay})` : ''),
       points2cpp: getValueAtBase(card.diningMultiplier),
       points7cpp: getValueAtMax(card.diningMultiplier),
       rating: card.diningRating,
     },
     {
       category: 'Pharmacy',
-      cashBack: formatEarningRate(card.pharmacyMultiplier, rewardType),
+      cashBack: formatEarningRate(card.pharmacyMultiplier, rewardType) + ((card as any).pharmacyMultiplierDisplay ? ` (${(card as any).pharmacyMultiplierDisplay})` : ''),
       points2cpp: getValueAtBase(card.pharmacyMultiplier),
       points7cpp: getValueAtMax(card.pharmacyMultiplier),
       rating: card.pharmacyRating,
     },
     {
       category: 'Other Purchases',
-      cashBack: formatEarningRate(card.otherMultiplier, rewardType),
+      cashBack: formatEarningRate(card.otherMultiplier, rewardType) + ((card as any).otherMultiplierDisplay ? ` (${(card as any).otherMultiplierDisplay})` : ''),
       points2cpp: getValueAtBase(card.otherMultiplier),
       points7cpp: getValueAtMax(card.otherMultiplier),
       rating: card.otherRating,
-      hasAsterisk: card.hasSpendingCap,
     },
     {
       category: 'Lounge Benefits',
@@ -257,8 +255,8 @@ export default function CardValueTable({
                   </td>
                   <td className={`px-4 py-3 text-sm`}>
                     <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        {row.cashBack}
+                      <div className="flex items-start gap-2 flex-wrap">
+                        <span className="whitespace-normal">{row.cashBack}</span>
                         {row.rating && <RatingBadge rating={row.rating} size="sm" />}
                       </div>
                       {row.note && (
@@ -318,7 +316,7 @@ export default function CardValueTable({
                 {/* Cash Back / Points Value */}
                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-gray-50 rounded-lg">
                   <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                    {rewardType === 'cashback' ? 'Cash Back' : 'Points'}
+                    {rewardType === 'cashback' ? 'Cash Back' : (showPointsColumns ? 'Points' : 'Value')}
                   </span>
                   <div className="flex flex-col ml-2 break-words whitespace-normal">
                     <span className={`font-bold text-sm ${getRatingColor(row.rating)} ${isKeyMetric ? 'text-base' : ''} text-right`}>
@@ -373,13 +371,12 @@ export default function CardValueTable({
             <strong className="text-gray-900">RGS Wallet:</strong> To indicate why we keep this card in our wallet and what we use it for. It is the highest cash back you can earn across all cards for that specific category.
           </div>
         </div>
+        <p className="text-xs text-gray-500 mt-3 italic border-t border-gray-200 pt-3">
+          *Point valuations shown are example redemptions; actual values vary by route, dates, and availability. Results not typical or guaranteed.
+        </p>
       </div>
 
-      {card.hasSpendingCap && (
-        <p className="mt-4 text-xs sm:text-sm text-gray-600 italic px-4 sm:px-0">
-          ** Spending cap applies on these categories
-        </p>
-      )}
+
     </div>
   )
 }

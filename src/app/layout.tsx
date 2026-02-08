@@ -6,6 +6,8 @@ import Navbar from '@/components/Navbar'
 import { draftMode } from 'next/headers'
 import Script from 'next/script'
 import JsonLd from '@/components/JsonLd'
+import { AnimationProvider } from '@/components/AnimationProvider'
+import CookieConsent from '@/components/CookieConsent'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -59,9 +61,9 @@ export default async function RootLayout({
     logo: 'https://therichgradstudent.com/favicon.svg',
     sameAs: [
       'https://instagram.com/TheRichGradStudent',
-      'https://twitter.com/TheRichGradStudent',
-      'https://tiktok.com/@TheRichGradStudent',
-      'https://youtube.com/@TheRichGradStudent'
+      'https://facebook.com/TheRichGradStudent',
+      'https://threads.net/@TheRichGradStudent',
+      'https://x.com/TheRichGradStudent'
     ],
     description: 'Mastering the points travel game on a graduate student budget.',
     founder: [
@@ -71,7 +73,7 @@ export default async function RootLayout({
       },
       {
         '@type': 'Person',
-        name: 'Karan'
+        name: 'Karan Jakhar'
       }
     ]
   }
@@ -81,6 +83,7 @@ export default async function RootLayout({
       <head>
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+        <meta name="fo-verify" content="fa9f7891-10c2-42c0-af32-8bb43acf60c1" />
         <JsonLd data={orgSchema} />
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased text-gray-900 bg-[#FAFAFA]`}>
@@ -94,7 +97,9 @@ export default async function RootLayout({
         )}
         <Navbar />
         <div className={isEnabled ? "pt-28" : "pt-16"}>
-          {children}
+          <AnimationProvider>
+            {children}
+          </AnimationProvider>
         </div>
 
         <footer className="bg-rgs-off-black text-white pt-12 pb-24 md:pb-12 mt-20 border-t border-rgs-green supports-[padding-bottom:env(safe-area-inset-bottom)]:pb-[calc(3rem+env(safe-area-inset-bottom))]">
@@ -104,7 +109,7 @@ export default async function RootLayout({
                 <address className="not-italic text-left">
                   <h3 className="text-xl font-bold mb-2">The Rich Grad Student</h3>
                   <p className="text-white/80 text-sm">
-                    Millionaire Style Travel, GRAD STUDENT BUDGET
+                    Upgraded Travel, GRAD STUDENT BUDGET
                   </p>
                 </address>
               </div>
@@ -136,7 +141,7 @@ export default async function RootLayout({
                 </Link>
                 <Link
                   href="/llms.txt"
-                  className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
+                  className="text-white/40 hover:text-white transition-colors text-sm"
                 >
                   AI Knowledge
                 </Link>
@@ -158,36 +163,36 @@ export default async function RootLayout({
                   </svg>
                 </a>
                 <a
-                  href="https://twitter.com/TheRichGradStudent"
+                  href="https://facebook.com/TheRichGradStudent"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white/70 hover:text-rgs-green transition-colors"
-                  aria-label="Twitter/X"
+                  aria-label="Facebook"
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                </a>
+                <a
+                  href="https://threads.net/@TheRichGradStudent"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/70 hover:text-rgs-green transition-colors"
+                  aria-label="Threads"
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.96-.065-1.182.408-2.256 1.33-3.022.812-.674 1.96-1.089 3.42-1.233.9-.09 1.958-.086 3.094.012.012-.814-.073-1.56-.252-2.228-.243-.905-.715-1.645-1.41-2.206-1.057-.852-2.574-1.074-3.868-.566-1.113.438-1.94 1.283-2.326 2.376l-1.95-.672c.534-1.515 1.651-2.683 3.144-3.29.606-.246 1.255-.388 1.924-.422 1.996-.1 3.98.456 5.44 1.635 1.058.853 1.826 1.986 2.226 3.28.236.762.358 1.578.367 2.448l.002.096c.092.057.182.116.27.176.936.639 1.653 1.475 2.073 2.418.784 1.763.832 4.463-1.271 6.52-1.876 1.833-4.178 2.615-7.454 2.637zm-.3-10.166c-1.34-.035-2.435.213-3.17.716-.623.425-.934.996-.9 1.652.037.701.391 1.294 1.024 1.715.67.444 1.527.63 2.416.528 1.2-.137 2.12-.65 2.669-1.487.393-.6.622-1.382.685-2.333-.89-.082-1.792-.124-2.723-.148z" />
+                  </svg>
+                </a>
+                <a
+                  href="https://x.com/TheRichGradStudent"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/70 hover:text-rgs-green transition-colors"
+                  aria-label="X"
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                </a>
-                <a
-                  href="https://tiktok.com/@TheRichGradStudent"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/70 hover:text-rgs-green transition-colors"
-                  aria-label="TikTok"
-                >
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
-                  </svg>
-                </a>
-                <a
-                  href="https://youtube.com/@TheRichGradStudent"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/70 hover:text-rgs-green transition-colors"
-                  aria-label="YouTube"
-                >
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                   </svg>
                 </a>
               </div>
@@ -196,27 +201,11 @@ export default async function RootLayout({
           </div>
         </footer>
 
+        {/* Cookie Consent Banner */}
+        <CookieConsent />
+
         {/* Google Analytics */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <Script
-              strategy="afterInteractive"
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-            />
-            <Script
-              id="google-analytics"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-                `,
-              }}
-            />
-          </>
-        )}
+
       </body>
     </html>
   )

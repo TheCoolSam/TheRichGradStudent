@@ -48,11 +48,10 @@ export default async function MillionaireGuidePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
-            Ultimate Millionaire Guide
+            Point Millionaire Guide
           </h1>
           <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto">
-            Your personalized pathway to mastering credit cards and travel rewards.
-            Follow the arrows to see which cards to apply for next based on your experience level.
+            Pathway to master credit cards and travel rewards. Follow the arrows to see which card we suggest applying for next based on experience level.
           </p>
         </div>
 

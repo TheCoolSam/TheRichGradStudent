@@ -78,39 +78,52 @@ export default function LevelCardsClient({ cards }: LevelCardsClientProps) {
                   <div className="flex flex-col items-center gap-1">
                     {/* Top card */}
                     {card.topCards[0]?.image && (
-                      <Link
-                        href={`/${card.topCards[0].slug}`}
-                        className="relative w-14 h-9 rounded shadow-sm overflow-hidden hover:ring-2 hover:ring-white transition-all"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Image
-                          src={urlFor(card.topCards[0].image).width(112).height(72).url()}
-                          alt={card.topCards[0].name}
-                          fill
-                          sizes="56px"
-                          className="object-cover"
-                        />
-                      </Link>
+                      card.topCards[0].slug ? (
+                        <Link href={`/${card.topCards[0].slug}`} className="relative w-14 h-9 rounded shadow-sm overflow-hidden transition-transform hover:scale-105">
+                          <Image
+                            src={urlFor(card.topCards[0].image).width(112).height(72).url()}
+                            alt={card.topCards[0].name}
+                            fill
+                            sizes="56px"
+                            className="object-cover"
+                          />
+                        </Link>
+                      ) : (
+                        <div className="relative w-14 h-9 rounded shadow-sm overflow-hidden">
+                          <Image
+                            src={urlFor(card.topCards[0].image).width(112).height(72).url()}
+                            alt={card.topCards[0].name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      )
                     )}
                     {/* Bottom two cards */}
                     {card.topCards.length > 1 && (
                       <div className="flex gap-1">
                         {card.topCards.slice(1, 3).map((creditCard, idx) =>
                           creditCard.image ? (
-                            <Link
-                              key={idx}
-                              href={`/${creditCard.slug}`}
-                              className="relative w-14 h-9 rounded shadow-sm overflow-hidden hover:ring-2 hover:ring-white transition-all"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Image
-                                src={urlFor(creditCard.image).width(112).height(72).url()}
-                                alt={creditCard.name}
-                                fill
-                                sizes="56px"
-                                className="object-cover"
-                              />
-                            </Link>
+                            creditCard.slug ? (
+                              <Link key={idx} href={`/${creditCard.slug}`} className="relative w-14 h-9 rounded shadow-sm overflow-hidden transition-transform hover:scale-105">
+                                <Image
+                                  src={urlFor(creditCard.image).width(112).height(72).url()}
+                                  alt={creditCard.name}
+                                  fill
+                                  sizes="56px"
+                                  className="object-cover"
+                                />
+                              </Link>
+                            ) : (
+                              <div key={idx} className="relative w-14 h-9 rounded shadow-sm overflow-hidden">
+                                <Image
+                                  src={urlFor(creditCard.image).width(112).height(72).url()}
+                                  alt={creditCard.name}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                            )
                           ) : null
                         )}
                       </div>
