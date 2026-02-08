@@ -504,7 +504,7 @@ export default async function ContentPage({ params }: PageProps) {
               : isPost
                 ? [
                   { label: 'Home', href: '/' },
-                  { label: 'Blog', href: '/' },
+                  { label: 'Blog', href: '/blog' },
                   { label: (content as Post).title },
                 ]
                 : [

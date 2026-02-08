@@ -158,6 +158,16 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                 <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs text-gray-400 bg-rgs-black/50 rounded border border-gray-600">
                                     ESC
                                 </kbd>
+                                {/* Mobile close button */}
+                                <button
+                                    onClick={onClose}
+                                    className="sm:hidden flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                                    aria-label="Close search"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </div>
 
                             {/* Results */}

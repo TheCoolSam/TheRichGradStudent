@@ -19,6 +19,7 @@ interface TableRow {
   rating?: string
   hasAsterisk?: boolean
   note?: string
+  isSpendCategory?: boolean // True for rows where "points/cash back" label makes sense
 }
 
 
@@ -112,12 +113,14 @@ export default function CardValueTable({
       points2cpp: 'N/A',
       points7cpp: 'N/A',
       rating: card.signupBonusRating,
+      isSpendCategory: false,
     },
     {
       category: 'Annual Fee',
       cashBack: `$${card.annualFee}`,
       points2cpp: 'N/A',
       points7cpp: 'N/A',
+      isSpendCategory: false,
     },
     {
       category: 'Annual Credits',
@@ -125,6 +128,7 @@ export default function CardValueTable({
       points2cpp: 'N/A',
       points7cpp: 'N/A',
       note: card.annualCreditsNotes,
+      isSpendCategory: false,
     },
     {
       category: 'Net Annual Fee',
@@ -132,6 +136,7 @@ export default function CardValueTable({
       points2cpp: 'N/A',
       points7cpp: 'N/A',
       rating: netAnnualFee <= 0 ? 'great' : netAnnualFee < 100 ? 'good' : undefined,
+      isSpendCategory: false,
     },
     {
       category: 'Travel',
@@ -139,6 +144,7 @@ export default function CardValueTable({
       points2cpp: getValueAtBase(card.travelMultiplier),
       points7cpp: getValueAtMax(card.travelMultiplier),
       rating: card.travelRating,
+      isSpendCategory: true,
     },
     {
       category: 'Grocery',
@@ -146,6 +152,7 @@ export default function CardValueTable({
       points2cpp: getValueAtBase(card.groceryMultiplier),
       points7cpp: getValueAtMax(card.groceryMultiplier),
       rating: card.groceryRating,
+      isSpendCategory: true,
     },
     {
       category: 'Gas',
@@ -153,6 +160,7 @@ export default function CardValueTable({
       points2cpp: getValueAtBase(card.gasMultiplier),
       points7cpp: getValueAtMax(card.gasMultiplier),
       rating: card.gasRating,
+      isSpendCategory: true,
     },
     {
       category: 'Dining',
@@ -160,6 +168,7 @@ export default function CardValueTable({
       points2cpp: getValueAtBase(card.diningMultiplier),
       points7cpp: getValueAtMax(card.diningMultiplier),
       rating: card.diningRating,
+      isSpendCategory: true,
     },
     {
       category: 'Pharmacy',
@@ -167,6 +176,7 @@ export default function CardValueTable({
       points2cpp: getValueAtBase(card.pharmacyMultiplier),
       points7cpp: getValueAtMax(card.pharmacyMultiplier),
       rating: card.pharmacyRating,
+      isSpendCategory: true,
     },
     {
       category: 'Other Purchases',
@@ -174,6 +184,7 @@ export default function CardValueTable({
       points2cpp: getValueAtBase(card.otherMultiplier),
       points7cpp: getValueAtMax(card.otherMultiplier),
       rating: card.otherRating,
+      isSpendCategory: true,
     },
     {
       category: 'Lounge Benefits',
@@ -181,6 +192,7 @@ export default function CardValueTable({
       points2cpp: 'N/A',
       points7cpp: 'N/A',
       rating: card.loungeRating,
+      isSpendCategory: false,
     },
     {
       category: 'Partner Benefits',
@@ -188,6 +200,7 @@ export default function CardValueTable({
       points2cpp: 'N/A',
       points7cpp: 'N/A',
       rating: card.partnerRating,
+      isSpendCategory: false,
     },
     {
       category: 'Misc Benefits',
@@ -195,6 +208,7 @@ export default function CardValueTable({
       points2cpp: 'N/A',
       points7cpp: 'N/A',
       rating: card.miscRating,
+      isSpendCategory: false,
     },
   ]
 
@@ -313,10 +327,13 @@ export default function CardValueTable({
 
               {/* Data Grid */}
               <div className="space-y-2">
-                {/* Cash Back / Points Value */}
+                {/* Cash Back / Points Value - only show "Points/Cash Back" label for spend categories */}
                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-gray-50 rounded-lg">
                   <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                    {rewardType === 'cashback' ? 'Cash Back' : (showPointsColumns ? 'Points' : 'Value')}
+                    {row.isSpendCategory
+                      ? (rewardType === 'cashback' ? 'Cash Back' : (showPointsColumns ? 'Points' : 'Value'))
+                      : 'Value'
+                    }
                   </span>
                   <div className="flex flex-col ml-2 break-words whitespace-normal">
                     <span className={`font-bold text-sm ${getRatingColor(row.rating)} ${isKeyMetric ? 'text-base' : ''} text-right`}>

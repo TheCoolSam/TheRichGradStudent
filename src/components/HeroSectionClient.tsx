@@ -31,7 +31,7 @@ export default function HeroSectionClient({ alreadyInSlug }: HeroSectionClientPr
         >
           {/* Parallax tagline */}
           <m.h1
-            className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-8"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black mb-8"
             style={{ y: taglineY, opacity: taglineOpacity }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
